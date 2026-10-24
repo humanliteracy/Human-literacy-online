@@ -40,7 +40,7 @@ element('p','','Imagine you send a message to a friend and hear nothing back. Ho
 // Companion video is optional until the matching MP4 is uploaded to /media/lesson01.mp4.
 // Check availability before creating a player so the published lesson never shows a broken embed.
 const videoEntry=element('section','video-lesson');videoEntry.hidden=true;
-const videoSrc='../../media/lesson01.mp4';
+const videoSrc='../../media/Human_Literacy_Lesson_01_FINAL_REVIEW_114s.mp4';
 fetch(videoSrc,{method:'HEAD'}).then(res=>{
   if(!res.ok||!videoEntry.isConnected)return;
   videoEntry.hidden=false;
