@@ -1,13 +1,15 @@
-# Human Literacy lesson videos
+# Human Literacy Online — video companions
 
-This folder contains MP4 video companions for the free interactive lessons.
+## Lesson 1: Understanding Before Reacting
 
-## Lesson 1
+The completed, approved companion video is a **114-second, silent, vertical H.264 MP4**.
 
-Upload the local finished file `Human_Literacy_Lesson_01_Understanding_Before_Reacting_100s.mp4` into this folder and rename it to **lesson01.mp4**.
+To publish: in this folder, upload the approved video with this **exact filename**:
 
-The existing lesson page at `lessons/01/index.html` automatically shows a silent HTML5 player when this file exists. If the video file is missing, the original interactive lesson continues to work unchanged.
+`lesson01.mp4`
 
-Recommended media format: vertical MP4, H.264, 720 × 1280 or 1080 × 1920, no audio. Include accessible readable on-image text, and keep a text version in the interactive lesson.
+Once present, the existing player in `lessons/01/index.html` automatically displays it in **Step 1 · See It**, without changing the interactive practice, knowledge check, or reflection exercises.
 
-Do not add secrets, private information or tracking credentials to this public repository.
+The approved master is archived in the project Google Drive folder: **TEAL — PUBLIC LIBRARY / 01 — Publications / Human Literacy Videos / Human_Literacy_Lesson_01_APPROVED_114s.mp4**.
+
+Do not substitute older 100-second drafts. Avoid modifying the ten approved source images after publication without a new review.
