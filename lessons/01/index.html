@@ -30,11 +30,11 @@ const pageSnapshots=new Map();
 function pageKey(){return stage+':'+index}
 function savePage(){pageSnapshots.set(pageKey(),{selected,viewed:[...viewed],firstChoiceRecorded,submitted})}
 function navigatePage(delta){savePage();const at=pageOrder.findIndex(p=>p.stage===stage&&p.index===index),target=pageOrder[at+delta];if(!target)return;stage=target.stage;index=target.index;const saved=pageSnapshots.get(pageKey());if(saved){selected=saved.selected;viewed=new Set(saved.viewed);firstChoiceRecorded=saved.firstChoiceRecorded;submitted=saved.submitted}else resetSelection();render();window.scrollTo(0,0)}
-function navigation(){const bar=element('nav','lesson-navigation');bar.setAttribute('aria-label','Lesson navigation');const at=pageOrder.findIndex(p=>p.stage===stage&&p.index===index);const back=action('← Back',()=>navigatePage(-1),true,bar);back.disabled=at===0;action('⌂ Home',()=>{location.href='../../'},true,bar);const next=action('Forward →',()=>navigatePage(1),true,bar);next.disabled=at===pageOrder.length-1;const note=element('p','muted','Navigation lets you review or skip pages. Skipped knowledge-check questions are recorded as unanswered.');note.style.fontSize='.85rem'}
+function navigation(){const bar=element('nav','lesson-navigation');bar.setAttribute('aria-label','Lesson navigation');const at=pageOrder.findIndex(p=>p.stage===stage&&p.index===index);const back=action('← Back',()=>navigatePage(-1),true,bar);back.disabled=at===0;action('⌂ Home',()=>{location.href='../../'},true,bar);const next=action('Forward →',()=>navigatePage(1),true,bar);next.disabled=at===pageOrder.length-1;}
 function progress(){const total=scenarioItems.length+quizItems.length,done=(stage==='quiz'?scenarioItems.length:0)+index;const p=element('div','progress');p.setAttribute('role','progressbar');p.setAttribute('aria-label','Lesson progress');p.setAttribute('aria-valuemin','0');p.setAttribute('aria-valuemax',String(total));p.setAttribute('aria-valuenow',String(done));const fill=element('div','fill');fill.style.width=(100*done/total)+'%';p.append(fill)}
 function render(){app.replaceChildren();navigation();
 if(stage==='intro'){
-element('div','eyebrow','STEP 1 OF 5 · SEE IT');
+
 element('h1','','See It');
 // Play the approved movie as the first learning experience.
 const videoEntry=element('section','video-lesson');
@@ -45,21 +45,21 @@ const source=document.createElement('source');
 source.src='../../media/Human_Literacy_Lesson_01_FINAL_REVIEW_114s.mp4';
 source.type='video/mp4';
 player.append(source);
-action('Continue to Step 2 · Understand It',()=>{savePage();stage='understand';index=0;resetSelection();render();window.scrollTo(0,0)});
+action('Continue to Understand It',()=>{savePage();stage='understand';index=0;resetSelection();render();window.scrollTo(0,0)});
 return}
 if(stage==='understand'){
-element('div','eyebrow','STEP 2 OF 5 · UNDERSTAND IT');
+
 element('h1','','Understand It');
 const story=element('section','feedback');element('strong','','WHAT HAPPENED',story);element('p','','You sent a message. There has been no reply yet.',story);
 const assumption=element('section','feedback');element('strong','','THE STORY YOUR MIND MIGHT ADD',assumption);element('p','','You might think: “They must be upset with me.” That is a possible explanation, not a confirmed fact.',assumption);
 const alternative=element('section','feedback');element('strong','','ANOTHER POSSIBILITY',alternative);element('p','','They may be busy, distracted, or unable to respond. You do not know yet.',alternative);
 element('h2','','Remember this');
 element('p','summary','Notice the fact. Question the assumption. Choose a respectful response.');
-action('Continue to Step 3 · Practice',()=>{savePage();stage='practice';index=0;resetSelection();render();window.scrollTo(0,0)});
+action('Continue to Practice',()=>{savePage();stage='practice';index=0;resetSelection();render();window.scrollTo(0,0)});
 return}
 
 if(stage==='live'){
-element('div','eyebrow','STEP 5 OF 5 · LIVE IT');
+element('div','eyebrow','LIVE IT');
 element('h1','','Take the skill into real life');
 element('p','','Try this 30-second practice privately. No conversation or confrontation is required.');
 const a=element('section','feedback');element('strong','','1 · NOTICE',a);element('p','','Think of a recent moment when you felt certain you knew another person’s intention.',a);
@@ -68,7 +68,7 @@ const c=element('section','feedback');element('strong','','3 · CONSIDER',c);ele
 element('h2','','Remember this');element('p','summary','What do I know, and what am I guessing?');
 element('h2','','Try it again later');element('p','','Tomorrow or next week, try this sequence with a new everyday situation.');
 action('Practice lesson again',restart);action('Back to all lessons',()=>{location.href='../../'},true);return}
-if(stage==='results'){const correct=quizAnswers.filter((a,i)=>a===bestIndex(quizItems[i])).length;const answered=quizAnswers.filter(a=>a!==undefined).length;element('div','eyebrow','LESSON COMPLETE');element('h1','',lessonTitle);element('p','summary','Independent knowledge check: '+correct+' of '+quizItems.length+' correct ('+answered+' answered).');element('p','','Practice is for comparing perspectives, not getting everything right immediately. Your first practice choices: '+practiceScore+' of '+scenarioItems.length+' strongest.');element('h2','','Review your answers');quizItems.forEach((q,i)=>{const opts=optionsFor(q),right=bestIndex(q),answer=quizAnswers[i];const box=element('section','feedback');element('strong','',String(i+1)+'. '+(q.q||q.question),box);element('p','', 'Your answer: '+(opts[answer]?.text||'Not answered')+(answer===right?' — Correct':' — Review this'),box);element('p','', 'Recommended: '+opts[right].text,box);element('p','',q.why||opts[right].why||opts[right].feedback||'',box)});action('Continue to Step 5 · Live it',()=>{savePage();stage='live';index=0;resetSelection();render();window.scrollTo(0,0)});return}
+if(stage==='results'){const correct=quizAnswers.filter((a,i)=>a===bestIndex(quizItems[i])).length;const answered=quizAnswers.filter(a=>a!==undefined).length;element('div','eyebrow','LESSON COMPLETE');element('h1','',lessonTitle);element('p','summary','Independent knowledge check: '+correct+' of '+quizItems.length+' correct ('+answered+' answered).');element('p','','Practice is for comparing perspectives, not getting everything right immediately. Your first practice choices: '+practiceScore+' of '+scenarioItems.length+' strongest.');element('h2','','Review your answers');quizItems.forEach((q,i)=>{const opts=optionsFor(q),right=bestIndex(q),answer=quizAnswers[i];const box=element('section','feedback');element('strong','',String(i+1)+'. '+(q.q||q.question),box);element('p','', 'Your answer: '+(opts[answer]?.text||'Not answered')+(answer===right?' — Correct':' — Review this'),box);element('p','', 'Recommended: '+opts[right].text,box);element('p','',q.why||opts[right].why||opts[right].feedback||'',box)});action('Continue to Live It',()=>{savePage();stage='live';index=0;resetSelection();render();window.scrollTo(0,0)});return}
 const isQuiz=stage==='quiz',item=(isQuiz?quizItems:scenarioItems)[index],opts=optionsFor(item);
 element('div','eyebrow',isQuiz?'INDEPENDENT KNOWLEDGE CHECK '+(index+1)+' OF '+quizItems.length:'PRACTICE SITUATION '+(index+1)+' OF '+scenarioItems.length);progress();
 element('h1','',isQuiz?'Check your understanding':item.title||'Explore the situation');if(!isQuiz&&item.scene)element('p','',item.scene);element('p','question',item.question||item.q);
