@@ -1,1 +1,151 @@
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf8f5">
+<title>Lesson 05 — Listening to Understand | Human Literacy</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#18353a;background:#eaf8f5;font-size:18px}*{box-sizing:border-box}body{margin:0}main{max-width:750px;margin:auto;padding:22px 16px 45px}.brand{color:#087f78;font-weight:800;letter-spacing:.13em;font-size:.81rem;margin-bottom:24px}.panel{background:#fff;border:1px solid #cce6df;border-radius:27px;padding:26px 22px;box-shadow:0 10px 26px #164c4510}.eyebrow{color:#087f78;font-weight:800;letter-spacing:.06em;font-size:.85rem}h1{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.2;margin:14px 0 22px}h2{font-size:1.3rem;line-height:1.3;margin:18px 0}p{line-height:1.65}.question{font-weight:650}.options{display:grid;gap:12px;margin-top:22px}.option{font:inherit;color:inherit;text-align:left;background:#fff;border:2px solid #cbe5df;border-radius:18px;padding:18px;line-height:1.55;cursor:pointer}.option:hover,.option:focus-visible{border-color:#07887d;outline-offset:3px}.option[disabled]{cursor:default}.option.chosen{border-color:#087f78;background:#effaf7}.option:focus-visible,.action:focus-visible{outline:3px solid #1a8079}.feedback{border-left:4px solid #087f78;background:#eff8f5;padding:16px 18px;border-radius:12px;margin-top:22px}.explore{color:#416f70;font-size:.94rem;line-height:1.5;margin:18px 0 0}.feedback h3{margin:0 0 8px;font-size:1.08rem}.feedback p{margin:0}.action{display:block;width:100%;margin-top:22px;border:0;border-radius:16px;padding:17px;background:#087f78;color:white;font:inherit;font-weight:750;cursor:pointer}.action.secondary{background:#e3f3ef;color:#075b55}.progress{height:10px;border-radius:99px;background:#d8ebe6;overflow:hidden;margin:9px 0 25px}.fill{height:100%;background:#087f78;transition:width .2s}.muted{color:#607b7e;font-size:.87rem}.summary{font-weight:750;font-size:1.1rem}.hidden{display:none}footer{margin-top:30px;color:#5b797b;font-size:.82rem;line-height:1.5}@media(max-width:430px){main{padding:18px 12px 35px}.panel{padding:24px 19px}.option{padding:16px}}
+</style>
+</head>
+<body><main><div class="brand">HUMAN LITERACY · INTERACTIVE LESSON</div><section class="panel" id="app" aria-live="polite"></section><footer>Educational practice, not a diagnosis or individualized professional advice. Your choices stay on this device; no account required.</footer></main>
+<script>
+'use strict';
+const scenarios=[
+ {
+  "title": "The interrupted story",
+  "scene": "A friend is describing a difficult day. You think you know exactly what they should do, but they have not finished speaking.",
+  "question": "What response best helps you understand them first?",
+  "choices": [
+   {
+    "text": "“I have been through that. Let me tell you what worked for me.”",
+    "quality": "Consider the tradeoff",
+    "why": "Your experience might help later, but leading with your story can shift attention away before you know what your friend needs."
+   },
+   {
+    "text": "“That sounds exhausting. What part has been hardest for you?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You acknowledge what you heard and invite them to explain their own experience. You can discuss solutions after you understand it."
+   },
+   {
+    "text": "“I think I know how to fix this, but I will wait until you finish.”",
+    "quality": "Helpful intention, limited listening",
+    "why": "Not interrupting is useful, but announcing that you have the fix can make the person feel you have already decided what matters."
+   }
+  ]
+ },
+ {
+  "title": "The misunderstood request",
+  "scene": "Someone at home says, “You never help when I need you.” You remember helping yesterday and feel unfairly criticized.",
+  "question": "Which first response is most likely to uncover the real concern?",
+  "choices": [
+   {
+    "text": "“I helped yesterday, so saying never is unfair.”",
+    "quality": "Consider the tradeoff",
+    "why": "The word “never” may be inaccurate, but correcting it immediately can turn the conversation into a contest about evidence instead of revealing today’s unmet need."
+   },
+   {
+    "text": "“I hear that you feel unsupported. What did you need from me today?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You do not have to agree with “never” to recognize their frustration. A specific question makes the need clearer before you discuss what is realistic."
+   },
+   {
+    "text": "“I am sorry. I will do more so you do not feel this way again.”",
+    "quality": "Caring, but premature",
+    "why": "An apology may calm things briefly, yet promising more before knowing the request can create commitments you cannot keep."
+   }
+  ]
+ },
+ {
+  "title": "The quiet friend",
+  "scene": "During a group outing, a normally talkative friend becomes quiet. You wonder if you upset them, but they have not said anything.",
+  "question": "What is the most respectful way to check in?",
+  "choices": [
+   {
+    "text": "“You seem quieter than usual. Would you like to talk, or would you prefer some space?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You share an observation without assigning a cause and offer two acceptable choices. Their silence does not have to be about you."
+   },
+   {
+    "text": "“Are you upset with me? I need to know if I did something.”",
+    "quality": "Understandable, but self-focused",
+    "why": "Seeking reassurance is natural, but the question centers your worry and may pressure them to comfort you."
+   },
+   {
+    "text": "“I will leave you alone until you decide to tell me what is wrong.”",
+    "quality": "Respects space, but assumes a problem",
+    "why": "Giving space can be kind, yet assuming something is wrong and waiting indefinitely can miss a simple chance to check whether they want company."
+   }
+  ]
+ }
+];
+const quiz=[
+ {
+  "q": "Someone pauses while telling you about a problem. What is the best next step?",
+  "choices": [
+   {
+    "text": "“Fill the silence with advice so they know you care.”",
+    "why": "Advice can be useful, but silence may mean they are thinking. Jumping in can cut off information you have not heard."
+   },
+   {
+    "text": "“Give them a moment, then ask whether they want to continue.”",
+    "best": true,
+    "why": "A little space respects their pace and gives them control over what they share."
+   },
+   {
+    "text": "“Repeat your own interpretation so they can confirm it quickly.”",
+    "why": "Checking understanding can help, but rushing to your interpretation may interrupt a thought they were still forming."
+   }
+  ]
+ },
+ {
+  "q": "You disagree with how a friend describes an event. What response supports understanding?",
+  "choices": [
+   {
+    "text": "“I remember it differently. Can you tell me what led you to see it that way?”",
+    "best": true,
+    "why": "You can be honest about your perspective while staying curious about theirs. Understanding does not require agreement."
+   },
+   {
+    "text": "“That is not what happened. Let me explain the facts first.”",
+    "why": "Facts matter, but leading with a correction may stop you from hearing why their experience felt different."
+   },
+   {
+    "text": "“You are right. I do not want to make this into an argument.”",
+    "why": "Avoiding conflict by agreeing can hide your genuine view and does not build shared understanding."
+   }
+  ]
+ },
+ {
+  "q": "After someone tells you something painful, how can you check what kind of support they want?",
+  "choices": [
+   {
+    "text": "“I know what you should do. Can I walk you through it?”",
+    "why": "Asking permission is better than forcing advice, but “I know” presumes you understand the solution before checking their needs."
+   },
+   {
+    "text": "“You can tell me anything. I promise I can help you fix it.”",
+    "why": "Warmth matters, but a promise to fix the situation may be unrealistic and can create pressure."
+   },
+   {
+    "text": "“Would it help more if I listened, helped you think through options, or gave you some space?”",
+    "best": true,
+    "why": "This offers practical forms of support without deciding for them. It also respects that they may not want advice right now."
+   }
+  ]
+ }
+];
+let stage='scenario',index=0,selected=-1,viewed=new Set(),practice=0,knowledge=0;const app=document.getElementById('app');
+function el(tag,cls,text){const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x}
+function button(text,fn,secondary=false){const b=el('button','action'+(secondary?' secondary':''),text);b.type='button';b.addEventListener('click',fn);return b}
+function reset(){app.replaceChildren()}
+function render(){reset(); if(stage==='done'){app.append(el('div','eyebrow','LESSON COMPLETE'),el('h1','','Listen first, understand more'),el('p','summary',`First choices: ${practice} of 3 strongest in practice · ${knowledge} of 3 correct in the knowledge check`),el('p','','Your first selection determines the score. Exploring other answers helps you understand their benefits and tradeoffs without changing that score. Listening means checking your assumptions, making room for another perspective, and asking what support is wanted.'),button('Practice again',()=>{stage='scenario';index=0;selected=-1;viewed=new Set();practice=0;knowledge=0;render()}),button('Back to lesson library',()=>{window.location.href='../../'},true));return}
+ const isQuiz=stage==='quiz',item=(isQuiz?quiz:scenarios)[index],count=3;
+ app.append(el('div','eyebrow',isQuiz?`KNOWLEDGE CHECK ${index+1} OF ${count}`:`SITUATION ${index+1} OF ${count}`));const progress=el('div','progress');progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Lesson progress');progress.setAttribute('aria-valuenow',String((isQuiz?3:0)+index));progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax','6');const fill=el('div','fill');fill.style.width=`${((isQuiz?3:0)+index)/6*100}%`;progress.append(fill);app.append(progress);
+ if(!isQuiz){app.append(el('h1','',item.title),el('p','',item.scene))}else{app.append(el('h1','','Check your understanding'))}app.append(el('p','question',item.question||item.q));const options=el('div','options');item.choices.forEach((c,i)=>{const b=el('button','option'+(selected===i?' chosen':''),c.text);b.type='button';b.setAttribute('aria-pressed',String(selected===i));b.addEventListener('click',()=>{if(viewed.size===0&&c.best){if(isQuiz)knowledge++;else practice++}selected=i;viewed.add(i);render()});options.append(b)});app.append(options);
+ if(selected!==-1){app.append(el('p','explore',`Explored ${viewed.size} of ${item.choices.length} choices. Tap any answer to compare its explanation.`));const c=item.choices[selected],fb=el('section','feedback');fb.append(el('h3','',c.quality||(c.best?'Strongest response':'Consider the tradeoff')),el('p','',c.why));if(!c.best){const best=item.choices.find(x=>x.best);fb.append(el('p','',`Another approach: ${best.text} ${best.why}`))}app.append(fb,button(index===2?(isQuiz?'See lesson summary':'Continue to knowledge check'):'Next',()=>{selected=-1;viewed=new Set();if(index===2){stage=isQuiz?'done':'quiz';index=0}else index++;render()}))}
+ }
+render();
+</script></body></html>
