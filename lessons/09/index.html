@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf8f5">
+<title>Lesson 09 — Recognizing Unhealthy Patterns | Human Literacy</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#18353a;background:#eaf8f5;font-size:18px}*{box-sizing:border-box}body{margin:0}main{max-width:750px;margin:auto;padding:22px 16px 45px}.brand{color:#087f78;font-weight:800;letter-spacing:.13em;font-size:.81rem;margin-bottom:24px}.panel{background:#fff;border:1px solid #cce6df;border-radius:27px;padding:26px 22px;box-shadow:0 10px 26px #164c4510}.eyebrow{color:#087f78;font-weight:800;letter-spacing:.06em;font-size:.85rem}h1{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.2;margin:14px 0 22px}h2{font-size:1.3rem;line-height:1.3;margin:18px 0}p{line-height:1.65}.question{font-weight:650}.options{display:grid;gap:12px;margin-top:22px}.option{font:inherit;color:inherit;text-align:left;background:#fff;border:2px solid #cbe5df;border-radius:18px;padding:18px;line-height:1.55;cursor:pointer}.option:hover,.option:focus-visible{border-color:#07887d;outline-offset:3px}.option[disabled]{cursor:default}.option.chosen{border-color:#087f78;background:#effaf7}.option:focus-visible,.action:focus-visible{outline:3px solid #1a8079}.feedback{border-left:4px solid #087f78;background:#eff8f5;padding:16px 18px;border-radius:12px;margin-top:22px}.explore{color:#416f70;font-size:.94rem;line-height:1.5;margin:18px 0 0}.feedback h3{margin:0 0 8px;font-size:1.08rem}.feedback p{margin:0}.action{display:block;width:100%;margin-top:22px;border:0;border-radius:16px;padding:17px;background:#087f78;color:white;font:inherit;font-weight:750;cursor:pointer}.action.secondary{background:#e3f3ef;color:#075b55}.progress{height:10px;border-radius:99px;background:#d8ebe6;overflow:hidden;margin:9px 0 25px}.fill{height:100%;background:#087f78;transition:width .2s}.muted{color:#607b7e;font-size:.87rem}.summary{font-weight:750;font-size:1.1rem}.hidden{display:none}footer{margin-top:30px;color:#5b797b;font-size:.82rem;line-height:1.5}@media(max-width:430px){main{padding:18px 12px 35px}.panel{padding:24px 19px}.option{padding:16px}}
+button:disabled{opacity:.45;cursor:not-allowed}.feedback p{margin:8px 0}.feedback strong{display:block;margin-bottom:8px}.lesson-heading{font-weight:800;font-size:clamp(1rem,3.8vw,1.18rem);line-height:1.45;color:#18353a;margin:-12px 0 22px;padding-bottom:15px;border-bottom:1px solid #cce6df}button:disabled{opacity:.48;cursor:not-allowed}.lesson-heading{display:flex!important;flex-direction:column;gap:5px;visibility:visible!important;opacity:1!important}.lesson-heading span{color:#087f78;font-size:.9rem;letter-spacing:.05em}.lesson-heading strong{font-size:clamp(1.1rem,4.2vw,1.35rem)}</style>
+</head>
+<body><main><div class="brand">HUMAN LITERACY · INTERACTIVE LESSON</div><div class="lesson-heading" aria-label="Lesson number and title">LESSON 09 · Recognizing Unhealthy Patterns</div><section class="panel" id="app" aria-live="polite"></section><footer>Educational practice, not a diagnosis or individualized professional advice. Your choices stay on this device; no account required.</footer></main>
+<script>
+'use strict';
+const scenarios=[
+  {
+    "title": "An apology without change",
+    "scene": "A friend repeatedly makes jokes about something you have asked them not to mention. Each time, they apologize. A few days later, it happens again.",
+    "question": "What is most useful to pay attention to?",
+    "choices": [
+      {
+        "text": "“They apologized, so I should assume the problem is solved.”",
+        "quality": "Consider the tradeoff",
+        "why": "An apology can be sincere, but repeated behavior shows whether a boundary is being respected over time."
+      },
+      {
+        "text": "“I’ve explained this boundary more than once. I’ll watch whether the behavior changes and decide what contact feels right for me.”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You focus on observable behavior and your own choices rather than trying to control or diagnose the other person."
+      },
+      {
+        "text": "“They must be a bad person, and I know exactly why they do this.”",
+        "quality": "Consider the tradeoff",
+        "why": "You can recognize harmful behavior without claiming to know someone's character or motives."
+      }
+    ]
+  },
+  {
+    "title": "A mistake or a pattern?",
+    "scene": "A coworker forgets to share an update once. You feel excluded. You have not noticed this happening before, and you do not know why it happened.",
+    "question": "Which response avoids jumping to a conclusion?",
+    "choices": [
+      {
+        "text": "“I missed the update. Was I left off by mistake? How can we make sure I receive the next one?”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You describe the event, check for missing information, and propose a practical solution without assuming intent."
+      },
+      {
+        "text": "“They are deliberately excluding me. I should tell everyone.”",
+        "quality": "Consider the tradeoff",
+        "why": "One event is not enough to establish a deliberate pattern. Accusing someone without checking can cause avoidable harm."
+      },
+      {
+        "text": "“I should say nothing, even if it keeps happening.”",
+        "quality": "Consider the tradeoff",
+        "why": "You do not have to ignore repeated problems. You can observe what happens next and raise concerns if needed."
+      }
+    ]
+  },
+  {
+    "title": "Pressure that keeps returning",
+    "scene": "Someone close to you repeatedly pressures you to share private messages and becomes angry when you say no. You have explained your limit several times. You feel increasingly uneasy.",
+    "question": "What response best protects your choices and safety?",
+    "choices": [
+      {
+        "text": "“If I give them access this once, the pressure will probably stop.”",
+        "quality": "Consider the tradeoff",
+        "why": "Giving in to repeated pressure may not end it and can reduce your privacy. You are allowed to keep personal boundaries."
+      },
+      {
+        "text": "“I need to prove they are a terrible person before I can ask for support.”",
+        "quality": "Consider the tradeoff",
+        "why": "You do not need to label or prove someone's motives to take your discomfort and safety seriously."
+      },
+      {
+        "text": "“This keeps happening after I’ve said no. I can protect my privacy, consider distance, and talk with someone trustworthy about my options.”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You recognize the repeated pressure, respect your own limits, and seek perspective without assuming confrontation is safe or required."
+      }
+    ]
+  }
+];
+const quiz=[
+  {
+    "q": "What is the clearest sign that a concerning behavior may be a pattern?",
+    "choices": [
+      {
+        "text": "“One uncomfortable interaction with no other information.”",
+        "why": "A single event can matter, but by itself it does not establish repetition."
+      },
+      {
+        "text": "“The same behavior continues over time, especially after a clear request to stop.”",
+        "best": true,
+        "why": "Repeated, observable actions provide stronger evidence than assumptions about motives."
+      },
+      {
+        "text": "“A feeling that the person must have bad intentions.”",
+        "why": "Feelings can alert us to concerns, but they do not establish what someone intends."
+      }
+    ]
+  },
+  {
+    "q": "Someone makes one mistake and you lack context. What is a fair first step when it is safe?",
+    "choices": [
+      {
+        "text": "“Describe what happened and ask a clarifying question.”",
+        "best": true,
+        "why": "Checking facts helps distinguish misunderstanding from repeated behavior."
+      },
+      {
+        "text": "“Decide their entire character from that event.”",
+        "why": "A single mistake does not reveal everything about a person."
+      },
+      {
+        "text": "“Ignore all future problems because everyone makes mistakes.”",
+        "why": "Compassion and attention to recurring harm can coexist."
+      }
+    ]
+  },
+  {
+    "q": "A person repeatedly ignores your privacy boundary. What is a reasonable next step?",
+    "choices": [
+      {
+        "text": "“Keep explaining indefinitely, even if you feel unsafe.”",
+        "why": "Repeated explanations are not always effective, and safety comes first."
+      },
+      {
+        "text": "“Give up your privacy to prove you care.”",
+        "why": "Caring about someone does not require surrendering your boundaries."
+      },
+      {
+        "text": "“Notice the repetition, protect your boundary, and seek trusted support if needed.”",
+        "best": true,
+        "why": "You can respond to repeated behavior without diagnosing the person or forcing a confrontation."
+      }
+    ]
+  }
+];
+
+const app=document.getElementById('app');
+const scenarioItems=typeof DATA!=='undefined'?DATA.scenarios:scenarios;
+const quizItems=typeof DATA!=='undefined'?DATA.quiz:quiz;
+let stage='practice',index=0,selected=-1,viewed=new Set(),practiceScore=0,quizAnswers=[],submitted=false,firstChoiceRecorded=false;
+const lessonTitle=document.title.replace(/^Lesson \d+ — /,'').replace(/ \| Human Literacy$/,'');
+function element(tag,cls,txt,parent=app){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;parent.append(e);return e}
+function action(label,fn,secondary=false,parent=app){const b=element('button',secondary?'action secondary':'action',label,parent);b.type='button';b.addEventListener('click',fn);return b}
+function optionsFor(item){return item.choices.map(c=>typeof c==='string'?{text:c}:c)}
+function bestIndex(item){return typeof item.correct==='number'?item.correct:optionsFor(item).findIndex(c=>c.best)}
+function resetSelection(){selected=-1;viewed=new Set();firstChoiceRecorded=false;submitted=false}
+function advance(){index++;resetSelection();if(stage==='practice'&&index===scenarioItems.length){stage='quiz';index=0}else if(stage==='quiz'&&index===quizItems.length){stage='results';index=0}render();window.scrollTo(0,0)}
+function restart(){stage='practice';index=0;practiceScore=0;quizAnswers=[];resetSelection();render();window.scrollTo(0,0)}
+function progress(){const total=scenarioItems.length+quizItems.length,done=(stage==='quiz'?scenarioItems.length:0)+index;const p=element('div','progress');p.setAttribute('role','progressbar');p.setAttribute('aria-label','Lesson progress');p.setAttribute('aria-valuemin','0');p.setAttribute('aria-valuemax',String(total));p.setAttribute('aria-valuenow',String(done));const fill=element('div','fill');fill.style.width=(100*done/total)+'%';p.append(fill)}
+function render(){app.replaceChildren();
+if(stage==='results'){const correct=quizAnswers.filter((a,i)=>a===bestIndex(quizItems[i])).length;element('div','eyebrow','LESSON COMPLETE');element('h1','',lessonTitle);element('p','summary','Independent knowledge check: '+correct+' of '+quizItems.length+' correct.');element('p','','Practice is for comparing perspectives, not getting everything right immediately. Your first practice choices: '+practiceScore+' of '+scenarioItems.length+' strongest.');element('h2','','Review your answers');quizItems.forEach((q,i)=>{const opts=optionsFor(q),right=bestIndex(q),answer=quizAnswers[i];const box=element('section','feedback');element('strong','',String(i+1)+'. '+(q.q||q.question),box);element('p','', 'Your answer: '+(opts[answer]?.text||'No answer')+(answer===right?' — Correct':' — Review this'),box);element('p','', 'Recommended: '+opts[right].text,box);element('p','',q.why||opts[right].why||opts[right].feedback||'',box)});element('h2','','Take it into everyday life');element('p','','Think of one real situation this week. What did you notice? What did you assume? What respectful next step could you try? You can reflect silently or discuss it with someone.');action('Practice again',restart);action('Back to all lessons',()=>{location.href='../../'},true);return}
+const isQuiz=stage==='quiz',item=(isQuiz?quizItems:scenarioItems)[index],opts=optionsFor(item);
+element('div','eyebrow',isQuiz?'INDEPENDENT KNOWLEDGE CHECK '+(index+1)+' OF '+quizItems.length:'PRACTICE SITUATION '+(index+1)+' OF '+scenarioItems.length);progress();
+element('h1','',isQuiz?'Check your understanding':item.title||'Explore the situation');if(!isQuiz&&item.scene)element('p','',item.scene);element('p','question',item.question||item.q);
+if(isQuiz){element('p','explore','Choose one answer, then submit it. Explanations and correct answers appear only after all questions.');}
+else{element('p','explore','Explore all '+opts.length+' responses and compare their tradeoffs before continuing.');}
+const holder=element('div','options');
+opts.forEach((c,i)=>{const b=element('button','option'+(selected===i?' chosen':''),c.text,holder);b.type='button';b.setAttribute('aria-pressed',String(selected===i));if(isQuiz&&submitted)b.disabled=true;b.addEventListener('click',()=>{if(isQuiz){if(submitted)return;selected=i;render();return}if(!firstChoiceRecorded){if(i===bestIndex(item))practiceScore++;firstChoiceRecorded=true}selected=i;viewed.add(i);render()})});
+if(isQuiz){const b=action('Submit answer',()=>{if(selected<0)return;quizAnswers[index]=selected;advance()});b.disabled=selected<0;if(selected<0)element('p','muted','Select an answer to enable submission.');return}
+if(selected>=0){const c=opts[selected],box=element('section','feedback');element('h3','',c.rating||c.quality||(c.best?'Strongest response':'Consider the tradeoff'),box);element('p','',c.why||c.feedback||'',box)}
+element('p','explore','Compared '+viewed.size+' of '+opts.length+' responses'+(viewed.size<opts.length?'. Select the remaining responses to unlock Next.':'. You are ready to continue.'));
+const b=action(index===scenarioItems.length-1?'Continue to independent knowledge check':'Next situation',advance);b.disabled=viewed.size<opts.length;
+}
+render();
+</script></body></html>
