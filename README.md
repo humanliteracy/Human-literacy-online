@@ -41,7 +41,15 @@ At the time of review, the six tracked HTML pages contain no application API cal
 
 Lessons support reflection and practice; they are not psychological diagnosis or individualized professional advice.
 
-The site is free to access. As of this review, no license file was present in the repository. Public visibility alone does not grant general permission to reuse or redistribute the source or curriculum. A license decision should be made separately.
+## Open reuse and licensing
+
+**Software code:** Original HTML, CSS, and JavaScript are released under the [MIT License](LICENSE). Preserve the required license and copyright notice when redistributing substantial portions of that code.
+
+**Educational content:** Original Human Literacy lesson narratives, scenarios, questions, answers, feedback, and other educational prose are dedicated to the public domain under [CC0 1.0 Universal](CONTENT-LICENSE.md), to the extent the project owns or controls the relevant rights. That content may be copied, adapted, translated, and redistributed, including commercially, without seeking permission or giving credit. Attribution is appreciated but not required.
+
+These permissions do not grant rights in third-party material, trademarks, or someone else’s identity. Material with its own license or attribution notice remains subject to that notice. See [CONTENT-LICENSE.md](CONTENT-LICENSE.md) for scope and caveats.
+
+Do not assume new external contributions are covered by these terms unless contributors hold the necessary rights and clearly agree to them.
 
 ## Review scope
 
