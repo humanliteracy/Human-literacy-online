@@ -37,14 +37,14 @@ if(stage==='intro'){
 element('div','eyebrow','SEE IT · UNDERSTAND IT');
 element('h1','','Pause before you decide');
 element('p','','Imagine you send a message to a friend and hear nothing back. Hours pass. Your mind starts filling in the blanks.');
-// Companion video is optional until the matching MP4 is uploaded to /media/lesson01.mp4.
+// Show the approved 114-second video only when the uploaded media is available.
 // Check availability before creating a player so the published lesson never shows a broken embed.
 const videoEntry=element('section','video-lesson');videoEntry.hidden=true;
 const videoSrc='../../media/Human_Literacy_Lesson_01_FINAL_REVIEW_114s.mp4';
 fetch(videoSrc,{method:'HEAD'}).then(res=>{
   if(!res.ok||!videoEntry.isConnected)return;
   videoEntry.hidden=false;
-  element('h2','','Watch the 100-second lesson',videoEntry);
+  element('h2','','Watch the 114-second lesson',videoEntry);
   const player=element('video','',undefined,videoEntry);
   player.controls=true;player.playsInline=true;player.preload='metadata';player.setAttribute('aria-label','Understanding Before Reacting video lesson');
   const source=document.createElement('source');source.src=videoSrc;source.type='video/mp4';player.append(source);
