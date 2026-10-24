@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf8f5">
+<title>Lesson 08 — Asking for Help | Human Literacy</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#18353a;background:#eaf8f5;font-size:18px}*{box-sizing:border-box}body{margin:0}main{max-width:750px;margin:auto;padding:22px 16px 45px}.brand{color:#087f78;font-weight:800;letter-spacing:.13em;font-size:.81rem;margin-bottom:24px}.panel{background:#fff;border:1px solid #cce6df;border-radius:27px;padding:26px 22px;box-shadow:0 10px 26px #164c4510}.eyebrow{color:#087f78;font-weight:800;letter-spacing:.06em;font-size:.85rem}h1{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.2;margin:14px 0 22px}h2{font-size:1.3rem;line-height:1.3;margin:18px 0}p{line-height:1.65}.question{font-weight:650}.options{display:grid;gap:12px;margin-top:22px}.option{font:inherit;color:inherit;text-align:left;background:#fff;border:2px solid #cbe5df;border-radius:18px;padding:18px;line-height:1.55;cursor:pointer}.option:hover,.option:focus-visible{border-color:#07887d;outline-offset:3px}.option[disabled]{cursor:default}.option.chosen{border-color:#087f78;background:#effaf7}.option:focus-visible,.action:focus-visible{outline:3px solid #1a8079}.feedback{border-left:4px solid #087f78;background:#eff8f5;padding:16px 18px;border-radius:12px;margin-top:22px}.explore{color:#416f70;font-size:.94rem;line-height:1.5;margin:18px 0 0}.feedback h3{margin:0 0 8px;font-size:1.08rem}.feedback p{margin:0}.action{display:block;width:100%;margin-top:22px;border:0;border-radius:16px;padding:17px;background:#087f78;color:white;font:inherit;font-weight:750;cursor:pointer}.action.secondary{background:#e3f3ef;color:#075b55}.progress{height:10px;border-radius:99px;background:#d8ebe6;overflow:hidden;margin:9px 0 25px}.fill{height:100%;background:#087f78;transition:width .2s}.muted{color:#607b7e;font-size:.87rem}.summary{font-weight:750;font-size:1.1rem}.hidden{display:none}footer{margin-top:30px;color:#5b797b;font-size:.82rem;line-height:1.5}@media(max-width:430px){main{padding:18px 12px 35px}.panel{padding:24px 19px}.option{padding:16px}}
+button:disabled{opacity:.45;cursor:not-allowed}.feedback p{margin:8px 0}.feedback strong{display:block;margin-bottom:8px}.lesson-heading{font-weight:800;font-size:clamp(1rem,3.8vw,1.18rem);line-height:1.45;color:#18353a;margin:-12px 0 22px;padding-bottom:15px;border-bottom:1px solid #cce6df}button:disabled{opacity:.48;cursor:not-allowed}.lesson-heading{display:flex!important;flex-direction:column;gap:5px;visibility:visible!important;opacity:1!important}.lesson-heading span{color:#087f78;font-size:.9rem;letter-spacing:.05em}.lesson-heading strong{font-size:clamp(1.1rem,4.2vw,1.35rem)}</style>
+</head>
+<body><main><div class="brand">HUMAN LITERACY · INTERACTIVE LESSON</div><div class="lesson-heading" aria-label="Lesson number and title">LESSON 08 · Asking for Help</div><section class="panel" id="app" aria-live="polite"></section><footer>Educational practice, not a diagnosis or individualized professional advice. Your choices stay on this device; no account required.</footer></main>
+<script>
+'use strict';
+const scenarios=[
+  {
+    "title": "You are overwhelmed",
+    "scene": "You have several responsibilities today and cannot finish them all without rushing. Someone you trust has offered to help before, but you hesitate because you do not want to seem incapable.",
+    "question": "Which request makes it easiest for someone to understand and respond honestly?",
+    "choices": [
+      {
+        "text": "“Could you pick up the groceries this afternoon? If not, I’ll make another plan.”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You make a specific request, give a useful timeframe, and leave room for an honest no."
+      },
+      {
+        "text": "“I guess I have to do everything myself.”",
+        "quality": "Consider the tradeoff",
+        "why": "This communicates frustration but does not clearly tell the other person what support you need."
+      },
+      {
+        "text": "“You need to help me today. I have too much going on.”",
+        "quality": "Consider the tradeoff",
+        "why": "Your need is real, but making the request a demand may disregard their capacity."
+      }
+    ]
+  },
+  {
+    "title": "You do not know where to begin",
+    "scene": "You are trying to understand an unfamiliar online form. You have reread the instructions and still feel confused. A friend knows how to use the website.",
+    "question": "How could you ask for help while staying involved in the task?",
+    "choices": [
+      {
+        "text": "“Can you just do all of this for me? I don’t want to deal with it.”",
+        "quality": "Consider the tradeoff",
+        "why": "Having someone take over may solve the immediate problem, but it can leave you without understanding or control. Sometimes hands-on help is appropriate; ask for what you actually need."
+      },
+      {
+        "text": "“Could you walk through the first section with me and explain what it asks? I’d like to complete it myself.”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You identify the difficult part, ask for manageable support, and keep ownership of the decision and information."
+      },
+      {
+        "text": "“Never mind. I should be able to figure this out alone.”",
+        "quality": "Consider the tradeoff",
+        "why": "Learning independently can be useful, but refusing available help can waste time and increase frustration."
+      }
+    ]
+  },
+  {
+    "title": "They cannot help today",
+    "scene": "You ask a family member to drive you to an appointment. They say they cannot because they already have a commitment. You still need transportation.",
+    "question": "What is the most constructive next step?",
+    "choices": [
+      {
+        "text": "“If you cared about me, you would cancel your plans.”",
+        "quality": "Consider the tradeoff",
+        "why": "This turns a practical need into a test of loyalty and disregards their existing responsibilities."
+      },
+      {
+        "text": "“Okay, I won’t ever ask you for anything again.”",
+        "quality": "Consider the tradeoff",
+        "why": "One refusal does not necessarily mean someone is unwilling to help in other situations."
+      },
+      {
+        "text": "“Thanks for letting me know. I’ll check another option. Could you help me think of one?”",
+        "best": true,
+        "quality": "Strongest response",
+        "why": "You accept their answer and look for alternatives without assuming they owe you their time. They can decline the second request too."
+      }
+    ]
+  }
+];
+const quiz=[
+  {
+    "q": "Which is the clearest request for practical help?",
+    "choices": [
+      {
+        "text": "“Nobody ever helps me when I need it.”",
+        "why": "This expresses distress but does not describe the specific help requested."
+      },
+      {
+        "text": "“Could you watch the children from 2 to 3 PM on Thursday? It is okay if you cannot.”",
+        "best": true,
+        "why": "It identifies the task, timeframe, and freedom to decline."
+      },
+      {
+        "text": "“You should know what I need without me asking.”",
+        "why": "Other people may care but cannot reliably guess what help is needed."
+      }
+    ]
+  },
+  {
+    "q": "Someone offers to help with a task you want to learn. What request supports your independence?",
+    "choices": [
+      {
+        "text": "“Please explain the first step and let me try it.”",
+        "best": true,
+        "why": "Guidance and practice can build understanding while preserving your control."
+      },
+      {
+        "text": "“Take over everything so I never have to learn.”",
+        "why": "Taking over can be appropriate in some situations, but it does not serve the stated goal of learning."
+      },
+      {
+        "text": "“I cannot ask questions because that would be embarrassing.”",
+        "why": "Asking questions is a normal part of learning."
+      }
+    ]
+  },
+  {
+    "q": "You ask for help and the other person says no. What is the most respectful response?",
+    "choices": [
+      {
+        "text": "“Keep asking until they feel guilty enough to agree.”",
+        "why": "Pressure does not respect their capacity or choice."
+      },
+      {
+        "text": "“Assume they do not care about you.”",
+        "why": "A refusal may reflect time, energy, or other responsibilities rather than lack of care."
+      },
+      {
+        "text": "“Accept their answer and consider another person, service, or plan.”",
+        "best": true,
+        "why": "You can continue meeting your need without demanding help from someone who cannot provide it."
+      }
+    ]
+  }
+];
+
+const app=document.getElementById('app');
+const scenarioItems=typeof DATA!=='undefined'?DATA.scenarios:scenarios;
+const quizItems=typeof DATA!=='undefined'?DATA.quiz:quiz;
+let stage='practice',index=0,selected=-1,viewed=new Set(),practiceScore=0,quizAnswers=[],submitted=false,firstChoiceRecorded=false;
+const lessonTitle=document.title.replace(/^Lesson \d+ — /,'').replace(/ \| Human Literacy$/,'');
+function element(tag,cls,txt,parent=app){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;parent.append(e);return e}
+function action(label,fn,secondary=false,parent=app){const b=element('button',secondary?'action secondary':'action',label,parent);b.type='button';b.addEventListener('click',fn);return b}
+function optionsFor(item){return item.choices.map(c=>typeof c==='string'?{text:c}:c)}
+function bestIndex(item){return typeof item.correct==='number'?item.correct:optionsFor(item).findIndex(c=>c.best)}
+function resetSelection(){selected=-1;viewed=new Set();firstChoiceRecorded=false;submitted=false}
+function advance(){index++;resetSelection();if(stage==='practice'&&index===scenarioItems.length){stage='quiz';index=0}else if(stage==='quiz'&&index===quizItems.length){stage='results';index=0}render();window.scrollTo(0,0)}
+function restart(){stage='practice';index=0;practiceScore=0;quizAnswers=[];resetSelection();render();window.scrollTo(0,0)}
+function progress(){const total=scenarioItems.length+quizItems.length,done=(stage==='quiz'?scenarioItems.length:0)+index;const p=element('div','progress');p.setAttribute('role','progressbar');p.setAttribute('aria-label','Lesson progress');p.setAttribute('aria-valuemin','0');p.setAttribute('aria-valuemax',String(total));p.setAttribute('aria-valuenow',String(done));const fill=element('div','fill');fill.style.width=(100*done/total)+'%';p.append(fill)}
+function render(){app.replaceChildren();
+if(stage==='results'){const correct=quizAnswers.filter((a,i)=>a===bestIndex(quizItems[i])).length;element('div','eyebrow','LESSON COMPLETE');element('h1','',lessonTitle);element('p','summary','Independent knowledge check: '+correct+' of '+quizItems.length+' correct.');element('p','','Practice is for comparing perspectives, not getting everything right immediately. Your first practice choices: '+practiceScore+' of '+scenarioItems.length+' strongest.');element('h2','','Review your answers');quizItems.forEach((q,i)=>{const opts=optionsFor(q),right=bestIndex(q),answer=quizAnswers[i];const box=element('section','feedback');element('strong','',String(i+1)+'. '+(q.q||q.question),box);element('p','', 'Your answer: '+(opts[answer]?.text||'No answer')+(answer===right?' — Correct':' — Review this'),box);element('p','', 'Recommended: '+opts[right].text,box);element('p','',q.why||opts[right].why||opts[right].feedback||'',box)});element('h2','','Take it into everyday life');element('p','','Think of one real situation this week. What did you notice? What did you assume? What respectful next step could you try? You can reflect silently or discuss it with someone.');action('Practice again',restart);action('Back to all lessons',()=>{location.href='../../'},true);return}
+const isQuiz=stage==='quiz',item=(isQuiz?quizItems:scenarioItems)[index],opts=optionsFor(item);
+element('div','eyebrow',isQuiz?'INDEPENDENT KNOWLEDGE CHECK '+(index+1)+' OF '+quizItems.length:'PRACTICE SITUATION '+(index+1)+' OF '+scenarioItems.length);progress();
+element('h1','',isQuiz?'Check your understanding':item.title||'Explore the situation');if(!isQuiz&&item.scene)element('p','',item.scene);element('p','question',item.question||item.q);
+if(isQuiz){element('p','explore','Choose one answer, then submit it. Explanations and correct answers appear only after all questions.');}
+else{element('p','explore','Explore all '+opts.length+' responses and compare their tradeoffs before continuing.');}
+const holder=element('div','options');
+opts.forEach((c,i)=>{const b=element('button','option'+(selected===i?' chosen':''),c.text,holder);b.type='button';b.setAttribute('aria-pressed',String(selected===i));if(isQuiz&&submitted)b.disabled=true;b.addEventListener('click',()=>{if(isQuiz){if(submitted)return;selected=i;render();return}if(!firstChoiceRecorded){if(i===bestIndex(item))practiceScore++;firstChoiceRecorded=true}selected=i;viewed.add(i);render()})});
+if(isQuiz){const b=action('Submit answer',()=>{if(selected<0)return;quizAnswers[index]=selected;advance()});b.disabled=selected<0;if(selected<0)element('p','muted','Select an answer to enable submission.');return}
+if(selected>=0){const c=opts[selected],box=element('section','feedback');element('h3','',c.rating||c.quality||(c.best?'Strongest response':'Consider the tradeoff'),box);element('p','',c.why||c.feedback||'',box)}
+element('p','explore','Compared '+viewed.size+' of '+opts.length+' responses'+(viewed.size<opts.length?'. Select the remaining responses to unlock Next.':'. You are ready to continue.'));
+const b=action(index===scenarioItems.length-1?'Continue to independent knowledge check':'Next situation',advance);b.disabled=viewed.size<opts.length;
+}
+render();
+</script></body></html>
