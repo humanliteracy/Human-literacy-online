@@ -1,23 +1,151 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#087f79"><title>Human Literacy Lab | Understanding Before Reacting</title><style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#14252b;background:#edf5f3}*{box-sizing:border-box}body{margin:0}main{max-width:690px;margin:auto;padding:18px 14px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:850;color:#087f79;letter-spacing:.04em;font-size:.86rem}.tag{font-size:.75rem;color:#51616b}.panel{background:white;border:1px solid #d4e5e0;border-radius:20px;padding:22px;margin-top:16px;box-shadow:0 6px 24px #133c3420}h1{font-size:clamp(1.55rem,5vw,2.2rem);line-height:1.18;margin:8px 0 12px}h2{font-size:1.3rem;line-height:1.3}p{line-height:1.6} .eyebrow{color:#087f79;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em}.muted{color:#53636c}.speech{background:#eff7f5;border-left:4px solid #087f79;border-radius:8px;padding:15px 16px;font-size:1.15rem;font-weight:650;line-height:1.5}.choices{display:grid;gap:11px;margin-top:16px}button{font:inherit;cursor:pointer;min-height:50px;border-radius:12px;padding:13px 16px;text-align:left}button:focus-visible{outline:3px solid #f5a524;outline-offset:3px}.choice{background:white;border:2px solid #c7dbd5;color:#14252b}.choice:hover:not(:disabled){border-color:#087f79;background:#f0faf7}.choice:disabled{cursor:default;opacity:.7}.choice.selected{border-color:#087f79;background:#e0f4ee;opacity:1}.primary{border:0;background:#087f79;color:white;font-weight:800;text-align:center;width:100%;margin-top:16px}.secondary{border:2px solid #087f79;background:white;color:#087f79;font-weight:750;text-align:center}.feedback{background:#f0f6fa;border-radius:14px;padding:16px;margin-top:17px;border:1px solid #d0e1e9}.feedback strong{display:block;margin-bottom:5px}.feedback p{margin:8px 0}.reaction{font-style:italic;color:#334e5a}.bar{height:9px;background:#d8e8e3;border-radius:10px;overflow:hidden;margin-top:14px}.fill{height:100%;background:#087f79;transition:width .25s}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.small{font-size:.85rem}.hidden{display:none!important}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.metric{background:#eff7f5;border-radius:12px;padding:12px 7px;text-align:center}.metric b{font-size:1.45rem;display:block}.metric span{font-size:.72rem;color:#53636c}.question-count{font-size:.86rem;color:#53636c}.check{margin:14px 0}.check label{display:flex;gap:10px;align-items:flex-start;line-height:1.4}.check input{width:20px;height:20px;flex:none;accent-color:#087f79}.footer{font-size:.78rem;color:#53636c;margin-top:20px}.status{color:#087f79;font-weight:750}ul{line-height:1.65;padding-left:22px}@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}@media(max-width:360px){.panel{padding:16px}.metrics{gap:5px}.metric span{font-size:.66rem}}
-</style></head><body><main><header class="top"><div class="brand">HUMAN LITERACY LAB</div><div class="tag">Lesson 01 · Free · No sign-in</div></header><section class="panel" id="app" aria-live="polite"></section><footer class="footer">Educational simulation, not therapy or crisis guidance. Other people may react differently in real life. No answers are sent to a server; progress resets when this page is reloaded. Designed for touch, keyboard, and screen readers.</footer></main><script>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf8f5">
+<title>Lesson 05 — Listening to Understand | Human Literacy</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#18353a;background:#eaf8f5;font-size:18px}*{box-sizing:border-box}body{margin:0}main{max-width:750px;margin:auto;padding:22px 16px 45px}.brand{color:#087f78;font-weight:800;letter-spacing:.13em;font-size:.81rem;margin-bottom:24px}.panel{background:#fff;border:1px solid #cce6df;border-radius:27px;padding:26px 22px;box-shadow:0 10px 26px #164c4510}.eyebrow{color:#087f78;font-weight:800;letter-spacing:.06em;font-size:.85rem}h1{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.2;margin:14px 0 22px}h2{font-size:1.3rem;line-height:1.3;margin:18px 0}p{line-height:1.65}.question{font-weight:650}.options{display:grid;gap:12px;margin-top:22px}.option{font:inherit;color:inherit;text-align:left;background:#fff;border:2px solid #cbe5df;border-radius:18px;padding:18px;line-height:1.55;cursor:pointer}.option:hover,.option:focus-visible{border-color:#07887d;outline-offset:3px}.option[disabled]{cursor:default}.option.chosen{border-color:#087f78;background:#effaf7}.option:focus-visible,.action:focus-visible{outline:3px solid #1a8079}.feedback{border-left:4px solid #087f78;background:#eff8f5;padding:16px 18px;border-radius:12px;margin-top:22px}.explore{color:#416f70;font-size:.94rem;line-height:1.5;margin:18px 0 0}.feedback h3{margin:0 0 8px;font-size:1.08rem}.feedback p{margin:0}.action{display:block;width:100%;margin-top:22px;border:0;border-radius:16px;padding:17px;background:#087f78;color:white;font:inherit;font-weight:750;cursor:pointer}.action.secondary{background:#e3f3ef;color:#075b55}.progress{height:10px;border-radius:99px;background:#d8ebe6;overflow:hidden;margin:9px 0 25px}.fill{height:100%;background:#087f78;transition:width .2s}.muted{color:#607b7e;font-size:.87rem}.summary{font-weight:750;font-size:1.1rem}.hidden{display:none}footer{margin-top:30px;color:#5b797b;font-size:.82rem;line-height:1.5}@media(max-width:430px){main{padding:18px 12px 35px}.panel{padding:24px 19px}.option{padding:16px}}
+</style>
+</head>
+<body><main><div class="brand">HUMAN LITERACY · INTERACTIVE LESSON</div><section class="panel" id="app" aria-live="polite"></section><footer>Educational practice, not a diagnosis or individualized professional advice. Your choices stay on this device; no account required.</footer></main>
+<script>
 'use strict';
 const scenarios=[
-{title:'The misunderstanding',context:'A friend says you ignored their message. You were busy helping someone and feel unfairly accused.',line:'You never care enough to respond to me.',prompt:'What is the most constructive first response?',options:[{label:'Explain immediately how busy you were.',why:'Your explanation may be true, but it skips their concern. Starting with a defense can increase frustration.',reaction:'You always have an excuse.',points:0},{label:'Ask what felt hurtful and listen before explaining.',why:'You seek understanding without agreeing that you never care. Listening first can reduce unnecessary conflict.',reaction:'I was worried something had happened. A quick message would help.',points:2},{label:'Say they are overreacting and should calm down.',why:'Labeling the reaction dismisses their feelings and may escalate the conversation.',reaction:'That is exactly what I mean. You never listen.',points:0}],takeaway:'Listen to understand before trying to be understood.'},
-{title:'The difficult boundary',context:'You regularly help a relative with errands. Today they ask you to cancel your own plans to do another nonurgent errand.',line:'If you really cared about me, you would drop everything.',prompt:'How can you show care while respecting yourself?',options:[{label:'Cancel your plans without discussing your limits.',why:'Helping can be kind, but automatic sacrifice can create resentment and unrealistic expectations.',reaction:'Thanks. I will call you next time too.',points:1},{label:'Say you care, cannot go today, and offer a time you can help.',why:'This communicates care and a clear limit while offering realistic support. You do not have to accept a guilt-based demand.',reaction:'I am disappointed, but tomorrow afternoon could work.',points:2},{label:'Tell them they are selfish and refuse further help.',why:'The limit may be necessary, but a personal attack can create avoidable harm.',reaction:'You do not need to insult me.',points:0}],takeaway:'A boundary is a clear statement of what you can do, not a punishment.'},
-{title:'The alarming post',context:'A social media post claims that a familiar household product is dangerous. It gives no study or official source and urges immediate sharing.',line:'SHARE THIS NOW! They do not want you to know!',prompt:'What should you do before reacting or sharing?',options:[{label:'Share it to protect others, then verify later.',why:'A warning can spread quickly, including when it is false. Sharing before checking may cause harm.',reaction:'Several friends repost it without checking.',points:0},{label:'Dismiss the post because its tone is dramatic.',why:'An emotional tone is a warning sign, but it does not prove the claim false. Verify the underlying evidence.',reaction:'You still do not know whether the claim is true.',points:1},{label:'Look for the original evidence and credible independent confirmation.',why:'Checking the primary source, date, and independent reliable evidence helps separate a real risk from an unsupported claim.',reaction:'You find the original context and can make a better-informed decision.',points:2}],takeaway:'Pause, check the source, and distinguish a claim from evidence.'}
+ {
+  "title": "The interrupted story",
+  "scene": "A friend is describing a difficult day. You think you know exactly what they should do, but they have not finished speaking.",
+  "question": "What response best helps you understand them first?",
+  "choices": [
+   {
+    "text": "“I have been through that. Let me tell you what worked for me.”",
+    "quality": "Consider the tradeoff",
+    "why": "Your experience might help later, but leading with your story can shift attention away before you know what your friend needs."
+   },
+   {
+    "text": "“That sounds exhausting. What part has been hardest for you?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You acknowledge what you heard and invite them to explain their own experience. You can discuss solutions after you understand it."
+   },
+   {
+    "text": "“I think I know how to fix this, but I will wait until you finish.”",
+    "quality": "Helpful intention, limited listening",
+    "why": "Not interrupting is useful, but announcing that you have the fix can make the person feel you have already decided what matters."
+   }
+  ]
+ },
+ {
+  "title": "The misunderstood request",
+  "scene": "Someone at home says, “You never help when I need you.” You remember helping yesterday and feel unfairly criticized.",
+  "question": "Which first response is most likely to uncover the real concern?",
+  "choices": [
+   {
+    "text": "“I helped yesterday, so saying never is unfair.”",
+    "quality": "Consider the tradeoff",
+    "why": "The word “never” may be inaccurate, but correcting it immediately can turn the conversation into a contest about evidence instead of revealing today’s unmet need."
+   },
+   {
+    "text": "“I hear that you feel unsupported. What did you need from me today?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You do not have to agree with “never” to recognize their frustration. A specific question makes the need clearer before you discuss what is realistic."
+   },
+   {
+    "text": "“I am sorry. I will do more so you do not feel this way again.”",
+    "quality": "Caring, but premature",
+    "why": "An apology may calm things briefly, yet promising more before knowing the request can create commitments you cannot keep."
+   }
+  ]
+ },
+ {
+  "title": "The quiet friend",
+  "scene": "During a group outing, a normally talkative friend becomes quiet. You wonder if you upset them, but they have not said anything.",
+  "question": "What is the most respectful way to check in?",
+  "choices": [
+   {
+    "text": "“You seem quieter than usual. Would you like to talk, or would you prefer some space?”",
+    "best": true,
+    "quality": "Strongest response",
+    "why": "You share an observation without assigning a cause and offer two acceptable choices. Their silence does not have to be about you."
+   },
+   {
+    "text": "“Are you upset with me? I need to know if I did something.”",
+    "quality": "Understandable, but self-focused",
+    "why": "Seeking reassurance is natural, but the question centers your worry and may pressure them to comfort you."
+   },
+   {
+    "text": "“I will leave you alone until you decide to tell me what is wrong.”",
+    "quality": "Respects space, but assumes a problem",
+    "why": "Giving space can be kind, yet assuming something is wrong and waiting indefinitely can miss a simple chance to check whether they want company."
+   }
+  ]
+ }
 ];
-const quiz=[{q:'Someone sounds upset. What is the best first step when it is safe to talk?',options:['Prove your explanation is correct','Ask what they mean and listen','Agree with every accusation'],correct:1,why:'Listening first helps clarify the concern; it does not require agreement.'},{q:'Which response demonstrates a healthy boundary?',options:['I care, but I cannot do that today. I can help tomorrow.','I will always do whatever you need.','You are selfish for asking.'],correct:0,why:'A healthy boundary combines a realistic limit with respectful communication.'},{q:'An urgent online claim has no source. What should you do?',options:['Forward it immediately','Assume it is false without checking','Find original evidence and independent confirmation'],correct:2,why:'Verification is more reliable than either immediate belief or immediate dismissal.'}];
-let stage='intro',index=0,selected=null,history=[],qindex=0,qselected=null,qhistory=[];const app=document.getElementById('app');
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function btn(label,fn,cls='primary'){const b=document.createElement('button');b.className=cls;b.textContent=label;b.addEventListener('click',fn);return b;}
-function render(){app.innerHTML='';if(stage==='intro'){app.innerHTML='<div class="eyebrow">Interactive learning experience</div><h1>Understanding Before Reacting</h1><p>Practice three real-life skills: <strong>listening, setting boundaries, and checking evidence.</strong></p><p>You will choose how to respond, see an example consequence, and receive immediate feedback. Then take a short assessment.</p><div class="speech">The goal is not to win every conversation. It is to make your next response more thoughtful.</div><p class="muted small">About 5 minutes · No sound required · No account · Replay anytime</p>';app.append(btn('Start the lesson',()=>{stage='scenario';render()}));return;}
-if(stage==='scenario'){const s=scenarios[index];app.innerHTML=`<div class="row"><div class="eyebrow">Scenario ${index+1} of 3</div><div class="question-count">${Math.round((index/3)*100)}% through practice</div></div><div class="bar" role="progressbar" aria-label="Practice progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${index}"><div class="fill" style="width:${index/3*100}%"></div></div><h1>${esc(s.title)}</h1><p>${esc(s.context)}</p><div class="speech">“${esc(s.line)}”</div><h2>${esc(s.prompt)}</h2><div class="choices" id="choices"></div><div id="out"></div>`;const c=document.getElementById('choices');s.options.forEach((o,j)=>{const b=btn(`${String.fromCharCode(65+j)}. ${o.label}`,()=>choose(j),'choice');b.disabled=selected!==null;if(selected===j)b.classList.add('selected');c.append(b)});if(selected!==null)showFeedback();return;}
-if(stage==='quiz'){const q=quiz[qindex];app.innerHTML=`<div class="eyebrow">Learning assessment</div><div class="row"><h1>Question ${qindex+1} of 3</h1><span class="question-count">Choose one</span></div><div class="bar"><div class="fill" style="width:${qindex/3*100}%"></div></div><h2>${esc(q.q)}</h2><div class="choices" id="choices"></div><div id="out"></div>`;q.options.forEach((o,j)=>{const b=btn(`${String.fromCharCode(65+j)}. ${o}`,()=>chooseQuiz(j),'choice');b.disabled=qselected!==null;if(qselected===j)b.classList.add('selected');document.getElementById('choices').append(b)});if(qselected!==null)showQuizFeedback();return;}
-if(stage==='result'){const practice=history.reduce((n,h,i)=>n+scenarios[i].options[h].points,0),score=qhistory.filter((x,i)=>x===quiz[i].correct).length;app.innerHTML=`<div class="eyebrow">Lesson complete</div><h1>Your learning summary</h1><div class="metrics"><div class="metric"><b>${history.length}/3</b><span>Scenarios completed</span></div><div class="metric"><b>${practice}/6</b><span>Practice points</span></div><div class="metric"><b>${score}/3</b><span>Knowledge check</span></div></div><h2>${score===3?'You understood the key ideas.':'You have a useful starting point.'}</h2><p>${score===3?'You identified listening, boundaries, and evidence-checking across all three questions.':'Review the ideas below and try again. Repetition helps turn knowledge into practical judgment.'}</p><ul><li><strong>Listen:</strong> understand the concern before defending your position.</li><li><strong>Boundaries:</strong> care for others without promising more than you can give.</li><li><strong>Evidence:</strong> verify claims before believing or sharing them.</li></ul><p class="muted small">Practice points reflect the lesson design, not a psychological assessment. The knowledge check measures immediate recall, not long-term behavior change.</p>`;app.append(btn('Replay the entire lesson',reset));app.append(btn('Retake only the assessment',()=>{qindex=0;qselected=null;qhistory=[];stage='quiz';render()},'secondary'));return;}}
-function choose(j){if(selected!==null)return;selected=j;history.push(j);render();document.getElementById('out').scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
-function showFeedback(){const s=scenarios[index],o=s.options[selected],out=document.getElementById('out');out.innerHTML=`<div class="feedback" role="status"><strong>Immediate feedback · ${o.points===2?'Strong choice':o.points===1?'Partly effective':'Consider another approach'}</strong><p>${esc(o.why)}</p><strong>Possible response</strong><p class="reaction">“${esc(o.reaction)}”</p><strong>Remember</strong><p>${esc(s.takeaway)}</p></div>`;out.append(btn(index===2?'Begin the learning assessment':'Continue to next scenario',()=>{index++;selected=null;if(index===3)stage='quiz';render();window.scrollTo({top:0,behavior:'instant'})}));out.append(btn('Try a different response',()=>{history.pop();selected=null;render()},'secondary'));}
-function chooseQuiz(j){if(qselected!==null)return;qselected=j;qhistory.push(j);render();}
-function showQuizFeedback(){const q=quiz[qindex],ok=qselected===q.correct,out=document.getElementById('out');out.innerHTML=`<div class="feedback" role="status"><strong>${ok?'That is right.':'Not quite.'}</strong><p>${esc(q.why)}</p>${ok?'':`<p>The best answer is: ${esc(q.options[q.correct])}</p>`}</div>`;out.append(btn(qindex===2?'See my learning summary':'Next question',()=>{qindex++;qselected=null;if(qindex===3)stage='result';render();window.scrollTo({top:0,behavior:'instant'})}));}
-function reset(){stage='intro';index=0;selected=null;history=[];qindex=0;qselected=null;qhistory=[];render();window.scrollTo({top:0,behavior:'instant'})}render();
+const quiz=[
+ {
+  "q": "Someone pauses while telling you about a problem. What is the best next step?",
+  "choices": [
+   {
+    "text": "“Fill the silence with advice so they know you care.”",
+    "why": "Advice can be useful, but silence may mean they are thinking. Jumping in can cut off information you have not heard."
+   },
+   {
+    "text": "“Give them a moment, then ask whether they want to continue.”",
+    "best": true,
+    "why": "A little space respects their pace and gives them control over what they share."
+   },
+   {
+    "text": "“Repeat your own interpretation so they can confirm it quickly.”",
+    "why": "Checking understanding can help, but rushing to your interpretation may interrupt a thought they were still forming."
+   }
+  ]
+ },
+ {
+  "q": "You disagree with how a friend describes an event. What response supports understanding?",
+  "choices": [
+   {
+    "text": "“I remember it differently. Can you tell me what led you to see it that way?”",
+    "best": true,
+    "why": "You can be honest about your perspective while staying curious about theirs. Understanding does not require agreement."
+   },
+   {
+    "text": "“That is not what happened. Let me explain the facts first.”",
+    "why": "Facts matter, but leading with a correction may stop you from hearing why their experience felt different."
+   },
+   {
+    "text": "“You are right. I do not want to make this into an argument.”",
+    "why": "Avoiding conflict by agreeing can hide your genuine view and does not build shared understanding."
+   }
+  ]
+ },
+ {
+  "q": "After someone tells you something painful, how can you check what kind of support they want?",
+  "choices": [
+   {
+    "text": "“I know what you should do. Can I walk you through it?”",
+    "why": "Asking permission is better than forcing advice, but “I know” presumes you understand the solution before checking their needs."
+   },
+   {
+    "text": "“You can tell me anything. I promise I can help you fix it.”",
+    "why": "Warmth matters, but a promise to fix the situation may be unrealistic and can create pressure."
+   },
+   {
+    "text": "“Would it help more if I listened, helped you think through options, or gave you some space?”",
+    "best": true,
+    "why": "This offers practical forms of support without deciding for them. It also respects that they may not want advice right now."
+   }
+  ]
+ }
+];
+let stage='scenario',index=0,selected=-1,viewed=new Set(),practice=0,knowledge=0;const app=document.getElementById('app');
+function el(tag,cls,text){const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x}
+function button(text,fn,secondary=false){const b=el('button','action'+(secondary?' secondary':''),text);b.type='button';b.addEventListener('click',fn);return b}
+function reset(){app.replaceChildren()}
+function render(){reset(); if(stage==='done'){app.append(el('div','eyebrow','LESSON COMPLETE'),el('h1','','Listen first, understand more'),el('p','summary',`First choices: ${practice} of 3 strongest in practice · ${knowledge} of 3 correct in the knowledge check`),el('p','','Your first selection determines the score. Exploring other answers helps you understand their benefits and tradeoffs without changing that score. Listening means checking your assumptions, making room for another perspective, and asking what support is wanted.'),button('Practice again',()=>{stage='scenario';index=0;selected=-1;viewed=new Set();practice=0;knowledge=0;render()}),button('Back to lesson library',()=>{window.location.href='../../'},true));return}
+ const isQuiz=stage==='quiz',item=(isQuiz?quiz:scenarios)[index],count=3;
+ app.append(el('div','eyebrow',isQuiz?`KNOWLEDGE CHECK ${index+1} OF ${count}`:`SITUATION ${index+1} OF ${count}`));const progress=el('div','progress');progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Lesson progress');progress.setAttribute('aria-valuenow',String((isQuiz?3:0)+index));progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax','6');const fill=el('div','fill');fill.style.width=`${((isQuiz?3:0)+index)/6*100}%`;progress.append(fill);app.append(progress);
+ if(!isQuiz){app.append(el('h1','',item.title),el('p','',item.scene))}else{app.append(el('h1','','Check your understanding'))}app.append(el('p','question',item.question||item.q));const options=el('div','options');item.choices.forEach((c,i)=>{const b=el('button','option'+(selected===i?' chosen':''),c.text);b.type='button';b.setAttribute('aria-pressed',String(selected===i));b.addEventListener('click',()=>{if(viewed.size===0&&c.best){if(isQuiz)knowledge++;else practice++}selected=i;viewed.add(i);render()});options.append(b)});app.append(options);
+ if(selected!==-1){app.append(el('p','explore',`Explored ${viewed.size} of ${item.choices.length} choices. Tap any answer to compare its explanation.`));const c=item.choices[selected],fb=el('section','feedback');fb.append(el('h3','',c.quality||(c.best?'Strongest response':'Consider the tradeoff')),el('p','',c.why));if(!c.best){const best=item.choices.find(x=>x.best);fb.append(el('p','',`Another approach: ${best.text} ${best.why}`))}app.append(fb,button(index===2?(isQuiz?'See lesson summary':'Continue to knowledge check'):'Next',()=>{selected=-1;viewed=new Set();if(index===2){stage=isQuiz?'done':'quiz';index=0}else index++;render()}))}
+ }
+render();
 </script></body></html>
