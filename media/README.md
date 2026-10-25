@@ -1,15 +1,21 @@
-# Human Literacy Online — video companions
+# Human Literacy Online — approved lesson videos
 
-## Lesson 1: Understanding Before Reacting
+## Lesson 1 — Understanding Before Reacting
 
-The completed, approved companion video is a **114-second, silent, vertical H.264 MP4**.
+Approved **114-second** silent portrait MP4, already uploaded as:
 
-To publish: in this folder, upload the approved video with this **exact filename**:
+`media/Human_Literacy_Lesson_01_FINAL_REVIEW_114s.mp4`
 
-`lesson01.mp4`
+The existing `lessons/01/index.html` player uses that exact filename. Keep it unchanged.
 
-Once present, the existing player in `lessons/01/index.html` automatically displays it in **Step 1 · See It**, without changing the interactive practice, knowledge check, or reflection exercises.
+## Lesson 2 — The Story We Tell Ourselves
 
-The approved master is archived in the project Google Drive folder: **TEAL — PUBLIC LIBRARY / 01 — Publications / Human Literacy Videos / Human_Literacy_Lesson_01_APPROVED_114s.mp4**.
+Approved **166-second** silent portrait MP4.
 
-Do not substitute older 100-second drafts. Avoid modifying the ten approved source images after publication without a new review.
+To publish, upload the final reviewed file into this `media` folder with this **exact filename**:
+
+`lesson02.mp4`
+
+The `lessons/02/index.html` page now contains the matching player under **See It**; **Understand It** is a separate page, followed by practice, knowledge check, and Live It. No extra HTML edits are required after the media upload.
+
+Avoid uploading an older review cut; use the final cut with the selected replacement of Scene 6. Check GitHub Actions → **pages build and deployment** for a successful website release.
