@@ -6,7 +6,7 @@ from urllib.parse import urlsplit, unquote
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP = {".git", "node_modules", ".venv"}
+SKIP = {".git", "node_modules", ".venv", "playwright-report", "test-results"}
 class Audit(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)

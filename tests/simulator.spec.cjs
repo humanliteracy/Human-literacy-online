@@ -148,7 +148,7 @@ for (const action of ['withdraw consent', 'close practice', 'hide page']) {
     await page.locator('#recordStart').click();
     await expect(page.locator('#recordStatus')).toContainText('Recording…');
     if (action === 'withdraw consent') await page.locator('#recordConsent').uncheck();
-    if (action === 'close practice') await page.locator('#expressStudio summary').click();
+    if (action === 'close practice') await page.locator('#expressStudio > summary').click();
     if (action === 'hide page') await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { configurable: true, value: true });
       document.dispatchEvent(new Event('visibilitychange'));
@@ -200,8 +200,8 @@ for (const action of ['withdraw consent', 'close practice', 'clear everything', 
     const url = await page.locator('#recordPlayer').getAttribute('src');
     if (action === 'withdraw consent') await page.locator('#recordConsent').uncheck();
     if (action === 'close practice') {
-      await page.locator('#expressStudio summary').click();
-      await page.locator('#expressStudio summary').click();
+      await page.locator('#expressStudio > summary').click();
+      await page.locator('#expressStudio > summary').click();
     }
     if (action === 'clear everything') await page.locator('#practiceClear').click();
     if (action === 'leave page') {
@@ -318,7 +318,7 @@ test('90-second limit stops recording and releases the microphone', async ({ pag
 test('optional practice is keyboard accessible and fits a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto('/simulator/01/');
-  const summary = page.locator('#expressStudio summary');
+  const summary = page.locator('#expressStudio > summary');
   await summary.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('#expressWords')).toBeVisible();
