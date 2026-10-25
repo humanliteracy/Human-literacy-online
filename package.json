@@ -1,0 +1,12 @@
+{
+  "name": "human-literacy-online",
+  "private": true,
+  "scripts": {
+    "test": "npm run audit && npm run test:browser",
+    "audit": "python3 scripts/site_audit.py",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}
