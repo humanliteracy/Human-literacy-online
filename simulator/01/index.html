@@ -134,6 +134,7 @@ hostile:"I hear you're frustrated. We can take a moment, but I need us to speak 
 boundary:"That's relevant. If the scope changed, let's document what changed and agree on revised priorities. What would you propose?",
 blame:"I can look into the handoffs, but I need specific facts rather than assigning blame. What can you do to help us move forward?",
 resign:"It sounds like you may be saying you want to leave the job. I won't assume that from a heated moment. Are you resigning, or do you want to pause and talk through the situation?",
+exit:"I hear that you want to leave this conversation. Do you mean you're resigning from the job, or that you need a break right now? I won't assume either one.",
 unclear:"I want to understand your explanation before drawing conclusions. Can you give me a clear status, what caused the delay, and what you propose next?"
 };
 const FINAL={
@@ -142,6 +143,7 @@ plan:"That gives us a useful next step. Please include the risks and anything yo
 boundary:"Let's review the priorities and discuss a feasible adjustment. I can't promise the client will approve it, but we should examine the facts.",
 dismiss:"This conversation isn't productive right now. We will pause and follow up about the missed deadline and expectations.",
 resign:"I hear that you're choosing to leave. Let's clarify whether you're formally resigning, and, if so, discuss the appropriate next steps. You can also take time to confirm your decision.",
+exit:"We can pause this meeting. Please let me know whether you intend to return to discuss the deadline or are considering leaving the job. We should clarify that before deciding next steps.",
 unclear:"Please follow up with a specific plan and the information still needed. We can continue once we have that."
 };
 const takeaways={
@@ -150,6 +152,7 @@ blame:"Specific evidence, shared responsibilities, and an actionable plan work b
 own:"Early accountability creates room for repair. You can admit a mistake without surrendering your boundaries.",
 boundary:"A respectful boundary can be a strong response. Clear facts and realistic options matter more than simply agreeing.",
 resign:"Leaving a job can be a legitimate decision. The learning opportunity is to state it clearly, understand the implications, and avoid acting solely from a heated moment.",
+exit:"Walking away to cool down can help avoid escalation. Clearly communicating whether you need a break or are actually resigning reduces confusion.",
 unclear:"The more specific you can be about facts, responsibilities, and next steps, the more productive the conversation becomes."
 };
 const $=id=>document.getElementById(id);
@@ -160,6 +163,8 @@ if(!v)return 'unclear';
 // Resignation has a different consequence from simply rejecting the conversation.
 // Evaluate it first so intense wording like "shove it" does not hide the intent.
 if(/\b(i quit|i'm quitting|i am quitting|i resign|i'm resigning|i am resigning|take this job and shove it|shove (this|the|your|my) job|i'm leaving (this|the|my) job|i am leaving (this|the|my) job|i don't work here anymore|i'm done with (this|the|my) job)\b/.test(v))return 'resign';
+// An angry walkout is not necessarily a resignation; ask for clarification.
+if(/\b(i'm out of here|i am out of here|i'm done here|i am done here|i'm walking out|i am walking out)\b/.test(v))return 'exit';
 if(/\b(fuck|shut up|screw you|idiot|asshole|kiss my ass|get lost|go away|leave me alone|don't care|whatever)\b/.test(v))return which===0?'hostile':'dismiss';
 if(which===1){
  if(/\b(sorry|apolog|reset|start over)\b/.test(v))return 'repair';
@@ -218,13 +223,13 @@ function finish(){
 turn=2;
 $('sceneProgress').textContent='SIMULATION COMPLETE';
 $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
-const firstScore={own:44,boundary:42,blame:17,hostile:6,resign:27,unclear:24};
-const secondScore={repair:48,plan:50,boundary:46,dismiss:4,resign:30,unclear:26};
+const firstScore={own:44,boundary:42,blame:17,hostile:6,resign:27,exit:20,unclear:24};
+const secondScore={repair:48,plan:50,boundary:46,dismiss:4,resign:30,exit:12,unclear:26};
 const score=(firstScore[first]||24)+(secondScore[lastKind]||26);
 $('score').textContent=score+'/100';$('scoreFill').style.width=score+'%';
-const outcome=(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
+const outcome=(lastKind==='exit'||first==='exit'&&lastKind!=='repair'&&lastKind!=='plan')?'Possible outcome: the meeting pauses, and the manager asks whether you need a break or intend to resign.':(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
 $('outcome').textContent=outcome;
-$('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
+$('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='exit'?'If you need to leave an escalating conversation, communicate whether it is a break or a decision to resign.':lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
 $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
 function reset(){
