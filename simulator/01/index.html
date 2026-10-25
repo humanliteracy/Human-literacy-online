@@ -44,6 +44,7 @@ h3{font-size:1.08rem;margin:0 0 10px}p{line-height:1.6;margin:0 0 14px}
 .write-label{font-weight:780;display:block;margin:18px 0 9px}
 textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;padding:14px 15px;min-height:94px;resize:vertical;color:#17383d;background:white}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.actions>button,.actions>a{flex:0 1 auto;min-height:44px;max-width:100%}
 .primary,.secondary{padding:14px 19px;border-radius:13px;border:2px solid #087d75;font-weight:800}
 .primary{background:#087d75;color:white}.primary:hover{background:#056159}
 .secondary{background:#fff;color:#087d75}.secondary:hover{background:#e8f5f1}
@@ -53,17 +54,24 @@ textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;pa
 .mode-control label{display:flex;gap:12px;align-items:flex-start;font-weight:750;cursor:pointer;line-height:1.45}
 .mode-control input{width:21px;height:21px;accent-color:#087d75;margin-top:2px;flex-shrink:0}
 .mode-control p{margin:8px 0 0 33px;font-size:.88rem;color:#42666a}
-.expression-practice summary{cursor:pointer;font-weight:800;font-size:1.05rem;color:#087d75;padding:4px}
-.expression-practice[open] summary{margin-bottom:18px}
+.expression-practice>summary,.speech-input>summary,.coach-review>summary,.coach-more>summary,.reflection-review>summary{cursor:pointer;font-weight:800;font-size:1rem;color:#087d75;padding:10px 0;min-height:44px}
+.expression-practice[open]>summary{margin-bottom:16px}
 .practice-step{border-top:1px solid #c5e2da;padding-top:20px;margin-top:24px}
 .recording-consent{display:flex;gap:12px;align-items:flex-start;line-height:1.5;margin:18px 0}
 .recording-consent input{width:21px;height:21px;accent-color:#087d75;flex-shrink:0}
 #recordPrivacy{margin-top:12px}
 .coach-panel{border:2px solid #b9dad2;border-radius:18px;padding:20px;margin-top:24px;background:#f6fcfa}
-.coach-panel h3{margin-top:18px}.coach-panel select{width:100%;padding:12px;border:2px solid #c5e3dc;border-radius:12px;background:white;color:#17383d}
+.coach-panel h3{margin-top:10px}.coach-panel select{width:100%;padding:12px;border:2px solid #c5e3dc;border-radius:12px;background:white;color:#17383d}
+.coach-panel .kicker{font-size:.72rem;letter-spacing:.1em}
+.coach-status{margin:12px 0}.coach-review{margin-top:12px}.coach-review[open]>summary{margin-bottom:8px}
+.coach-more{margin-top:8px}.coach-more[open]>summary{margin-bottom:4px}
 .coach-literal{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0;padding:14px;border-left:4px solid #087d75;background:white}
 .coach-option{padding:16px;background:white;border:1px solid #b9dad2;border-radius:14px;margin-top:16px}
-.speech-input{margin-top:20px}.speech-input summary{font-size:.95rem}
+.coach-option .write-label{margin:0 0 8px}.coach-option>button{margin-top:10px;min-height:44px;max-width:100%}
+.speech-input{margin-top:20px}.speech-input>summary{font-size:.95rem}
+.mode-note{display:inline-block;padding:5px 10px;margin:0 0 16px;border-radius:8px;background:#eff9f5;color:#075e58;font-size:.86rem;font-weight:750}
+.reflection-review{border-top:1px solid #c5e2da;margin-top:18px;padding-top:6px}
+.reflection-copy h3{margin:18px 0 8px}.reflection-copy p:last-child{margin-bottom:0}
 .transcript{display:grid;gap:10px;margin:16px 0}
 .bubble{border-radius:14px;padding:13px 15px;line-height:1.5;overflow-wrap:anywhere}
 .bubble .who{font-weight:850;display:block;font-size:.8rem;margin-bottom:5px}
@@ -78,7 +86,7 @@ textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;pa
 .voice-status{font-weight:700;color:#156963;margin:13px 0}
 footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
 @media(min-width:800px){.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}}
-@media(max-width:580px){.container{padding:17px 12px 40px}.scene-top,.dialogue{padding:16px}.office{min-height:230px}.head{width:89px;height:100px}.bodyshape{width:168px;height:145px}.content{padding:19px 16px}.actions button{flex:1}}
+@media(max-width:580px){.container{padding:17px 12px 40px}.scene-top,.dialogue{padding:16px}.office{min-height:230px}.head{width:89px;height:100px}.bodyshape{width:168px;height:145px}.content{padding:19px 16px}.coach-panel{padding:16px 12px}.coach-option{padding:12px}.primary,.secondary{padding:12px 16px}.coach-literal{padding:10px 12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -104,17 +112,17 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
     </section>
 
     <section class="content" id="inputPanel" aria-labelledby="replyHeading">
-      <h2 id="replyHeading" class="response-title">How do you respond?</h2>
+      <h2 id="replyHeading" class="response-title" tabindex="-1">How do you respond?</h2>
       <p class="micro">There is no penalty for experimenting. Choose a response or write your own. The manager will react to your approach.</p>
       <div class="choices" id="choices"></div>
       <label class="write-label" for="yourReply">Or use your own words</label>
       <textarea id="yourReply" maxlength="600" placeholder="Type what you would say…"></textarea>
-      <div class="actions"><button id="send" type="button" class="primary">Say this →</button><button id="openPractice" type="button" class="secondary" aria-controls="expressStudio">Try private expression and rehearsal</button></div>
+      <div class="actions"><button id="send" type="button" class="primary">Say this →</button><button id="openPractice" type="button" class="secondary" aria-controls="expressStudio" aria-label="Try private expression and rehearsal">Try private expression</button></div>
     </section>
 
     <section id="endPanel" class="content hidden" aria-live="polite">
       <div class="kicker">Practice complete</div>
-      <h2>What happened—and what could happen next?</h2>
+      <h2 id="completionTitle" tabindex="-1">What happens next?</h2>
       <p id="outcome" class="outcome"></p>
       <div id="scoreArea" class="hidden">
         <div class="scorehead"><strong>Communication practice feedback</strong><span id="score" class="score"></span></div>
@@ -122,16 +130,17 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
         <p id="scoreDetails" class="small" aria-live="polite"></p>
         <p class="small">This is a coaching illustration, not a measure of your worth or a prediction of real workplace outcomes. The goal is to learn through exploration, not obedience.</p>
       </div>
-      <div id="exploreNote" class="tip"><strong>Exploration mode: no grade</strong><p style="margin:8px 0 0">You can express a first reaction without directing it at a real person. Explore the possible consequences, then decide whether you want to practice another approach. There is no right way to feel.</p></div>
-      <div class="tip"><strong id="takeawayHeading">What you practiced</strong><p id="takeaway" style="margin:7px 0 0"></p></div>
-      <section aria-labelledby="reflectionHeading">
-        <h3 id="reflectionHeading">Reflect / Apply</h3>
-        <p id="reflectionBasis" class="micro"></p>
-        <h4>What your words may make clear</h4><p id="madeClear"></p>
-        <h4>What remains unresolved</h4><p id="unresolved"></p>
-        <h4>One optional real-world practice</h4><p id="realWorldPractice"></p>
+      <p id="exploreNote" class="mode-note">Exploration mode · no grade</p>
+      <section class="reflection-copy" aria-label="Reflection and optional practice">
+        <h3>What remains unresolved</h3><p id="unresolved"></p>
+        <h3>One optional next step</h3><p id="realWorldPractice"></p>
       </section>
-      <div class="actions"><button id="replay" class="primary" type="button">↻ Try a different approach</button><a class="secondary" style="text-decoration:none" href="../../">Back to all lessons</a></div>
+      <details id="reflectionReview" class="reflection-review">
+        <summary>Review your goal</summary>
+        <p id="reflectionBasis" class="micro"></p>
+        <h3>What your words may make clear</h3><p id="madeClear"></p>
+      </details>
+      <div class="actions"><button id="replay" class="primary" type="button">Try again</button><a class="secondary" style="text-decoration:none" href="../../">Back to all lessons</a></div>
     </section>
 
     <section class="content" aria-labelledby="historyHeading">
@@ -150,8 +159,8 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <p id="recordPrivacy" class="micro">Or record yourself. Audio stays in this page's memory; it is not uploaded or transcribed. Recording starts only after you choose consent below and press Record. Stop anytime. Each take is limited to 90 seconds.</p>
       <label class="recording-consent" for="recordConsent"><input id="recordConsent" type="checkbox" autocomplete="off" aria-describedby="recordPrivacy">I choose to use my microphone for this private practice. I can withdraw consent and delete the audio at any time.</label>
       <div class="actions">
-        <button id="recordStart" class="primary" type="button" disabled>🎤 Record my response</button>
-        <button id="recordStop" class="secondary" type="button" disabled>■ Stop recording</button>
+        <button id="recordStart" class="primary" type="button" aria-label="Record my response" disabled>Record</button>
+        <button id="recordStop" class="secondary" type="button" disabled>Stop recording</button>
         <button id="recordDelete" class="secondary" type="button" disabled>Delete recording</button>
       </div>
       <p id="recordStatus" class="voice-status" role="status" aria-live="polite">Microphone off. Writing works without microphone consent.</p>
@@ -174,12 +183,14 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <h3 id="rehearseStep">3 · Rehearse</h3>
       <p class="micro">Choose your own words and boundaries. You do not have to agree with the manager or change how you feel.</p>
       <section class="coach-panel" aria-labelledby="coachTitle">
-        <div class="kicker">Optional · Scripted Communication Coach</div>
+        <div class="kicker">Optional · Scripted coach</div>
         <h3 id="coachTitle">Understand → Choose → Practice</h3>
-        <p class="micro">This is a guided prototype using curated examples, not AI or an assessment of your feelings. It cannot interpret a recording. Enter the words you want to explore in Express, or choose optional browser dictation. Nothing is sent to a coaching service.</p>
-        <button id="coachUnderstand" class="primary" type="button">Help me understand what I said</button>
-        <p id="coachStatus" class="message" role="status">You choose whether a possible interpretation fits. You can change or reject it.</p>
+        <p class="micro">Scripted examples, not AI. You can edit or reject any reading. Local recordings are not interpreted.</p>
+        <button id="coachUnderstand" class="primary" type="button" aria-label="Help me understand what I said">Help me understand</button>
+        <p id="coachStatus" class="micro coach-status" role="status">You choose whether a possible reading fits.</p>
         <div id="coachUnderstanding" class="hidden">
+          <details id="coachReview" class="coach-review" open>
+          <summary>Review goal and reading</summary>
           <h4 id="coachUnderstandingTitle" tabindex="-1">A possible reading, for you to review</h4>
           <strong>Your words, exactly as entered</strong><blockquote id="coachLiteral" class="coach-literal"></blockquote>
           <p id="coachHearing"></p>
@@ -188,20 +199,21 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
           <select id="coachPath"><option value="">Choose your own path…</option></select>
           <label class="write-label" for="coachGoal">My goal (edit or replace this possible reading)</label>
           <textarea id="coachGoal" maxlength="600" autocomplete="off"></textarea>
-          <div class="actions"><button id="coachConfirm" class="primary" type="button">Use my goal and show options</button><button id="coachReject" class="secondary" type="button">Reject this interpretation</button></div>
+          <div class="actions"><button id="coachConfirm" class="primary" type="button" aria-label="Use my goal and show options">Use my goal</button><button id="coachReject" class="secondary" type="button" aria-label="Reject this interpretation">Reject this</button></div>
+          </details>
         </div>
         <section id="coachChoices" class="hidden" aria-labelledby="coachChoicesTitle">
           <h4 id="coachChoicesTitle" tabindex="-1">Choose or edit your wording</h4>
           <p id="coachChosenGoal"></p>
-          <p class="micro">These are scripted examples for the path you chose, not a reading of your mind. None is universally correct. Edit any example, use your own draft below, or skip them. Moving wording fills the simulator reply; it never sends it.</p>
+          <p class="micro">Edit any example or write your own. Moving wording fills your reply without sending it. No option is universally correct.</p>
           <div id="coachOptions"></div>
         </section>
       </section>
       <label class="write-label" for="practiceWords">What I might actually say next</label>
       <textarea id="practiceWords" maxlength="600" autocomplete="off" placeholder="Draft a response you want to try. It will not be sent until you choose Say this in the simulator."></textarea>
       <div class="actions">
-        <button id="practiceTransfer" class="primary" type="button">Move draft to simulator ↑</button>
-        <button id="practiceClear" class="secondary" type="button">Clear all private practice</button>
+        <button id="practiceTransfer" class="primary" type="button" aria-label="Move draft to simulator">Move draft</button>
+        <button id="practiceClear" class="secondary" type="button" aria-label="Clear all private practice">Clear all</button>
       </div>
       <p id="practiceStatus" class="message" role="status" aria-live="polite">Moving a draft only fills your reply. Review it there and choose Say this yourself. If a roleplay is complete, moving a draft starts a new conversation.</p>
       </section>
@@ -244,15 +256,6 @@ dismiss:"This conversation isn't productive right now. We will pause and follow 
 resign:"I hear that you're choosing to leave. Let's clarify whether you're formally resigning, and, if so, discuss the appropriate next steps. You can also take time to confirm your decision.",
 exit:"We can pause this meeting. Please let me know whether you intend to return to discuss the deadline or are considering leaving the job. We should clarify that before deciding next steps.",
 unclear:"Please follow up with a specific plan and the information still needed. We can continue once we have that."
-};
-const takeaways={
-hostile:"Strong language can be heard as rejecting the conversation, even if you intended something else. You decide what, if anything, you want to clarify.",
-blame:"Specific evidence, shared responsibilities, and an actionable plan work better than blanket blame.",
-own:"Early accountability creates room for repair. You can admit a mistake without surrendering your boundaries.",
-boundary:"A respectful boundary can be a strong response. Clear facts and realistic options matter more than simply agreeing.",
-resign:"Leaving a job can be a legitimate decision. You choose whether to confirm that decision and explore the practical next steps.",
-exit:"Walking away to cool down can help avoid escalation. Clearly communicating whether you need a break or are actually resigning reduces confusion.",
-unclear:"The more specific you can be about facts, responsibilities, and next steps, the more productive the conversation becomes."
 };
 const $=id=>document.getElementById(id);
 let turn=0,first='unclear',firstWords='',lastKind='unclear',lastWords='',log=[];
@@ -354,11 +357,12 @@ $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden')
 applyFeedbackMode();
 const outcome=(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':(lastKind==='exit'||first==='exit'&&lastKind!=='repair'&&lastKind!=='plan')?'Possible outcome: the meeting pauses, and the manager asks whether you need a break or intend to resign.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
 $('outcome').textContent=conversationGoal?coachPaths[conversationGoal.path].outcome:outcome;
-$('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='exit'?'If you need to leave an escalating conversation, communicate whether it is a break or a decision to resign.':lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
+
 const path=conversationGoal?.path||((first==='resign'||lastKind==='resign')?'resign':lastKind==='exit'?'pause':lastKind==='boundary'?'scope':(lastKind==='plan'||lastKind==='repair')?'recovery':'custom');
 const reflection=coachPaths[path];
 $('reflectionBasis').textContent=conversationGoal?(conversationGoal.goal?'You chose this practice goal: '+conversationGoal.goal:'You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.'):'These prompts follow a scripted conversation path. They do not determine your feelings or intentions; choose a goal in the coach if a different path fits.';
 $('madeClear').textContent=reflection.clear;$('unresolved').textContent=reflection.unresolved;$('realWorldPractice').textContent=reflection.action;
+$('reflectionReview').open=false;$('completionTitle').focus({preventScroll:true});
 $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
 function applyFeedbackMode(){
@@ -376,7 +380,7 @@ $('bossWords').textContent=opening;message('Jordan · manager',opening);showTurn
 }
 $('send').addEventListener('click',submit);
 $('yourReply').addEventListener('input',()=>{delete $('send').dataset.kind;pendingCoachContext=null});
-$('replay').addEventListener('click',reset);
+$('replay').addEventListener('click',()=>{reset();$('replyHeading').focus({preventScroll:true})});
 /* Consent-based local recording. Tokens invalidate late permission and recorder events. */
 const privateRecorder={recording:null,stream:null,url:null,state:'idle',requestId:0,limitId:null};
 const recordingSupported=Boolean(navigator.mediaDevices?.getUserMedia&&window.MediaRecorder);

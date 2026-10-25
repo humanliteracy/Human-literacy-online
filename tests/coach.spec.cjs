@@ -119,6 +119,7 @@ test('unknown free-form roleplay wording does not receive a fabricated numerical
 test('rejecting an interpretation leaves the expression intact and lets the learner choose another goal', async ({ page }) => {
   await understand(page, 'You all can kiss my ass');
   await confirm(page);
+  await page.locator('#coachReview > summary').click();
   await page.locator('#coachReject').click();
   await expect(page.locator('#coachChoices')).toBeHidden();
   await expect(page.locator('#coachPath')).toHaveValue('');
@@ -136,6 +137,7 @@ test('rejecting an interpretation leaves the expression intact and lets the lear
 test('editing the goal or source expression invalidates stale suggestions', async ({ page }) => {
   await understand(page, 'The expectations are unreasonable. I quit');
   await confirm(page);
+  await page.locator('#coachReview > summary').click();
   await page.locator('#coachGoal').fill('I want to leave after clarifying notice.');
   await expect(page.locator('#coachChoices')).toBeHidden();
   await confirm(page);
@@ -237,8 +239,11 @@ test('expanded coach fits a 320px viewport', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await understand(page, 'The expectations are unreasonable. I quit');
   await confirm(page);
+  await expect(page.locator('.coach-option:visible')).toHaveCount(1);
+  await page.locator('#coachMore > summary').click();
+  await expect(page.locator('.coach-option:visible')).toHaveCount(3);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  expect(await page.locator('.coach-option textarea').evaluateAll(nodes => nodes.every(n => n.scrollHeight <= n.clientHeight))).toBe(true);
+  await expect.poll(() => page.locator('.coach-option textarea:visible').evaluateAll(nodes => nodes.every(n => n.scrollHeight <= n.clientHeight))).toBe(true);
   await page.locator('.coach-panel').screenshot({ path: testInfo.outputPath('coach-mobile.png') });
 });
 

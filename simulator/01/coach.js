@@ -110,11 +110,13 @@
     function resizeOptions() {
       if ($('coachChoices').classList.contains('hidden')) return;
       for (const input of $('coachOptions').querySelectorAll('textarea')) {
+        if (input.closest('details:not([open])')) continue;
         input.style.height = 'auto';
         input.style.height = Math.max(94, input.scrollHeight + 4) + 'px';
       }
     }
     window.addEventListener('resize', resizeOptions);
+    $('expressStudio').addEventListener('toggle', resizeOptions);
     for (const [value, path] of Object.entries(paths)) {
       const option = document.createElement('option');
       option.value = value; option.textContent = path.label; $('coachPath').append(option);
@@ -129,9 +131,10 @@
     function reset() {
       clearChoices();
       $('coachUnderstanding').classList.add('hidden');
+      $('coachReview').open = true;
       for (const id of ['coachLiteral', 'coachHearing', 'coachTentative']) $(id).textContent = '';
       $('coachGoal').value = ''; $('coachPath').value = '';
-      $('coachStatus').textContent = 'You choose whether a possible interpretation fits. You can change or reject it.';
+      $('coachStatus').textContent = 'You choose whether a possible reading fits.';
     }
     $('expressWords').addEventListener('input', reset);
     $('coachGoal').addEventListener('input', clearChoices);
@@ -151,7 +154,7 @@
       $('coachTentative').textContent = example?.tentative || 'No intention or feeling is inferred. Choose a path and describe what you want to communicate, or keep your own wording.';
       $('coachPath').value = example?.path || '';
       $('coachGoal').value = example?.goal || '';
-      $('coachStatus').textContent = example ? 'A curated example matches these words. Its possible reading is yours to edit or reject.' : 'Please clarify: these words are outside the curated examples. No interpretation or score has been invented.';
+      $('coachStatus').textContent = example ? 'A scripted example matches. Edit or reject this possible reading.' : 'Please clarify your goal; these words have no scripted reading. No interpretation or score is inferred.';
       $('coachUnderstanding').classList.remove('hidden');
       $('coachUnderstandingTitle').focus();
     });
@@ -171,27 +174,37 @@
       }
       confirmed = { path, goal };
       $('coachChosenGoal').textContent = 'Your chosen goal: ' + goal;
+      const more = document.createElement('details'); more.id = 'coachMore'; more.className = 'coach-more';
+      const summary = document.createElement('summary');
+      const additional = document.createElement('div'); additional.id = 'coachMoreOptions';
+      more.append(summary, additional);
+      more.addEventListener('toggle', resizeOptions);
       const options = path === 'custom' ? [
         ['State your own goal', 'What I want you to understand is: ' + goal],
         ['Invite clarification', 'My goal is: ' + goal + ' Can we check what that means before deciding next steps?'],
         ['Keep decisions open', 'I want to clarify this first: ' + goal + ' I am not making a new commitment in this conversation.'],
       ] : paths[path].options;
+      summary.textContent = 'More responses (' + (options.length - 1) + ')';
       options.forEach(([label, words], index) => {
         const article = document.createElement('article'); article.className = 'coach-option';
         const fieldId = 'coachWording' + index;
         const heading = document.createElement('label'); heading.className = 'write-label'; heading.htmlFor = fieldId; heading.textContent = label;
         const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = words.slice(0, 600);
         input.addEventListener('input', resizeOptions);
-        const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.textContent = 'Move this wording to simulator';
-        button.setAttribute('aria-label', 'Move ' + label.toLowerCase() + ' wording to simulator');
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.textContent = 'Use this wording';
+        button.setAttribute('aria-label', 'Use this wording: ' + label + ' (move to simulator)');
         button.addEventListener('click', () => {
           if (!input.value.trim()) { input.focus(); $('coachStatus').textContent = 'Enter wording you want to try, or choose another option.'; return; }
           $('practiceWords').value = input.value;
           moveDraft(input.value.trim(), { ...confirmed });
           $('coachStatus').textContent = 'Your chosen wording moved to the reply. Nothing was sent; you still choose whether to submit it.';
         });
-        article.append(heading, input, button); $('coachOptions').append(article);
+        article.append(heading, input, button);
+        (index === 0 ? $('coachOptions') : additional).append(article);
       });
+      if (options.length > 1) $('coachOptions').append(more);
+      $('coachReview').open = false;
+      $('coachStatus').textContent = 'Goal confirmed. You can review or change it anytime.';
       $('coachChoices').classList.remove('hidden'); resizeOptions(); $('coachChoicesTitle').focus();
     });
     return { reset, getContext: () => confirmed ? { ...confirmed } : null };
