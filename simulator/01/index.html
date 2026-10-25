@@ -132,27 +132,33 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <div class="transcript" id="history"><p class="micro">Your conversation will appear here. Nothing is saved to an account.</p></div>
     </section>
 
-    <details class="content voice-lab" aria-labelledby="voiceHeading">
-      <summary>Optional microphone experiment — volume and pauses</summary>
-      <div class="kicker" style="margin-top:14px">ADVANCED · OPTIONAL</div>
-      <h2 id="voiceHeading">Voice Delivery Lab</h2>
-      <p>How you say something can influence how it is heard. Try speaking a sentence, then compare your volume changes and pauses. <strong>This lab does not change your simulator score.</strong></p>
-      <div class="voice-demo"><strong>Try saying this:</strong> “I understand the deadline mattered. I should have said something sooner. Here is my plan.”</div>
+    <section class="content" aria-labelledby="expressTitle" id="expressStudio">
+      <div class="kicker">OPTIONAL · UNFILTERED PRACTICE</div>
+      <h2 id="expressTitle">Express it. Hear it. Choose what comes next.</h2>
+      <p>Sometimes you need a place to say what you really think without directing it at another person. Practice privately, listen back if you wish, and decide whether to try a different response. <strong>Your expression is not graded.</strong></p>
+      <div class="voice-demo"><strong>Start here:</strong> Imagine Jordan is listening. Say what you really feel. You can express frustration, set a boundary, resign, or simply explain the situation. This is a fictional practice space, not therapy.</div>
+      <h3>1 · Record and listen back</h3>
+      <p class="micro">Microphone permission is requested only when you press Record. You can listen back, replay, and delete the recording. The site does not upload this audio.</p>
       <div class="actions">
-        <button id="voiceStart" class="primary" type="button">🎤 Start voice practice</button>
-        <button id="voiceStop" class="secondary" type="button" disabled>■ Stop and review</button>
+        <button id="recordStart" class="primary" type="button">🎤 Record my response</button>
+        <button id="recordStop" class="secondary" type="button" disabled>■ Stop recording</button>
+        <button id="recordDelete" class="secondary" type="button" disabled>Delete recording</button>
       </div>
-      <p id="voicePracticeStatus" class="voice-status" role="status" aria-live="polite">Microphone is off.</p>
-      <label for="voiceEnergy"><strong>Live microphone activity</strong></label>
-      <div id="voiceEnergy" class="voice-meter" role="meter" aria-label="Live microphone sound intensity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="voiceEnergyFill" class="voice-meter-fill"></div>
+      <p id="recordStatus" class="voice-status" role="status" aria-live="polite">Not recording. Nothing saved.</p>
+      <audio id="recordPlayer" controls class="hidden" aria-label="Listen back to your practice recording" style="width:100%;margin:8px 0 18px"></audio>
+      <h3>2 · Decide what matters</h3>
+      <p class="micro">These questions are optional. No one else needs to see your answers.</p>
+      <label class="write-label" for="rehearsedWords">What I want the manager to understand</label>
+      <textarea id="rehearsedWords" maxlength="600" placeholder="For example: I'm overwhelmed; the deadline changed; I need help or a clearer expectation…"></textarea>
+      <label class="write-label" for="practiceWords">What I might actually say next</label>
+      <textarea id="practiceWords" maxlength="600" placeholder="Use honest words and clear boundaries. You don't have to agree with the manager."></textarea>
+      <div class="actions">
+        <button id="practiceTransfer" class="primary" type="button">Use this response in the simulator ↑</button>
+        <button id="practiceClear" class="secondary" type="button">Clear written reflections</button>
       </div>
-      <label for="rehearsedWords" class="write-label">Optional: what did you say?</label>
-      <textarea id="rehearsedWords" maxlength="600" placeholder="Type the words you practiced if you'd like an approximate speaking-rate estimate."></textarea>
-      <p class="small">Pace can only be estimated if you type the words you spoke. Sound level and pauses are rough measurements affected by microphone distance, background noise, and equipment.</p>
-      <div id="voicePracticeResult" class="tip hidden" role="status" aria-live="polite"></div>
-      <p class="small"><strong>Privacy:</strong> Only start when you're ready. This lab analyzes microphone sound locally in your browser. It does not record, save, or upload audio through our website. Your browser will ask for permission. The separate “Speak instead” feature may use an external browser speech service.</p>
-    </details>
+      <p id="practiceStatus" class="message" role="status" aria-live="polite">When you're ready, you can bring your practiced words into the simulation. We never send or score them automatically.</p>
+      <p class="small"><strong>Privacy:</strong> Recording uses the browser's MediaRecorder, stays in temporary page memory, and is cleared by Delete or when you leave this page. No site server receives it. The separate “Speak instead” transcription option may use your browser's external speech-recognition service, so it is not guaranteed to remain entirely on your device.</p>
+    </section>
   </main>
   <footer><strong>Human Literacy — Practice without judgment.</strong> This prototype uses authored dialogue and simple rule-based interpretation, not an AI-powered live video character. Outcomes vary in real workplaces. No account or site analytics are used by this page. Microphone access, if enabled, is handled by the browser's speech service.</footer>
 </div>
@@ -314,116 +320,86 @@ $('speak').addEventListener('click',()=>{
 });
 }
 
-/* Optional local microphone practice. No microphone access occurs until Start is pressed. */
-const voiceLab={stream:null,context:null,source:null,analyser:null,buffer:null,frameId:null,
-  running:false,pending:false,started:0,previous:0,frames:0,activeFrames:0,
-  activeDuration:0,pauses:0,quietStart:null,wasActive:false,lastStatusSecond:-1,requestId:0};
-function voiceMeter(level){
-  const amount=Math.max(0,Math.min(100,Math.round(level)));
-  $('voiceEnergyFill').style.width=amount+'%';
-  $('voiceEnergy').setAttribute('aria-valuenow',String(amount));
+/* Unscored, in-browser audio rehearsal; no API request and no persistent storage. */
+const privateRecorder={recording:null,stream:null,parts:[],url:null,pending:false,requestId:0,limitId:null};
+function clearRecordedAudio(){
+  if(privateRecorder.url){URL.revokeObjectURL(privateRecorder.url);privateRecorder.url=null}
+  const player=$('recordPlayer');player.pause();player.removeAttribute('src');player.load();player.classList.add('hidden');
+  $('recordDelete').disabled=true;
 }
-function voiceCleanup(){
-  if(voiceLab.frameId!==null&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(voiceLab.frameId);
-  voiceLab.frameId=null;
-  if(voiceLab.stream){voiceLab.stream.getTracks().forEach(t=>t.stop());voiceLab.stream=null}
-  if(voiceLab.context){const ctx=voiceLab.context;voiceLab.context=null;try{ctx.close().catch(()=>{})}catch(_){}}
-  voiceLab.source=null;voiceLab.analyser=null;voiceLab.buffer=null;
-  voiceLab.running=false;voiceLab.pending=false;
-  $('voiceStart').disabled=false;$('voiceStop').disabled=true;voiceMeter(0);
+function stopMediaTracks(){
+  if(privateRecorder.stream){privateRecorder.stream.getTracks().forEach(track=>track.stop());privateRecorder.stream=null}
 }
-function stopVoicePractice(report=true){
-  const wasRunning=voiceLab.running;
-  const seconds=wasRunning?Math.max(0,(performance.now()-voiceLab.started)/1000):0;
-  const pauses=voiceLab.pauses;
-  const activeSeconds=voiceLab.activeDuration/1000;
-  voiceLab.requestId++;
-  voiceCleanup();
-  $('voicePracticeStatus').textContent='Microphone is off.';
-  if(!report||!wasRunning)return;
-  const result=$('voicePracticeResult');
-  result.classList.remove('hidden');result.replaceChildren();
-  const title=document.createElement('strong');title.textContent='Your practice reflection';result.append(title);
-  const summary=document.createElement('p');
-  summary.textContent='You practiced for '+seconds.toFixed(1)+' seconds. Approximate periods of audible sound: '+activeSeconds.toFixed(1)+' seconds. Quiet pauses detected: '+pauses+'.';
-  result.append(summary);
-  const words=$('rehearsedWords').value.trim();
-  if(words&&seconds>=2){
-    const count=words.split(/\s+/).filter(Boolean).length;
-    const rate=Math.round(count*60/seconds);
-    const pace=document.createElement('p');
-    pace.textContent='If you spoke the '+count+' typed words during that entire practice, your estimated pace was '+rate+' words per minute. This is only an approximation.';
-    result.append(pace);
+function stopRecord(){
+  if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
+  $('recordStart').disabled=false;$('recordStop').disabled=true;
+  const rec=privateRecorder.recording;
+  if(rec&&rec.state==='recording'){rec.stop();$('recordStatus').textContent='Finalizing recording…';}
+  else stopMediaTracks();
+}
+async function startRecord(){
+  if(privateRecorder.pending||(privateRecorder.recording&&privateRecorder.recording.state==='recording'))return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){
+    $('recordStatus').textContent='Recording is not supported here. You can still speak to the manager or type a response.';return;
   }
-  const note=document.createElement('p');
-  note.textContent='Try again with a different speaking pace or volume and notice the difference. These signals cannot determine whether you were angry, sincere, respectful, or sarcastic.';
-  result.append(note);
-}
-function voiceTick(now){
-  if(!voiceLab.running)return;
-  const analyser=voiceLab.analyser,values=voiceLab.buffer;
-  analyser.getByteTimeDomainData(values);
-  let power=0;
-  for(let i=0;i<values.length;i++){const sample=(values[i]-128)/128;power+=sample*sample}
-  const rms=Math.sqrt(power/values.length);
-  const active=rms>0.024; // Relative signal activity, not reliable speech recognition.
-  const delta=Math.min(120,Math.max(0,now-voiceLab.previous));
-  voiceLab.previous=now;voiceLab.frames++;
-  if(active){
-    voiceLab.activeFrames++;voiceLab.activeDuration+=delta;
-    if(voiceLab.quietStart!==null&&now-voiceLab.quietStart>=550&&voiceLab.wasActive)voiceLab.pauses++;
-    voiceLab.quietStart=null;voiceLab.wasActive=true;
-  }else if(voiceLab.wasActive&&voiceLab.quietStart===null){voiceLab.quietStart=now}
-  voiceMeter(rms*480);
-  const second=Math.floor((now-voiceLab.started)/1000);
-  if(second!==voiceLab.lastStatusSecond){
-    voiceLab.lastStatusSecond=second;
-    $('voicePracticeStatus').textContent='Microphone on · '+second+' seconds · Speak naturally. Press Stop and review when finished.';
-  }
-  voiceLab.frameId=requestAnimationFrame(voiceTick);
-}
-async function startVoicePractice(){
-  if(voiceLab.running||voiceLab.pending)return;
-  const Audio=window.AudioContext||window.webkitAudioContext;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!Audio){
-    $('voicePracticeStatus').textContent='This browser does not support local microphone analysis. The written simulator still works.';
-    return;
-  }
-  voiceLab.pending=true;voiceLab.requestId++;
-  const currentRequest=voiceLab.requestId;
-  $('voiceStart').disabled=true;
-  $('voicePracticeResult').classList.add('hidden');
-  $('voicePracticeStatus').textContent='Requesting microphone permission…';
+  privateRecorder.pending=true;privateRecorder.requestId++;const request=privateRecorder.requestId;
+  $('recordStart').disabled=true;clearRecordedAudio();
+  $('recordStatus').textContent='Waiting for microphone permission…';
   let stream;
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
-    if(!voiceLab.pending||voiceLab.requestId!==currentRequest){stream.getTracks().forEach(t=>t.stop());return}
-    voiceLab.stream=stream;
-    voiceLab.context=new Audio();
-    voiceLab.source=voiceLab.context.createMediaStreamSource(stream);
-    voiceLab.analyser=voiceLab.context.createAnalyser();
-    voiceLab.analyser.fftSize=2048;
-    voiceLab.source.connect(voiceLab.analyser); // Never connect the microphone to speakers.
-    voiceLab.buffer=new Uint8Array(voiceLab.analyser.fftSize);
-    if(voiceLab.context.state==='suspended')await voiceLab.context.resume();
-    if(voiceLab.requestId!==currentRequest){voiceCleanup();return}
-    voiceLab.started=performance.now();voiceLab.previous=voiceLab.started;voiceLab.frames=0;
-    voiceLab.activeFrames=0;voiceLab.activeDuration=0;voiceLab.pauses=0;
-    voiceLab.quietStart=null;voiceLab.wasActive=false;voiceLab.lastStatusSecond=-1;
-    voiceLab.pending=false;voiceLab.running=true;
-    $('voiceStop').disabled=false;
-    $('voicePracticeStatus').textContent='Microphone on · Speak naturally.';
-    voiceLab.frameId=requestAnimationFrame(voiceTick);
-  }catch(error){
-    if(stream&&!voiceLab.stream)stream.getTracks().forEach(t=>t.stop());
-    voiceCleanup();
-    $('voicePracticeStatus').textContent='Microphone access was unavailable or declined. You can still use the simulator without it.';
-  }
+    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    if(request!==privateRecorder.requestId){stream.getTracks().forEach(track=>track.stop());return}
+    privateRecorder.stream=stream;privateRecorder.parts=[];
+    const recorder=new window.MediaRecorder(stream);privateRecorder.recording=recorder;
+    recorder.ondataavailable=event=>{if(event.data&&event.data.size>0)privateRecorder.parts.push(event.data)};
+    recorder.onstop=()=>{
+      stopMediaTracks();
+      if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
+      privateRecorder.recording=null;
+      const chunks=privateRecorder.parts;privateRecorder.parts=[];
+      $('recordStart').disabled=false;$('recordStop').disabled=true;
+      if(!chunks.length){$('recordStatus').textContent='No audio was captured. You can try again.';return}
+      const blob=new Blob(chunks,{type:recorder.mimeType||chunks[0].type||'audio/webm'});
+      privateRecorder.url=URL.createObjectURL(blob);
+      const player=$('recordPlayer');player.src=privateRecorder.url;player.classList.remove('hidden');player.load();
+      $('recordDelete').disabled=false;
+      $('recordStatus').textContent='Recorded locally. Press Play to listen back, or Delete to erase this take.';
+    };
+    recorder.onerror=()=>{stopMediaTracks();$('recordStart').disabled=false;$('recordStop').disabled=true;$('recordStatus').textContent='Recording was interrupted. Please try again.'};
+    recorder.start();privateRecorder.pending=false;
+    $('recordStop').disabled=false;$('recordStatus').textContent='Recording… Speak naturally. Stop to listen back. Maximum 90 seconds.';
+    privateRecorder.limitId=setTimeout(()=>{if(privateRecorder.recording&&privateRecorder.recording.state==='recording')stopRecord()},90000);
+  }catch(_){if(stream&&!privateRecorder.stream)stream.getTracks().forEach(track=>track.stop());stopMediaTracks();privateRecorder.pending=false;$('recordStart').disabled=false;$('recordStop').disabled=true;$('recordStatus').textContent='Microphone permission was declined or unavailable. The written simulator still works.'}
 }
-$('voiceStart').addEventListener('click',startVoicePractice);
-$('voiceStop').addEventListener('click',()=>stopVoicePractice(true));
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&(voiceLab.running||voiceLab.pending))stopVoicePractice(false)});
-window.addEventListener('pagehide',()=>{if(voiceLab.running||voiceLab.pending)stopVoicePractice(false)});
+function discardRecording(){
+  privateRecorder.requestId++;privateRecorder.pending=false;
+  if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
+  const recorder=privateRecorder.recording;
+  if(recorder&&recorder.state==='recording'){
+    recorder.ondataavailable=null;recorder.onstop=null;recorder.stop();
+  }
+  privateRecorder.recording=null;privateRecorder.parts=[];
+  stopMediaTracks();clearRecordedAudio();
+  $('recordStart').disabled=false;$('recordStop').disabled=true;
+  $('recordStatus').textContent='Recording deleted. Nothing saved.';
+}
+$('recordStart').addEventListener('click',startRecord);
+$('recordStop').addEventListener('click',stopRecord);
+$('recordDelete').addEventListener('click',discardRecording);
+$('practiceClear').addEventListener('click',()=>{
+  $('rehearsedWords').value='';$('practiceWords').value='';
+  $('practiceStatus').textContent='Written reflections cleared. Your audio recording is controlled separately.';
+});
+$('practiceTransfer').addEventListener('click',()=>{
+  const words=$('practiceWords').value.trim();
+  if(!words){$('practiceWords').focus();$('practiceStatus').textContent='Write what you want to practice in the second box first.';return}
+  if($('inputPanel').classList.contains('hidden'))reset();
+  $('yourReply').value=words;delete $('send').dataset.kind;
+  $('practiceStatus').textContent='Your practiced wording is ready in the simulator. Review it there, then choose Say this when you want the manager to respond.';
+  $('inputPanel').scrollIntoView({behavior:'auto',block:'start'});$('yourReply').focus();
+});
+window.addEventListener('pagehide',discardRecording);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&privateRecorder.recording&&privateRecorder.recording.state==='recording')stopRecord()});
 
 reset();
 applyFeedbackMode();
