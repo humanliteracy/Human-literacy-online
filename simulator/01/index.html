@@ -99,6 +99,7 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <p id="outcome" class="outcome"></p>
       <div class="scorehead"><strong>Communication practice feedback</strong><span id="score" class="score">0/100</span></div>
       <div class="track" aria-label="Skill practice score"><div id="scoreFill" class="fill"></div></div>
+      <p id="scoreDetails" class="small" aria-live="polite"></p>
       <p class="small">This is a coaching illustration, not a measure of your worth or a prediction of real workplace outcomes. The goal is to learn through exploration, not obedience.</p>
       <div class="tip"><strong id="takeawayHeading">What you practiced</strong><p id="takeaway" style="margin:7px 0 0"></p></div>
       <h3>Bring it into real life</h3>
@@ -156,7 +157,7 @@ exit:"Walking away to cool down can help avoid escalation. Clearly communicating
 unclear:"The more specific you can be about facts, responsibilities, and next steps, the more productive the conversation becomes."
 };
 const $=id=>document.getElementById(id);
-let turn=0,first='unclear',firstWords='',lastKind='unclear',log=[];
+let turn=0,first='unclear',firstWords='',lastKind='unclear',lastWords='',log=[];
 function classify(t,which){
 const v=t.toLowerCase().trim();
 if(!v)return 'unclear';
@@ -212,12 +213,20 @@ first=type;firstWords=text;turn=1;
 replyFromManager(REACTIONS[type]||REACTIONS.unclear);
 showTurn();
 }else{
-lastKind=type;
+lastKind=type;lastWords=text;
 replyFromManager(first==='resign'&&type==='plan'
   ?"Thank you for clarifying the practical steps. If you're choosing to resign, let's confirm that decision and arrange a clear handover, rather than treat this as an ordinary project update."
   :FINAL[type]||FINAL.unclear);
 finish();
 }
+}
+// Separate the intent to resign or take a break from the way it was expressed.
+// This is illustrative rule-based feedback, not validated assessment.
+function interpersonalPenalty(words){
+const s=words.toLowerCase();
+if(/\b(get lost|kiss my ass|fuck off|screw you|shut up|i'm sick of you|i am sick of you|you're (?:an? )?(?:idiot|moron|stupid|useless)|you are (?:an? )?(?:idiot|moron|stupid|useless))\b/.test(s))return 20;
+if(/\b(take (?:this|your|the) job and shove it|shove it|go to hell)\b/.test(s))return 12;
+return 0;
 }
 function finish(){
 turn=2;
@@ -225,15 +234,18 @@ $('sceneProgress').textContent='SIMULATION COMPLETE';
 $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
 const firstScore={own:44,boundary:42,blame:17,hostile:6,resign:27,exit:20,unclear:24};
 const secondScore={repair:48,plan:50,boundary:46,dismiss:4,resign:30,exit:12,unclear:26};
-const score=(firstScore[first]||24)+(secondScore[lastKind]||26);
+const firstPoints=firstScore[first]??24,secondPoints=secondScore[lastKind]??26;
+const tonePenalty=Math.min(35,interpersonalPenalty(firstWords)+interpersonalPenalty(lastWords));
+const score=Math.max(0,Math.min(100,firstPoints+secondPoints-tonePenalty));
 $('score').textContent=score+'/100';$('scoreFill').style.width=score+'%';
+$('scoreDetails').textContent='Step 1: '+firstPoints+' points + Step 2: '+secondPoints+' points'+(tonePenalty?' − '+tonePenalty+' for personally disrespectful language':'')+' = '+score+'/100. These are approximate teaching rules, not a validated rating of communication ability.';
 const outcome=(lastKind==='exit'||first==='exit'&&lastKind!=='repair'&&lastKind!=='plan')?'Possible outcome: the meeting pauses, and the manager asks whether you need a break or intend to resign.':(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
 $('outcome').textContent=outcome;
 $('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='exit'?'If you need to leave an escalating conversation, communicate whether it is a break or a decision to resign.':lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
 $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
 function reset(){
-turn=0;first='unclear';firstWords='';lastKind='unclear';log=[];
+turn=0;first='unclear';firstWords='';lastKind='unclear';lastWords='';log=[];
 const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
 $('bossWords').textContent=opening;message('Jordan · manager',opening);showTurn();window.scrollTo(0,0);
 }
