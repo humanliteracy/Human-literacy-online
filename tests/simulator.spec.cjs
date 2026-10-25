@@ -3,9 +3,21 @@ const { test, expect } = require('@playwright/test');
 test.beforeEach(async ({ page }) => {
   page.browserErrors = [];
   page.on('pageerror', error => page.browserErrors.push(error.message));
+  await page.addInitScript(() => {
+    window.captureErrors = [];
+    const capture = navigator.mediaDevices?.getUserMedia?.bind(navigator.mediaDevices);
+    if (capture) navigator.mediaDevices.getUserMedia = async constraints => {
+      try { return await capture(constraints); }
+      catch (error) { captureErrors.push({ name: error.name, message: error.message }); throw error; }
+    };
+  });
 });
-test.afterEach(async ({ page }) => {
+test.afterEach(async ({ page }, testInfo) => {
   expect(page.browserErrors).toEqual([]);
+  if (testInfo.status !== testInfo.expectedStatus) {
+    const failures = await page.evaluate(() => window.captureErrors);
+    if (failures?.length) throw new Error('Browser media capture failures: ' + JSON.stringify(failures));
+  }
 });
 
 async function openPractice(page) {

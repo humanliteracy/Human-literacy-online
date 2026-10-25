@@ -14,10 +14,12 @@ module.exports = defineConfig({
   use: {
     baseURL: 'http://127.0.0.1:8765',
     browserName: 'chromium',
+    // Exercise media APIs in full Chromium's current headless mode.
+    channel: 'chromium',
     trace: 'retain-on-failure',
     launchOptions: {
       ...(process.env.BROWSER_EXECUTABLE_PATH ? { executablePath: process.env.BROWSER_EXECUTABLE_PATH } : {}),
-      args: ['--use-fake-device-for-media-stream'],
+      args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
     },
   },
   webServer: {
