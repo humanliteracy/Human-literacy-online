@@ -208,7 +208,9 @@ replyFromManager(REACTIONS[type]||REACTIONS.unclear);
 showTurn();
 }else{
 lastKind=type;
-replyFromManager(FINAL[type]||FINAL.unclear);
+replyFromManager(first==='resign'&&type==='plan'
+  ?"Thank you for clarifying the practical steps. If you're choosing to resign, let's confirm that decision and arrange a clear handover, rather than treat this as an ordinary project update."
+  :FINAL[type]||FINAL.unclear);
 finish();
 }
 }
@@ -220,7 +222,7 @@ const firstScore={own:44,boundary:42,blame:17,hostile:6,resign:27,unclear:24};
 const secondScore={repair:48,plan:50,boundary:46,dismiss:4,resign:30,unclear:26};
 const score=(firstScore[first]||24)+(secondScore[lastKind]||26);
 $('score').textContent=score+'/100';$('scoreFill').style.width=score+'%';
-const outcome=lastKind==='resign'?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
+const outcome=(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
 $('outcome').textContent=outcome;
 $('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
 $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
