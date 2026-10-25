@@ -332,7 +332,7 @@ function stopMediaTracks(){
 }
 function stopRecord(){
   if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
-  $('recordStart').disabled=false;$('recordStop').disabled=true;
+  $('recordStart').disabled=true;$('recordStop').disabled=true;
   const rec=privateRecorder.recording;
   if(rec&&rec.state==='recording'){rec.stop();$('recordStatus').textContent='Finalizing recording…';}
   else stopMediaTracks();
