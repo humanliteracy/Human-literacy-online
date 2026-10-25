@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eaf8f5">
+<meta name="description" content="Practice a challenging workplace conversation in a free, private Human Literacy Life Simulator prototype.">
+<title>Life Simulator 01 — The Missed Deadline | Human Literacy</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#14363a;background:#eaf8f5;font-size:17px}
+*{box-sizing:border-box}body{margin:0}button,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}
+a{color:#087b74}a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid #e4ae57;outline-offset:3px}
+.container{max-width:930px;margin:auto;padding:20px 18px 72px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.brand{font-weight:850;letter-spacing:.13em;color:#087a72;font-size:.86rem;text-decoration:none}
+.toplink{font-size:.92rem;font-weight:700}
+.kicker{font-size:.78rem;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#087d75}
+h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 14px}
+h2{font-size:1.4rem;letter-spacing:-.02em;margin:0 0 12px}
+h3{font-size:1.08rem;margin:0 0 10px}p{line-height:1.6;margin:0 0 14px}
+.intro{max-width:760px}.sub{font-size:1.08rem;color:#47666a}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:17px 0 24px}
+.chip{display:inline-block;background:#d9eee9;color:#075e58;border:1px solid #b9dad2;border-radius:999px;font-size:.8rem;font-weight:750;padding:7px 12px}
+.scene{border-radius:27px;background:linear-gradient(135deg,#16363d 0%,#174e52 50%,#1b6664 100%);color:#fff;overflow:hidden;box-shadow:0 20px 46px #184d4530}
+.scene-top{padding:17px 24px;border-bottom:1px solid #ffffff25;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.81rem;color:#daeee8;font-weight:750}
+.office{min-height:280px;position:relative;background:radial-gradient(ellipse at 75% 15%,#568b83 0%,transparent 45%),linear-gradient(145deg,#2d5054,#163338 70%);overflow:hidden;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.office:before{content:"";position:absolute;width:270px;height:220px;top:10px;left:8%;border:10px solid #c2d6d350;border-radius:5px;background:linear-gradient(145deg,#d9eee455,#8baaa85b 55%,#415e645b);transform:skewY(-3deg);z-index:-1}
+.office:after{content:"";position:absolute;bottom:-26px;left:-5%;right:-5%;height:86px;transform:rotate(-1deg);background:linear-gradient(#354f4d,#233c3e);border-top:12px solid #7b9a8a;z-index:0}
+.person{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:end;transform:translateY(24px);z-index:1}
+.head{width:106px;height:119px;border-radius:46% 46% 48% 48%;background:linear-gradient(100deg,#9a6251,#e1ae8e 48%,#aa7766);box-shadow:inset -14px 0 21px #673e4055;position:relative}
+.head:before{content:"";position:absolute;left:-2px;right:-2px;top:-10px;height:44px;border-radius:70% 70% 20% 20%;background:#283039;transform:rotate(-4deg)}
+.head:after{content:"";position:absolute;top:57px;left:33px;width:43px;height:16px;border-bottom:3px solid #573d3d;border-radius:50%}
+.bodyshape{width:196px;height:170px;background:linear-gradient(95deg,#172d3d,#334a56 53%,#132c3a);border-radius:65px 65px 10px 10px;margin-top:-8px;position:relative}
+.bodyshape:before{content:"";position:absolute;left:79px;top:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:72px solid #eff3ef}
+.scene-label{position:absolute;bottom:15px;right:16px;z-index:2;background:#132e36db;color:#dff5ee;border:1px solid #ffffff55;border-radius:9px;padding:8px 12px;font-size:.74rem;font-weight:750}
+.dialogue{padding:26px 28px 30px}
+.speaker{font-size:.78rem;font-weight:900;letter-spacing:.14em;color:#99e0d4;text-transform:uppercase;margin-bottom:12px}
+.boss-words{font-size:clamp(1.25rem,3.5vw,1.7rem);line-height:1.5;font-weight:680;margin:0;max-width:740px}
+.content{background:#fff;border:1px solid #c5e2da;border-radius:24px;padding:25px;margin-top:20px;box-shadow:0 8px 32px #174c4b0a}
+.micro{font-size:.86rem;color:#4e666b}.response-title{margin:0 0 10px}
+.choices{display:grid;gap:10px;margin:16px 0}
+.choice{border:2px solid #c5e3dc;background:#f9fefd;border-radius:16px;text-align:left;padding:16px 19px;color:#153f40;font-weight:620;line-height:1.45}
+.choice:hover{border-color:#128b7e;background:#e7f7f2}
+.write-label{font-weight:780;display:block;margin:18px 0 9px}
+textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;padding:14px 15px;min-height:94px;resize:vertical;color:#17383d;background:white}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.primary,.secondary{padding:14px 19px;border-radius:13px;border:2px solid #087d75;font-weight:800}
+.primary{background:#087d75;color:white}.primary:hover{background:#056159}
+.secondary{background:#fff;color:#087d75}.secondary:hover{background:#e8f5f1}
+.message{padding:11px 14px;background:#edf7f3;border-radius:11px;font-size:.9rem;color:#2e5353;margin-top:13px}
+.hidden{display:none!important}
+.transcript{display:grid;gap:10px;margin:16px 0}
+.bubble{border-radius:14px;padding:13px 15px;line-height:1.5;overflow-wrap:anywhere}
+.bubble .who{font-weight:850;display:block;font-size:.8rem;margin-bottom:5px}
+.bubble.mine{background:#d9f2e9;margin-left:14%}.bubble.manager{background:#e9eff0;margin-right:14%}
+.scorehead{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;justify-content:space-between}
+.score{font-size:2.4rem;font-weight:900;color:#087b74;letter-spacing:-.04em}
+.track{height:12px;background:#dbece8;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#42aaa2,#087d75);border-radius:99px}
+.tip{border-left:4px solid #0a8a80;padding:13px 16px;background:#eff9f5;border-radius:12px;margin:16px 0}
+.outcome{font-weight:750;color:#174e4e;font-size:1.07rem}
+.small{font-size:.83rem;color:#516f70;line-height:1.5}
+footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
+@media(min-width:800px){.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}}
+@media(max-width:580px){.container{padding:17px 12px 40px}.scene-top,.dialogue{padding:16px}.office{min-height:230px}.head{width:89px;height:100px}.bodyshape{width:168px;height:145px}.content{padding:19px 16px}.actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="top"><a class="brand" href="../../">HUMAN LITERACY</a><a class="toplink" href="../../">← All lessons</a></header>
+  <div class="intro">
+    <div class="kicker">Life Simulator · Prototype 01</div>
+    <h1>The Missed Deadline</h1>
+    <p class="sub">Make choices. Try your own words. See how a respectful manager might respond. Replay, experiment, and take one useful skill into real life.</p>
+    <div class="chips"><span class="chip">Interactive role-play</span><span class="chip">Optional microphone</span><span class="chip">No account</span><span class="chip">Replay anytime</span></div>
+  </div>
+
+  <main>
+    <section class="scene" aria-label="Workplace conversation">
+      <div class="scene-top"><span>WORKPLACE · PRIVATE OFFICE</span><span id="sceneProgress">SCENE 1 OF 2</span></div>
+      <div class="office" aria-hidden="true"><div class="person"><div class="head"></div><div class="bodyshape"></div></div><div class="scene-label">Illustrated character · video planned</div></div>
+      <div class="dialogue" aria-live="polite" aria-atomic="true"><div class="speaker">Jordan · Your manager</div><p class="boss-words" id="bossWords">The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?</p></div>
+    </section>
+
+    <section class="content" id="inputPanel" aria-labelledby="replyHeading">
+      <h2 id="replyHeading" class="response-title">How do you respond?</h2>
+      <p class="micro">There is no penalty for experimenting. Choose a response or write your own. The manager will react to your approach.</p>
+      <div class="choices" id="choices"></div>
+      <label class="write-label" for="yourReply">Or use your own words</label>
+      <textarea id="yourReply" maxlength="600" placeholder="Type what you would say…"></textarea>
+      <div class="actions"><button id="speak" type="button" class="secondary">🎤 Speak instead</button><button id="send" type="button" class="primary">Say this →</button></div>
+      <div id="voiceNote" class="message" aria-live="polite">Speech input is optional and only available in supported browsers. Browser speech services may process voice data; typing is the privacy-friendly option.</div>
+    </section>
+
+    <section id="endPanel" class="content hidden" aria-live="polite">
+      <div class="kicker">Practice complete</div>
+      <h2>What happened—and what could happen next?</h2>
+      <p id="outcome" class="outcome"></p>
+      <div class="scorehead"><strong>Communication practice feedback</strong><span id="score" class="score">0/100</span></div>
+      <div class="track" aria-label="Skill practice score"><div id="scoreFill" class="fill"></div></div>
+      <p class="small">This is a coaching illustration, not a measure of your worth or a prediction of real workplace outcomes. The goal is to learn through exploration, not obedience.</p>
+      <div class="tip"><strong id="takeawayHeading">What you practiced</strong><p id="takeaway" style="margin:7px 0 0"></p></div>
+      <h3>Bring it into real life</h3>
+      <p>Next time a task may be late, try this three-part update: <strong>what happened, what is still needed, and when you can realistically deliver.</strong> If circumstances are unfair, explain the facts and ask for a reasonable adjustment.</p>
+      <div class="actions"><button id="replay" class="primary" type="button">↻ Try a different approach</button><a class="secondary" style="text-decoration:none" href="../../">Back to all lessons</a></div>
+    </section>
+
+    <section class="content" aria-labelledby="historyHeading">
+      <h2 id="historyHeading">Conversation so far</h2>
+      <div class="transcript" id="history"><p class="micro">Your conversation will appear here. Nothing is saved to an account.</p></div>
+    </section>
+  </main>
+  <footer><strong>Human Literacy — Practice without judgment.</strong> This prototype uses authored dialogue and simple rule-based interpretation, not an AI-powered live video character. Outcomes vary in real workplaces. No account or site analytics are used by this page. Microphone access, if enabled, is handled by the browser's speech service.</footer>
+</div>
+<script>
+(function(){
+'use strict';
+const FIRST=[
+{kind:'own',text:'I underestimated the work. I should have warned you yesterday. Here is what remains.'},
+{kind:'hostile',text:"Fuck off. I'm sick of these deadlines."},
+{kind:'boundary',text:'The client changed the scope. I need us to agree on what is realistic.'},
+{kind:'blame',text:"It isn't my fault. Everybody else messed this up."}
+];
+const SECOND=[
+{kind:'repair',text:'I want to reset this conversation. Here are the facts and what I can do next.'},
+{kind:'plan',text:'I can send a written status update in 30 minutes, with a realistic delivery time.'},
+{kind:'boundary',text:'I can meet the priority, but we need to adjust the scope or deadline.'},
+{kind:'dismiss',text:"Whatever. I don't care what happens."}
+];
+const REACTIONS={
+own:"I appreciate you owning the delay. I needed to know earlier, but we can still solve this. What will you do next?",
+hostile:"I won't continue while we're insulting each other. Let's reset the tone. I still need a clear status and a plan; if this continues we may need a formal meeting. Can we try again?",
+boundary:"That's relevant. If the scope changed, let's document what changed and agree on revised priorities. What would you propose?",
+blame:"I can look into the handoffs, but I need specific facts rather than assigning blame. What can you do to help us move forward?",
+unclear:"I want to understand your explanation before drawing conclusions. Can you give me a clear status, what caused the delay, and what you propose next?"
+};
+const FINAL={
+repair:"Thank you for resetting. We can address the work and any concerns separately. Send me the facts and the new plan.",
+plan:"That gives us a useful next step. Please include the risks and anything you need from me so we can update the client accurately.",
+boundary:"Let's review the priorities and discuss a feasible adjustment. I can't promise the client will approve it, but we should examine the facts.",
+dismiss:"This conversation isn't productive right now. We will pause and follow up about the missed deadline and expectations.",
+unclear:"Please follow up with a specific plan and the information still needed. We can continue once we have that."
+};
+const takeaways={
+hostile:"An angry response can interrupt problem-solving and create an additional issue. Repair is possible, but consequences depend on context.",
+blame:"Specific evidence, shared responsibilities, and an actionable plan work better than blanket blame.",
+own:"Early accountability creates room for repair. You can admit a mistake without surrendering your boundaries.",
+boundary:"A respectful boundary can be a strong response. Clear facts and realistic options matter more than simply agreeing.",
+unclear:"The more specific you can be about facts, responsibilities, and next steps, the more productive the conversation becomes."
+};
+const $=id=>document.getElementById(id);
+let turn=0,first='unclear',firstWords='',lastKind='unclear',log=[];
+function classify(t,which){
+const v=t.toLowerCase().trim();
+if(!v)return 'unclear';
+if(/\b(fuck|shut up|screw you|idiot|asshole|don't care|whatever)\b/.test(v))return which===0?'hostile':'dismiss';
+if(which===1){
+ if(/\b(sorry|apolog|reset|start over)\b/.test(v))return 'repair';
+ if(/\b(scope|unrealistic|adjust|priority|need more time|deadline)\b/.test(v))return 'boundary';
+ if(/\b(plan|update|finish|send|deliver|timeline|status|by tomorrow|by today)\b/.test(v))return 'plan';
+ return 'unclear';
+}
+if(/\b(not my fault|their fault|everybody else's|someone else messed|blame)\b/.test(v))return 'blame';
+if(/\b(scope|unrealistic|change|capacity|not safe|boundary|need more time)\b/.test(v))return 'boundary';
+if(/\b(my mistake|should have|underestimated|apolog|sorry|i forgot|my fault|take responsibility)\b/.test(v))return 'own';
+return 'unclear';
+}
+function message(who,words){log.push({who:who,words:words});showHistory()}
+function showHistory(){
+const node=$('history');node.replaceChildren();
+log.forEach(entry=>{
+const div=document.createElement('div');div.className='bubble '+(entry.who==='You'?'mine':'manager');
+const label=document.createElement('span');label.className='who';label.textContent=entry.who;
+const words=document.createElement('span');words.textContent=entry.words;
+div.append(label,words);node.append(div);
+});
+}
+function choose(kind,words){$('yourReply').value=words;const b=$('send');b.dataset.kind=kind;b.focus()}
+function optionsForTurn(){
+const container=$('choices');container.replaceChildren();
+const choices=turn===0?FIRST:SECOND;
+choices.forEach(o=>{
+ const b=document.createElement('button');b.className='choice';b.type='button';b.textContent='“'+o.text+'”';
+ b.addEventListener('click',()=>{choose(o.kind,o.text);submit()});container.append(b);
+});
+}
+function showTurn(){
+$('inputPanel').classList.remove('hidden');$('endPanel').classList.add('hidden');
+$('sceneProgress').textContent='SCENE '+(turn+1)+' OF 2';
+$('replyHeading').textContent=turn===0?'How do you respond?':'What do you do now?';
+$('yourReply').value='';delete $('send').dataset.kind;optionsForTurn();
+}
+function replyFromManager(text){$('bossWords').textContent=text;message('Jordan · manager',text)}
+function submit(){
+const text=$('yourReply').value.trim();if(!text){$('yourReply').focus();return}
+const supplied=$('send').dataset.kind;const type=supplied&&((turn===0?FIRST:SECOND).some(o=>o.kind===supplied&&o.text===text))?supplied:classify(text,turn);
+message('You',text);
+if(turn===0){
+first=type;firstWords=text;turn=1;
+replyFromManager(REACTIONS[type]||REACTIONS.unclear);
+showTurn();
+}else{
+lastKind=type;
+replyFromManager(FINAL[type]||FINAL.unclear);
+finish();
+}
+}
+function finish(){
+turn=2;
+$('sceneProgress').textContent='SIMULATION COMPLETE';
+$('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
+const firstScore={own:44,boundary:42,blame:17,hostile:6,unclear:24};
+const secondScore={repair:48,plan:50,boundary:46,dismiss:4,unclear:26};
+const score=(firstScore[first]||24)+(secondScore[lastKind]||26);
+$('score').textContent=score+'/100';$('scoreFill').style.width=score+'%';
+const outcome=lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
+$('outcome').textContent=outcome;
+$('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
+$('endPanel').scrollIntoView({behavior:'auto',block:'start'});
+}
+function reset(){
+turn=0;first='unclear';firstWords='';lastKind='unclear';log=[];
+const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
+$('bossWords').textContent=opening;message('Jordan · manager',opening);showTurn();window.scrollTo(0,0);
+}
+$('send').addEventListener('click',submit);
+$('yourReply').addEventListener('input',()=>{delete $('send').dataset.kind});
+$('replay').addEventListener('click',reset);
+const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SpeechRec){$('speak').disabled=true;$('speak').textContent='🎤 Voice unavailable';}
+else{
+$('speak').addEventListener('click',()=>{
+ const recognition=new SpeechRec();recognition.lang='en-US';recognition.interimResults=false;recognition.maxAlternatives=1;
+ $('voiceNote').textContent='Listening… speak your response. Your browser may use an external speech-recognition service.';
+ recognition.onresult=e=>{$('yourReply').value=e.results[0][0].transcript;delete $('send').dataset.kind;$('voiceNote').textContent='Transcription ready. Check it, then press “Say this”.';};
+ recognition.onerror=e=>{$('voiceNote').textContent='Voice input was not available ('+e.error+'). You can type your response instead.';};
+ recognition.onend=()=>{if($('voiceNote').textContent.startsWith('Listening'))$('voiceNote').textContent='Listening stopped. Type your reply if nothing was captured.';};
+ try{recognition.start()}catch(_){$('voiceNote').textContent='Unable to start voice recognition. Please type your response.';}
+});
+}
+reset();
+})();
+</script>
+</body>
+</html>
