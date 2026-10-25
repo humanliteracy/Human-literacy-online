@@ -68,7 +68,7 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
 </head>
 <body>
 <div class="container">
-  <header class="top"><a class="brand" href="../../">HUMAN LITERACY</a><a class="toplink" href="../../">← All lessons</a></header>
+  <header class="top"><a class="brand" href="../../">HUMAN LITERACY</a><a class="toplink" href="../../">← Home</a></header>
   <div class="intro">
     <div class="kicker">Life Simulator · Prototype 01</div>
     <h1>The Missed Deadline</h1>
@@ -118,7 +118,7 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
 'use strict';
 const FIRST=[
 {kind:'own',text:'I underestimated the work. I should have warned you yesterday. Here is what remains.'},
-{kind:'hostile',text:"Fuck off. I'm sick of these deadlines."},
+{kind:'hostile',text:"I'm tired of this conversation. Leave me alone."},
 {kind:'boundary',text:'The client changed the scope. I need us to agree on what is realistic.'},
 {kind:'blame',text:"It isn't my fault. Everybody else messed this up."}
 ];
@@ -130,7 +130,7 @@ const SECOND=[
 ];
 const REACTIONS={
 own:"I appreciate you owning the delay. I needed to know earlier, but we can still solve this. What will you do next?",
-hostile:"I won't continue while we're insulting each other. Let's reset the tone. I still need a clear status and a plan; if this continues we may need a formal meeting. Can we try again?",
+hostile:"I hear you're frustrated. We can take a moment, but I need us to speak respectfully and address the missed deadline. Can we try again?",
 boundary:"That's relevant. If the scope changed, let's document what changed and agree on revised priorities. What would you propose?",
 blame:"I can look into the handoffs, but I need specific facts rather than assigning blame. What can you do to help us move forward?",
 unclear:"I want to understand your explanation before drawing conclusions. Can you give me a clear status, what caused the delay, and what you propose next?"
@@ -154,7 +154,7 @@ let turn=0,first='unclear',firstWords='',lastKind='unclear',log=[];
 function classify(t,which){
 const v=t.toLowerCase().trim();
 if(!v)return 'unclear';
-if(/\b(fuck|shut up|screw you|idiot|asshole|don't care|whatever)\b/.test(v))return which===0?'hostile':'dismiss';
+if(/\b(fuck|shut up|screw you|idiot|asshole|kiss my ass|get lost|go away|leave me alone|don't care|whatever)\b/.test(v))return which===0?'hostile':'dismiss';
 if(which===1){
  if(/\b(sorry|apolog|reset|start over)\b/.test(v))return 'repair';
  if(/\b(scope|unrealistic|adjust|priority|need more time|deadline)\b/.test(v))return 'boundary';
