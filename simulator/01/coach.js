@@ -14,7 +14,7 @@
       manager: ['You are choosing to decline this request under these conditions. Is that a final decision, or are there different conditions you want to discuss?', 'We have made your boundary explicit. We still need to clarify responsibilities and next steps; I cannot promise that we will agree.'],
       clear: 'Your wording may make a refusal or limit explicit without agreeing to the assignment.',
       unresolved: 'Whether the other person accepts the limit, what responsibilities remain, and what happens next still need clarification.',
-      action: 'If useful, privately write one request you would decline, the limit you want to keep, and whether you are open to any alternative. You do not have to offer one.',
+      action: 'Privately write one request you would decline and the limit you want to keep. You do not have to offer an alternative.',
     },
     resign: {
       label: 'Leave or resign from the job', kind: 'resign',
@@ -25,10 +25,10 @@
         ['Keep it brief', 'I am resigning. Please explain the process and who I should speak with about notice and any handover.'],
       ],
       followups: ['I am confirming my decision to resign. Let us clarify notice and any handover.', 'I want to leave this job. I need information about the process before agreeing to practical details.'],
-      manager: ['You have said you want to resign. I will not treat that as agreement to finish this assignment. Would you like to confirm that decision and discuss the process?', 'We have clarified that you are choosing to leave. Notice, pay, and any handover still depend on your circumstances and applicable arrangements.'],
+      manager: ['You have said you want to resign. I will not treat that as agreement to finish this assignment. What practical details would you like to clarify?', 'We have clarified that you are choosing to leave. Notice, pay, and any handover still depend on your circumstances and applicable arrangements.'],
       clear: 'Your wording may make the decision to resign explicit, rather than accepting the assignment or only asking for a short break.',
       unresolved: 'Notice, final pay, timing, and any handover remain practical questions. This prototype cannot determine employment rights or consequences.',
-      action: 'If you choose, draft a private resignation statement and a list of questions about notice, final pay, and handover. Review your own circumstances before sending anything.',
+      action: 'Draft one private resignation statement. You decide whether to send it.',
     },
     scope: {
       label: 'Renegotiate scope, time, or expectations', kind: 'boundary',
@@ -42,7 +42,7 @@
       manager: ['You are asking to revisit scope and time rather than promising the current combination. Which tradeoff or support would you like us to discuss?', 'We have identified a need for revised expectations. The scope, deadline, and support still need agreement; no new commitment should be assumed.'],
       clear: 'Your wording may distinguish a scope change from a commitment you can realistically make, and put alternatives on the table.',
       unresolved: 'The actual scope of work, deadline, priorities, and support still need agreement. A request does not guarantee an adjustment.',
-      action: 'If helpful, make a short private list: what changed, what you can realistically offer, and which scope, time, or support options you want clarified.',
+      action: 'Privately note what changed and one scope, time, or support adjustment you want to ask about.',
     },
     help: {
       label: 'Communicate distress or ask for support', kind: 'unclear',
@@ -56,7 +56,7 @@
       manager: ['You are choosing to ask for support. You decide what personal details to share. What kind of help or adjustment would you like to discuss?', 'You have stated a need for support. We have not yet established what is available or appropriate; you can decide what to explore next.'],
       clear: 'Your wording may state a need for support while keeping control of what personal details you share.',
       unresolved: 'What support is available, who can provide it, and what you want to disclose remain your choices to explore.',
-      action: 'If useful, write down one form of support you might request and one detail you prefer to keep private. You can decide whether and with whom to discuss it.',
+      action: 'Privately name one form of support you might request. Share only what you choose.',
     },
     pause: {
       label: 'Pause the conversation without resigning', kind: 'exit',
@@ -70,7 +70,7 @@
       manager: ['You are asking to pause rather than resign. Would you like to discuss when or how to continue, without deciding the work issue right now?', 'We have distinguished a pause from leaving the job. Timing and the original work issue remain unresolved.'],
       clear: 'Your wording may distinguish taking a break from resigning or accepting a new obligation.',
       unresolved: 'When or how to resume, and the original issue, may still need discussion.',
-      action: 'If useful, rehearse one sentence asking for a pause and one way to clarify whether or when you want to return to the conversation.',
+      action: 'Rehearse one sentence asking for a pause. You choose whether or when to return.',
     },
     recovery: {
       label: 'Discuss accountability and a recovery plan', kind: 'own',
@@ -84,7 +84,7 @@
       manager: ['You are choosing to discuss your part and a recovery plan. What facts or limits should we clarify before setting a new expectation?', 'We have identified a need for a realistic plan. The remaining work, support, and delivery time still need to be confirmed.'],
       clear: 'Your wording may separate your part in the situation from promises you cannot yet make.',
       unresolved: 'The remaining work, support, and a realistic delivery time still need confirmation.',
-      action: 'If useful, draft a private update with what happened, what remains, and what you can realistically commit to. Include any support or adjustment you need.',
+      action: 'Draft one private update about what remains and what you can realistically offer.',
     },
     custom: {
       label: 'Another goal / I want to clarify it myself', kind: 'unclear',
@@ -94,7 +94,7 @@
       manager: ['I do not have a scripted response tailored to that goal. What would you like to clarify, without making a commitment you do not choose?', 'We have not established a shared understanding yet. You can clarify, pause, or choose a different way to communicate.'],
       clear: 'Your own wording is the starting point. This prototype cannot determine what it means to you.',
       unresolved: 'Your goal and what the other person understands may still need clarification. No intention or feeling can be established by this script.',
-      action: 'If useful, write what you want someone to understand and one question that could check whether they understood you. You can keep it private.',
+      action: 'Privately write one question that could check whether someone understood your goal.',
     },
   };
   // Exact curated examples only; arbitrary language is never classified by this coach.
@@ -104,7 +104,7 @@
     ['i need more time because the scope changed', { path: 'scope', goal: 'I want revised expectations that respect the scope change and my capacity.', hearing: 'A hypothetical manager may hear a request to revisit scope and time, rather than a promise to meet the original deadline.', tentative: 'You might be communicating a need for realistic expectations. You decide what facts and limits matter to you.' }],
   ]);
 
-  function createCoach({ moveDraft, onChange }) {
+  function createCoach({ moveDraft, onChange, onAdvance }) {
     const $ = id => document.getElementById(id);
     let confirmed = null;
     function resizeOptions() {
@@ -117,6 +117,12 @@
     }
     window.addEventListener('resize', resizeOptions);
     $('expressStudio').addEventListener('toggle', resizeOptions);
+    $('coachReview').addEventListener('toggle', () => {
+      if (!confirmed) return;
+      $('coachChoices').classList.toggle('hidden', $('coachReview').open);
+      if ($('coachReview').open) $('coachUnderstandingTitle').focus();
+      else resizeOptions();
+    });
     for (const [value, path] of Object.entries(paths)) {
       const option = document.createElement('option');
       option.value = value; option.textContent = path.label; $('coachPath').append(option);
@@ -132,10 +138,13 @@
       clearChoices();
       $('coachUnderstanding').classList.add('hidden');
       $('coachReview').open = true;
+      $('readingDetails').open = false;
+      $('expressionQuestion').classList.remove('hidden');
       for (const id of ['coachLiteral', 'coachHearing', 'coachTentative']) $(id).textContent = '';
       $('coachGoal').value = ''; $('coachPath').value = '';
-      $('coachStatus').textContent = 'You choose whether a possible reading fits.';
+      $('coachStatus').textContent = '';
     }
+    $('coachEditExpression').addEventListener('click', () => { reset(); $('expressWords').focus(); });
     $('expressWords').addEventListener('input', reset);
     $('coachGoal').addEventListener('input', clearChoices);
     $('coachPath').addEventListener('change', clearChoices);
@@ -146,6 +155,7 @@
         $('coachStatus').textContent = 'Enter the words you want to explore in Express. A local recording is not transcribed or interpreted by this coach.';
         $('expressWords').focus(); return;
       }
+      onAdvance();
       // Ignore only a final period and letter case when matching the displayed examples.
       const normalized = literal.trim().toLowerCase();
       const example = examples.get(normalized.endsWith('.') ? normalized.slice(0, -1) : normalized);
@@ -154,7 +164,8 @@
       $('coachTentative').textContent = example?.tentative || 'No intention or feeling is inferred. Choose a path and describe what you want to communicate, or keep your own wording.';
       $('coachPath').value = example?.path || '';
       $('coachGoal').value = example?.goal || '';
-      $('coachStatus').textContent = example ? 'A scripted example matches. Edit or reject this possible reading.' : 'Please clarify your goal; these words have no scripted reading. No interpretation or score is inferred.';
+      $('coachStatus').textContent = example ? 'Check this suggested goal.' : 'Please clarify your goal; no scripted reading matches.';
+      $('expressionQuestion').classList.add('hidden');
       $('coachUnderstanding').classList.remove('hidden');
       $('coachUnderstandingTitle').focus();
     });
@@ -204,10 +215,10 @@
       });
       if (options.length > 1) $('coachOptions').append(more);
       $('coachReview').open = false;
-      $('coachStatus').textContent = 'Goal confirmed. You can review or change it anytime.';
+      $('coachStatus').textContent = 'Goal confirmed.';
       $('coachChoices').classList.remove('hidden'); resizeOptions(); $('coachChoicesTitle').focus();
     });
-    return { reset, getContext: () => confirmed ? { ...confirmed } : null };
+    return { reset, focus: () => { (confirmed && !$('coachReview').open ? $('coachChoicesTitle') : $('coachUnderstanding').classList.contains('hidden') ? $('expressWords') : $('coachUnderstandingTitle')).focus(); }, getContext: () => confirmed ? { ...confirmed } : null };
   }
   window.HumanLiteracyCoach = { paths, createCoach };
 })();

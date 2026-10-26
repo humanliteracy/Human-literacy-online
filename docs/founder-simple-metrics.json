@@ -1,0 +1,1090 @@
+{
+  "baseline_sha": "e9c9042d251502505b4f32efd69d22a1deaab4a6",
+  "candidate": "PR #2 simplification; exact revision displayed by the independent preview",
+  "synthetic_example": "The expectations are unreasonable. I quit",
+  "definition": "Visible fields/actions exclude descendants of closed disclosures and display:none ancestors. Actions include main buttons and disclosure summaries. Six decision clicks exclude typing and optional disclosures; one synthetic text entry. Heights are CSS pixels, same Chromium and 844px viewport height.",
+  "before": [
+    {
+      "width": 1120,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 2181,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse"
+          ],
+          "practiceHeight": 96,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 3914,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 1829,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 4561,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachPath",
+            "coachGoal",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use my goal",
+            "Reject this",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2476,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 4406,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2321,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 4382,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2297,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 4533,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "\u201cI want to leave this job. I need information about the process before agreeing to practical details.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2297,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 4771,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "Review your goal",
+            "Try again",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2297,
+          "completionHeight": 582
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    },
+    {
+      "width": 320,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 3116,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse"
+          ],
+          "practiceHeight": 106,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 5933,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2922,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 6880,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachPath",
+            "coachGoal",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use my goal",
+            "Reject this",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3869,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 6636,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3626,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 6635,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3625,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 6931,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "\u201cI want to leave this job. I need information about the process before agreeing to practical details.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3625,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 7562,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "Review your goal",
+            "Try again",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3625,
+          "completionHeight": 934
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    },
+    {
+      "width": 390,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 2646,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse"
+          ],
+          "practiceHeight": 106,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 5074,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 2534,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 5906,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachPath",
+            "coachGoal",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use my goal",
+            "Reject this",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3365,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 5708,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3168,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 5707,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "\u201cI'm tired of this conversation. Leave me alone.\u201d",
+            "\u201cThe client changed the scope. I need us to agree on what is realistic.\u201d",
+            "\u201cIt isn't my fault. Everybody else messed this up.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3167,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 6008,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "yourReply",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "\u201cI want to leave this job. I need information about the process before agreeing to practical details.\u201d",
+            "Say this \u2192",
+            "Try private expression",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3167,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 6404,
+          "visibleFields": [
+            "practiceScoreToggle",
+            "expressWords",
+            "recordConsent",
+            "rehearsedWords",
+            "coachWording0",
+            "practiceWords"
+          ],
+          "visibleActions": [
+            "Review your goal",
+            "Try again",
+            "Optional: Express \u2192 Listen Back \u2192 Rehearse",
+            "Record",
+            "Stop recording",
+            "Delete recording",
+            "Optional browser speech-to-text",
+            "Help me understand",
+            "Review goal and reading",
+            "Use this wording",
+            "More responses (2)",
+            "Move draft",
+            "Clear all"
+          ],
+          "practiceHeight": 3167,
+          "completionHeight": 760
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    }
+  ],
+  "after": [
+    {
+      "width": 1120,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 1543,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 96,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 1203,
+          "visibleFields": [
+            "expressWords"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Next",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 564,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 1484,
+          "visibleFields": [
+            "coachPath",
+            "coachGoal"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use my goal",
+            "Why this suggestion?",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 844,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 1446,
+          "visibleFields": [
+            "coachWording0"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use this wording",
+            "More responses (2)",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 806,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 1583,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 96,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 1543,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "More responses (1)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 96,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 1522,
+          "visibleFields": [],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "What remains open",
+            "Try again",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 96,
+          "completionHeight": 450
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    },
+    {
+      "width": 320,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 1732,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 1199,
+          "visibleFields": [
+            "expressWords"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Next",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 568,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 1468,
+          "visibleFields": [
+            "coachPath",
+            "coachGoal"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use my goal",
+            "Why this suggestion?",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 837,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 1521,
+          "visibleFields": [
+            "coachWording0"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use this wording",
+            "More responses (2)",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 890,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 1771,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 1763,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "More responses (1)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 1847,
+          "visibleFields": [],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "What remains open",
+            "Try again",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 666
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    },
+    {
+      "width": 390,
+      "stages": [
+        {
+          "stage": "entry",
+          "pageHeight": 1490,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "express",
+          "pageHeight": 1162,
+          "visibleFields": [
+            "expressWords"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Next",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 568,
+          "completionHeight": 0
+        },
+        {
+          "stage": "goal",
+          "pageHeight": 1431,
+          "visibleFields": [
+            "coachPath",
+            "coachGoal"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use my goal",
+            "Why this suggestion?",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 837,
+          "completionHeight": 0
+        },
+        {
+          "stage": "wording",
+          "pageHeight": 1413,
+          "visibleFields": [
+            "coachWording0"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "Private drafting",
+            "Change goal",
+            "Use this wording",
+            "More responses (2)",
+            "Edit first reaction",
+            "Tools and privacy",
+            "Back to reply",
+            "Clear all",
+            "Conversation so far"
+          ],
+          "practiceHeight": 819,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reply",
+          "pageHeight": 1530,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI underestimated the work. I should have warned you yesterday. Here is what remains.\u201d",
+            "More responses (3)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "followup",
+          "pageHeight": 1554,
+          "visibleFields": [
+            "yourReply"
+          ],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "\u201cI am confirming my decision to resign. Let us clarify notice and any handover.\u201d",
+            "More responses (1)",
+            "Say this \u2192",
+            "Help me draft",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 0
+        },
+        {
+          "stage": "reflection",
+          "pageHeight": 1568,
+          "visibleFields": [],
+          "visibleActions": [
+            "Jordan\u2019s question",
+            "View illustration",
+            "What remains open",
+            "Try again",
+            "Private drafting",
+            "Conversation so far"
+          ],
+          "practiceHeight": 84,
+          "completionHeight": 519
+        }
+      ],
+      "decisionClicks": 6,
+      "textEntries": 1
+    }
+  ]
+}

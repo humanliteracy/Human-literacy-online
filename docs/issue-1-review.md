@@ -1,72 +1,77 @@
-# Issue #1: Communication Coach review
+# Communication Coach: founder simplification review
 
-Issue: <https://github.com/humanliteracy/Human-literacy-online/issues/1>
+Draft PR: <https://github.com/humanliteracy/Human-literacy-online/pull/2> · [Changed files](https://github.com/humanliteracy/Human-literacy-online/pull/2/files).
 
-Branch: `feat/issue-1-communication-coach`. Prepared for owner review; no merge or site publication is part of this change.
+Work continues on `feat/issue-1-communication-coach`. The checkout was clean and its local/remote head matched `e9c9042d251502505b4f32efd69d22a1deaab4a6` before editing. Issue #4 preview work remains committed separately on `design/issue-4-independent-preview`; it was not reset, merged, or overwritten.
 
-## Release notes
+The founder reported successful Chromebook access and a complicated experience, referencing E18 in the Master Project Register. This revision applies the six requirements supplied with that review. The register itself was not available through this checkout or connected tools; its original wording has not been independently retrieved. Founder acceptance of this updated revision remains pending.
 
-- Adds an optional, explicitly scripted **Understand → Choose → Practice** coach inside the working Express → Listen Back → Rehearse flow.
-- Shows the learner's literal words and a tentative reading for the three curated issue examples. Unknown wording asks for clarification. Goals are editable and interpretations rejectable; no hidden emotion is asserted.
-- Shows one suggested response first, with the other two fully editable responses behind **More responses (2)**. All seven goal paths remain available. The confirmed interpretation folds into **Review goal and reading**, where it can still be edited or rejected. Moving any wording only fills the simulator reply; sending remains a separate choice.
-- Shortens visible action labels, retains descriptive accessible names, removes the mobile rule that squeezed buttons into narrow columns, and keeps touch targets at least 44px high. Extra responses grow to show their complete wording when revealed, including after a viewport change while the practice panel is closed.
-- Keeps authored consequences, unresolved questions, and one optional practical next step visible at completion. Removes the repetitive takeaway paragraph and long grade-free explanation. **Review your goal** keeps the chosen goal and additional interpretation available on demand. Keyboard focus moves to the completion heading and returns to the reply heading on replay.
-- Preserves the learner's decision, including resignation and refusal. No numerical score is fabricated for unknown wording or learner-selected goals. Existing optional numeric coaching still works for the original authored conversation choices; the default remains unscored.
-- Retains consent-based local recording, playback, deletion, the 90-second cap, cancellation/race protection, replay, and the neutral illustrated manager. Browser dictation has separate prominent external-service consent, never starts automatically, and cannot run alongside local recording.
-- Clearing private practice clears goal wording from pending and later reflections while preserving an already-submitted roleplay path. The simulator reply/history remain separately controlled as disclosed.
-- Documents a future server-side interpretation/conversation adapter. **V1 is scripted. V2 AI is a design only**: no backend, model integration, billing, media uploads, or client-side provider keys are activated.
+## Resulting experience
 
-## Actual automated results
+1. **Reply:** one suggested response, with all remaining authored responses under **More responses**. Own wording is always available. **Help me draft** starts the optional Coach.
+2. **Express:** one private text field and **Next**. No recording, reflection field, or rehearsal draft competes with this question.
+3. **Goal:** confirm or change the communication path and editable goal. **Why this suggestion?** retains the literal expression, tentative reading and rejection option. Unknown wording requires the learner to clarify; no intent is inferred.
+4. **Wording:** one editable suggestion. **More responses (2)** retains both alternatives; **Change goal** and **Edit first reaction** remain available. Editing the goal invalidates stale suggestions.
+5. **Reply and send:** **Use this wording** fills the reply, closes private drafting and focuses the reply. Nothing is sent until the learner chooses **Say this**. A second conversational turn remains available.
+6. **Finish:** one relevant takeaway and one optional practical action. **What remains open** retains consequences/questions and goal detail; the transcript is available separately on request.
 
-Run on October 25, 2026:
+Only one primary question is shown at a time. Jordan's question can be reopened as reference while drafting. The original illustration, transcript, existing optional feedback settings, recording/listening, browser dictation, rehearsal and detailed privacy explanation remain accessible through native keyboard-operable disclosures. No functionality is replaced by a screenshot or a mock service.
 
-```sh
-BROWSER_EXECUTABLE_PATH=/usr/bin/chromium npm test
-```
+All seven learner-selected paths remain: refusal/boundaries, resignation, scope, support, pause, recovery and custom. There is no forced agreement. Scoring stays off by default; the existing opt-in remains tucked away. No new scoring, account, backend, AI service, provider key or dependency is introduced.
 
-- **77 browser tests passed, 0 failed, 0 skipped; 33.3 seconds locally.** No retries are configured.
-- The suite uses full Chromium's current headless mode with synthetic media and retains actual browser recording/playback checks. [Draft PR #2's checks](https://github.com/humanliteracy/Human-literacy-online/pull/2/checks) show the current GitHub Actions results for the same `npm test` workflow.
-- Site audit: **13 shipped HTML pages, 0 broken links/errors**, with the 10 existing static-H1 warnings. Lesson headings are generated by JavaScript and verified in browser tests. Generated Playwright reports/results are excluded from the site audit.
-- JavaScript syntax check: **13 shipped inline/external scripts parsed successfully**.
-- `git diff --check`: passed.
-- `git diff --quiet bcb4e4f -- lessons media index.html`: passed. All ten approved lessons, both approved videos, and homepage are unchanged from the base `main` revision.
-- `git diff --quiet 3b4d9b5 -- simulator/01/speech.js package.json package-lock.json`: passed. Browser dictation and dependency declarations are unchanged by the mobile revision. No backend or AI service was added.
+## Resignation correction
 
-The suite retains the prior 61 regression cases, with disclosure navigation added where needed, plus **16 mobile cases: eight each at 320px and 390px**. Both widths exercise one response by default, all alternatives, every goal path, edited draft retention, goal rejection/editing, keyboard-only alternative selection and explicit submission, completion/replay focus, one-line action labels, touch-target size, resizing while closed, private cleanup, permission denial, custom drafts, no uploads, and no persistent storage. Existing cases still cover the three issue examples, unknown wording, actual browser audio encoding/playback with a synthetic microphone, recording races, the 90-second limit, real navigation cleanup, optional scoring, ten complete lesson workflows, both videos, and homepage navigation.
+Previously, typing **I am confirming my decision to resign.** could fall through the direct script to a generic request for a project plan. The direct final resignation reply also asked the learner to confirm again. The exact confirmation now follows the resignation branch and Jordan explicitly acknowledges it, discusses notice/pay/timing/handover and does not accept the assignment on the learner's behalf. The coached response also stops asking for repeated confirmation. Direct and coached-then-edited confirmation are both tested.
 
-Local versions: Node.js 24.19.0, Python 3.12.14, Playwright 1.64.1, system Chromium 154.0.8037.57. GitHub Actions uses Node.js 22, Python 3.12, and Playwright-managed full Chromium. Test failures are also reported as GitHub check annotations.
+## Before/after: visible work and interaction effort
 
-## Measured mobile layout
+Baseline is the previous PR revision `e9c9042`. The same synthetic resignation example, Chromium, fonts and 844px viewport height were used. Counts include only rendered controls, excluding closed-disclosure descendants. [Raw measurements and definitions](founder-simple-metrics.json).
 
-For the curated resignation example after goal confirmation, measured before and after this revision with the same browser, font, and 844px viewport height:
-
-| Viewport width | Default Coach panel height | Default completion height |
+| Moment | Before | After |
 | --- | --- | --- |
-| 320px | 3307 → 1056px (68% shorter) | 1935 → 934px (52% shorter) |
-| 390px | 2716 → 940px (65% shorter) | 1547 → 760px (51% shorter) |
+| Open private drafting | Reply plus Express, Listen Back and Rehearse stacked together; 6 visible fields | One expression question; 1 visible field |
+| Review goal | Earlier work areas remain, with 8 visible fields | One goal question; path and editable goal, 2 visible fields |
+| Choose wording | Earlier work areas remain, with 7 visible fields | One editable suggestion, 1 visible field |
+| Return to reply | Private stack remains open | Drafting closes; reply receives focus |
+| Finish | Multiple reflection prompts and open drafting stack | One takeaway, one optional action; details and drafting folded |
+| Required decisions for this example | 6 clicks and 1 text entry | 6 clicks and 1 text entry |
 
-These measurements describe the default folded view of this example. Revealing more responses or goal details intentionally adds height; no responses or learner decisions were removed. Long custom goals can require more space.
+The six clicks are Help me draft → Next → Use my goal → Use this wording → Say this → follow-up response. This revision reduces concurrent reading, fields and scrolling; it does **not** claim fewer required decision clicks. Explicit transfer and sending remain separate. No optional disclosure must be opened for this default example.
+
+| Width | Open expression area | Wording area | Completion card |
+| --- | --- | --- | --- |
+| 320px | 2922 → 568px (81% shorter) | 3626 → 890px (75% shorter) | 934 → 666px (29% shorter) |
+| 390px | 2534 → 568px (78% shorter) | 3168 → 819px (74% shorter) | 760 → 519px (32% shorter) |
+
+Area heights cover the full private drafting disclosure, including its visible optional menus; completion heights cover the completion card. Revealing tools, alternatives, long custom wording or goal detail intentionally adds space.
 
 ## Screenshots
 
-Desktop, 1120px browser viewport:
+[Before: 390px stacked expression](screenshots/founder-before-express-390.png) · [After: one expression question](screenshots/founder-simple-express-390.png) · [Goal question](screenshots/founder-simple-goal-390.png) · [Initial reply](screenshots/founder-simple-entry-390.png).
 
-![Desktop scripted coach with one suggested response and accessible disclosures](screenshots/issue-1-coach-desktop.png)
+[Desktop wording](screenshots/founder-simple-wording-1120.png) · [320px wording](screenshots/founder-simple-wording-320.png) · [390px wording](screenshots/founder-simple-wording-390.png).
 
-Mobile, 390px browser viewport:
+[Desktop reflection](screenshots/founder-simple-reflection-1120.png) · [320px reflection](screenshots/founder-simple-reflection-320.png) · [390px reflection](screenshots/founder-simple-reflection-390.png).
 
-![Mobile scripted coach showing one response first](screenshots/issue-1-coach-mobile.png)
+All captured inputs are synthetic. No founder answers, private register contents or raw audio are included.
 
-[320px Coach screenshot](screenshots/issue-1-coach-mobile-320.png) · [All three responses revealed at 390px](screenshots/issue-1-alternatives-mobile.png) · [Editable reading and goal at 390px](screenshots/issue-1-reading-mobile.png)
+## Verification
 
-Completed resignation path, with no default grade and resignation-specific real-world practice:
+On 26 October 2026: **85 browser tests passed, 0 failed, 0 skipped, 3.1 minutes**, with no retries. Thirteen shipped scripts parsed. The static audit found 13 pages, zero broken links/errors, and the ten existing lesson static-heading warnings; live lesson headings are checked in the browser. Four negative preview identity/integrity checks passed. `git diff --check` and protected-path comparisons passed. Exact independently downloaded preview verification is recorded in the founder handoff. Reproduce application checks with:
 
-![Resignation reflection and optional real-world practice](screenshots/issue-1-resignation-reflection.png)
+```sh
+BROWSER_EXECUTABLE_PATH=/usr/bin/chromium npm test
+python3 review/check_integrity.py
+```
 
-[320px completion screenshot](screenshots/issue-1-reflection-mobile-320.png) · [390px completion screenshot](screenshots/issue-1-reflection-mobile-390.png)
+The existing 77 cases remain, with disclosure-opening steps adapted to the simplified UI. Eight focused cases were added: two mobile sequential/keyboard journeys, two explicit resignation confirmations, two pending-microphone close paths, and two dictation cancellation paths. These cover desktop and 320px/390px reflow, focus, alternatives, explicit sending, unscored defaults, all seven decisions, local media lifecycle, ten complete lesson workflows and approved videos. Tests fail on browser JavaScript exceptions.
 
-## Limits and review focus
+The tools disclosure cancels pending/active microphone use and dictation when closed; late results cannot restart or refill it. Advancing to goal review also stops live dictation/recording. The 90-second limit, consent withdrawal, delete, page hiding/navigation cleanup, playback, no uploads and no persistent response storage remain tested.
 
-Browser speech-to-text tests use a mocked API and do not contact a real external speech provider. Recording tests use a synthetic microphone, not a physical device. Live speech-service processing/retention, physical microphone quality, Firefox, Safari, mobile operating-system permission dialogs, and screen-reader software were not tested. Keyboard navigation, semantic labels, and mobile dimensions were tested; this is not a full accessibility audit.
+The local review wrapper is reused from Issue #4 in [review/local_preview.py](../review/local_preview.py), parameterized for an immutable candidate SHA and independently supplied archive checksum. Its small founder launch block verifies the wrapper itself before execution, then verifies the source archive. It binds only loopback, requires a fresh HttpOnly/SameSite session, rejects foreign Host/Origin and writes, serves an immutable in-memory allowlist, and adds an unreleased/full-source-SHA banner only to HTTP responses. Lesson source bytes are unchanged.
 
-V1 only matches the three curated examples automatically. Other phrases deliberately require manual goal clarification. Existing direct, uncoached roleplay rules remain a limited script. Review the authored wording and learner choices before considering a merge. A future genuinely contextual service would need the separate owner-approved backend and consent contract in [the adapter design](communication-coach-adapter.md).
+Limits: automated Chromium with synthetic microphone and mocked speech-provider lifecycle; no live external speech service, physical microphone/phone or screen-reader software is claimed as tested. Founder Chromebook access succeeded for the earlier revision; this updated candidate still needs the founder's own opening and interaction confirmation. This is not a full accessibility audit.
+
+## Release boundary
+
+All ten approved lesson files, both approved videos, homepage, unrelated work, dependency declarations and shared browser/CI configuration are preserved. GitHub Pages remains configured to publish `main`; updating this draft branch does not publish the site. No merge, production deploy, paid service, account or billing activation is authorized. Next gate: founder tests the exact unreleased candidate; any later release requires separate explicit approval.

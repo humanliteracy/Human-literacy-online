@@ -1,6 +1,9 @@
+const { reveal } = require('./review-helpers.cjs');
 const { test, expect } = require('@playwright/test');
 
 async function understand(page, words = 'The expectations are unreasonable. I quit') {
+  await reveal(page, 'expressStudio');
+  if (!await page.locator('#expressWords').isVisible()) await page.locator('#coachEditExpression').click();
   await page.locator('#expressWords').fill(words);
   await page.locator('#coachUnderstand').click();
   await expect(page.locator('#coachUnderstandingTitle')).toBeFocused();
@@ -45,7 +48,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('.coach-option')).toHaveCount(3);
       await expect(page.locator('#coachWording1')).toBeHidden();
       await expect(page.locator('#coachWording2')).toBeHidden();
-      const collapsed = await page.locator('.coach-panel').evaluate(n => n.getBoundingClientRect().height);
+      const collapsed = await page.locator('#coachFlow').evaluate(n => n.getBoundingClientRect().height);
       await page.locator('#coachMore > summary').click();
       await expect(page.locator('.coach-option:visible')).toHaveCount(3);
       await expect.poll(() => page.locator('.coach-option textarea').evaluateAll(nodes => nodes.every(n => n.scrollHeight <= n.clientHeight))).toBe(true);
@@ -54,7 +57,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('.coach-option:visible')).toHaveCount(1);
       await page.locator('#coachMore > summary').click();
       await expect(page.locator('#coachWording1')).toHaveValue('I am resigning. I want to discuss notice and any handover.');
-      const expanded = await page.locator('.coach-panel').evaluate(n => n.getBoundingClientRect().height);
+      const expanded = await page.locator('#coachFlow').evaluate(n => n.getBoundingClientRect().height);
       expect(expanded - collapsed).toBeGreaterThan(200);
       expect(collapsed).toBeLessThan(1200);
       await readableActions(page);
@@ -109,7 +112,7 @@ for (const width of [320, 390]) {
 
     test('short action labels fit at each stage without narrow multi-line buttons', async ({ page }) => {
       await readableActions(page);
-      await page.locator('#speechPanel > summary').click();
+      await reveal(page, 'speechPanel');
       await readableActions(page);
       await understand(page);
       await readableActions(page);
@@ -166,6 +169,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#coachChosenGoal')).toContainText('clarifying notice');
       await expect(page.locator('#coachMore')).not.toHaveAttribute('open');
       await page.locator('#coachReview > summary').click();
+      await reveal(page, 'readingDetails');
       await page.locator('#coachReject').click();
       await expect(page.locator('#coachPath')).toBeFocused();
       await expect(page.locator('#coachGoal')).toHaveValue('');
@@ -182,7 +186,9 @@ for (const width of [320, 390]) {
       await page.locator('#coachMore > summary').click();
       await page.locator('.coach-option button').first().click();
       await page.locator('#send').click();
+      await reveal(page, 'expressStudio');
       await page.locator('#practiceClear').click();
+      await page.locator('#returnToReply').click();
       await expect(page.locator('#coachOptions')).toBeEmpty();
       await expect(page.locator('#coachMore')).toHaveCount(0);
       await page.locator('#choices button').first().click();
@@ -202,7 +208,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#completionTitle')).toBeFocused();
       await expect(page.locator('#outcome')).toBeVisible();
       await expect(page.locator('#outcome')).toContainText('assignment is not accepted');
-      await expect(page.locator('#unresolved')).toBeVisible();
+      await expect(page.locator('#unresolved')).toBeHidden();
       await expect(page.locator('#unresolved')).toContainText('final pay');
       await expect(page.locator('#realWorldPractice')).toBeVisible();
       await expect(page.locator('#realWorldPractice')).toContainText('resignation statement');
@@ -229,12 +235,15 @@ for (const width of [320, 390]) {
       await confirm(page);
       await page.locator('#coachMore > summary').click();
       expect(await page.evaluate(() => micRequests)).toBe(0);
+      await reveal(page, 'recordingPanel');
       await page.locator('#recordConsent').check();
       await page.locator('#recordStart').click();
       await expect(page.locator('#recordStatus')).toContainText('permission was declined');
       await page.locator('#recordConsent').uncheck();
       await expect(page.locator('.coach-option:visible')).toHaveCount(3);
+      await reveal(page, 'rehearsalPanel');
       await page.locator('#practiceWords').fill('I choose my own words and boundaries.');
+      await reveal(page, 'rehearsalPanel');
       await page.locator('#practiceTransfer').click();
       await expect(page.locator('#yourReply')).toHaveValue('I choose my own words and boundaries.');
       await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');

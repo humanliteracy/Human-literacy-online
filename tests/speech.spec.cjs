@@ -1,3 +1,4 @@
+const { reveal } = require('./review-helpers.cjs');
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
@@ -18,7 +19,7 @@ test.beforeEach(async ({ page }) => {
   });
   await page.goto('/simulator/01/');
   await page.locator('#openPractice').click();
-  await page.locator('#speechPanel > summary').click();
+  await reveal(page, 'speechPanel');
 });
 test.afterEach(async ({ page }) => { expect(page.errors).toEqual([]); });
 
@@ -26,6 +27,7 @@ test('browser dictation has prominent separate consent and cannot start just by 
   await expect(page.locator('#speechPrivacy')).toContainText('send live speech');
   await expect(page.locator('#speechConsent')).not.toBeChecked();
   await expect(page.locator('#speechStart')).toBeDisabled();
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await expect(page.locator('#speechStart')).toBeDisabled();
   expect(await page.evaluate(() => speechStarts)).toBe(0);
@@ -51,12 +53,17 @@ test('dictation appends reviewable expression and never starts coaching or sends
   await expect(page.locator('#speechStop')).toBeDisabled();
 });
 
-for (const action of ['withdraw consent', 'close speech option', 'close private practice', 'clear private practice', 'hide page']) {
+for (const action of ['withdraw consent', 'close speech option', 'close tools', 'review goal', 'close private practice', 'clear private practice', 'hide page']) {
   test(`${action} cancels browser dictation and ignores late results`, async ({ page }) => {
     await page.locator('#speechConsent').check();
     await page.locator('#speechStart').click();
     if (action === 'withdraw consent') await page.locator('#speechConsent').uncheck();
     if (action === 'close speech option') await page.locator('#speechPanel > summary').click();
+    if (action === 'close tools') await page.locator('#practiceTools > summary').click();
+    if (action === 'review goal') {
+      await page.locator('#expressWords').fill('The expectations are unreasonable. I quit');
+      await page.locator('#coachUnderstand').click();
+    }
     if (action === 'close private practice') await page.locator('#expressStudio > summary').click();
     if (action === 'clear private practice') await page.locator('#practiceClear').click();
     if (action === 'hide page') await page.evaluate(() => {
@@ -65,7 +72,7 @@ for (const action of ['withdraw consent', 'close speech option', 'close private 
     });
     await expect.poll(() => page.evaluate(() => speechAborts)).toBe(1);
     await page.evaluate(() => emitSpeech('A stale private transcription'));
-    await expect(page.locator('#expressWords')).toHaveValue('');
+    await expect(page.locator('#expressWords')).toHaveValue(action === 'review goal' ? 'The expectations are unreasonable. I quit' : '');
     await expect(page.locator('#speechStop')).toBeDisabled();
   });
 }
@@ -84,10 +91,11 @@ test('unsupported speech recognition keeps writing and local recording available
   await page.addInitScript(() => { window.SpeechRecognition = undefined; window.webkitSpeechRecognition = undefined; });
   await page.reload();
   await page.locator('#openPractice').click();
-  await page.locator('#speechPanel > summary').click();
+  await reveal(page, 'speechPanel');
   await page.locator('#speechConsent').check();
   await expect(page.locator('#speechStart')).toBeDisabled();
   await expect(page.locator('#speechStatus')).toContainText('unavailable');
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await expect(page.locator('#recordStart')).toBeEnabled();
   await page.locator('#expressWords').fill('Written fallback');
@@ -98,6 +106,7 @@ test('starting local recording cancels browser dictation', async ({ page, contex
   await context.grantPermissions(['microphone']);
   await page.locator('#speechConsent').check();
   await page.locator('#speechStart').click();
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await page.locator('#recordStart').click();
   await expect(page.locator('#recordStatus')).toContainText('Recording…');

@@ -1,3 +1,4 @@
+const { reveal, feedback } = require('./review-helpers.cjs');
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
@@ -10,7 +11,7 @@ test.afterEach(async ({ page }) => { expect(page.errors).toEqual([]); });
 
 async function understand(page, words) {
   await page.locator('#expressWords').fill(words);
-  await page.getByRole('button', { name: 'Help me understand what I said', exact: true }).click();
+  await page.getByRole('button', { name: 'Next: choose what I want to communicate', exact: true }).click();
   await expect(page.locator('#coachLiteral')).toHaveText(words);
   await expect(page.locator('#coachUnderstandingTitle')).toBeFocused();
 }
@@ -46,6 +47,7 @@ test('strong expression has a tentative, rejectable reading and can preserve a f
   await expect(page.locator('#madeClear')).toContainText('refusal or limit');
   await expect(page.locator('#outcome')).toContainText('refusal or limit');
   await expect(page.locator('#realWorldPractice')).toContainText('decline');
+  await feedback(page);
   await page.locator('#practiceScoreToggle').check();
   await expect(page.locator('#score')).toHaveText('');
   await expect(page.locator('#scoreDetails')).toContainText('No numerical rubric');
@@ -106,10 +108,12 @@ test('unexpected wording asks for clarification rather than inventing an interpr
 });
 
 test('unknown free-form roleplay wording does not receive a fabricated numerical score', async ({ page }) => {
+  await page.locator('#returnToReply').click();
   await page.locator('#yourReply').fill('flibberty pancake moon');
   await page.locator('#send').click();
   await page.locator('#yourReply').fill('purple orbital teapot');
   await page.locator('#send').click();
+  await feedback(page);
   await page.locator('#practiceScoreToggle').check();
   await expect(page.locator('#score')).toHaveText('');
   await expect(page.locator('#scoreDetails')).toContainText('unrecognized wording');
@@ -120,6 +124,7 @@ test('rejecting an interpretation leaves the expression intact and lets the lear
   await understand(page, 'You all can kiss my ass');
   await confirm(page);
   await page.locator('#coachReview > summary').click();
+  await reveal(page, 'readingDetails');
   await page.locator('#coachReject').click();
   await expect(page.locator('#coachChoices')).toBeHidden();
   await expect(page.locator('#coachPath')).toHaveValue('');
@@ -142,6 +147,7 @@ test('editing the goal or source expression invalidates stale suggestions', asyn
   await expect(page.locator('#coachChoices')).toBeHidden();
   await confirm(page);
   await expect(page.locator('#coachChosenGoal')).toContainText('clarifying notice');
+  await page.locator('#coachEditExpression').click();
   await page.locator('#expressWords').fill('Something different');
   await expect(page.locator('#coachUnderstanding')).toBeHidden();
   await expect(page.locator('#coachOptions')).toBeEmpty();
@@ -151,7 +157,9 @@ test('editing the goal or source expression invalidates stale suggestions', asyn
 test('an entirely custom rehearsal is not overwritten or auto-submitted by the coach', async ({ page }) => {
   await understand(page, 'I need more time because the scope changed');
   await confirm(page);
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('I will not commit before we clarify which work matters.');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#yourReply')).toHaveValue('I will not commit before we clarify which work matters.');
   await expect(page.locator('#history .bubble')).toHaveCount(1);
@@ -184,6 +192,7 @@ test('literal words and custom goals are displayed as text, never interpreted as
 test('clearing private practice clears coaching interpretations and drafts too', async ({ page }) => {
   await understand(page, 'The expectations are unreasonable. I quit');
   await confirm(page);
+  await reveal(page, 'expressStudio');
   await page.locator('#practiceClear').click();
   await expect(page.locator('#coachUnderstanding')).toBeHidden();
   await expect(page.locator('#coachLiteral')).toBeEmpty();
@@ -205,7 +214,9 @@ test('cleared private goal wording cannot reappear after a roleplay completes', 
   await confirm(page);
   await moveFirst(page);
   await page.locator('#send').click();
+  await reveal(page, 'expressStudio');
   await page.locator('#practiceClear').click();
+  await page.locator('#returnToReply').click();
   await page.locator('#choices button').first().click();
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#coachGoal')).toHaveValue('');
@@ -223,7 +234,7 @@ test('the coach works using only the keyboard and exposes named controls', async
   await page.keyboard.press('Tab');
   await expect(page.getByRole('combobox', { name: 'What do you want to communicate?' })).toBeFocused();
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('textbox', { name: 'My goal (edit or replace this possible reading)' })).toBeFocused();
+  await expect(page.getByRole('textbox', { name: 'My goal' })).toBeFocused();
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
   await expect(page.locator('#coachChoicesTitle')).toBeFocused();
@@ -244,7 +255,7 @@ test('expanded coach fits a 320px viewport', async ({ page }, testInfo) => {
   await expect(page.locator('.coach-option:visible')).toHaveCount(3);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect.poll(() => page.locator('.coach-option textarea:visible').evaluateAll(nodes => nodes.every(n => n.scrollHeight <= n.clientHeight))).toBe(true);
-  await page.locator('.coach-panel').screenshot({ path: testInfo.outputPath('coach-mobile.png') });
+  await page.locator('#coachFlow').screenshot({ path: testInfo.outputPath('coach-mobile.png') });
 });
 
 for (const [path, goal, reflection] of [
@@ -261,6 +272,7 @@ for (const [path, goal, reflection] of [
     await completeCoachedRoleplay(page);
     await expect(page.locator('#reflectionBasis')).toContainText(goal);
     await expect(page.locator('#realWorldPractice')).toContainText(reflection);
+    await feedback(page);
     await page.locator('#practiceScoreToggle').check();
     await expect(page.locator('#score')).toHaveText('');
   });

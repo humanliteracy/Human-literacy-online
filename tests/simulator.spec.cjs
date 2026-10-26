@@ -1,3 +1,4 @@
+const { reveal, feedback, replies } = require('./review-helpers.cjs');
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
@@ -22,7 +23,7 @@ test.afterEach(async ({ page }, testInfo) => {
 
 async function openPractice(page) {
   await page.goto('/simulator/01/');
-  await page.getByRole('button', { name: 'Try private expression and rehearsal' }).click();
+  await page.getByRole('button', { name: 'Help me draft a response' }).click();
   await expect(page.locator('#expressWords')).toBeFocused();
 }
 
@@ -47,6 +48,7 @@ async function recordTake(page, context) {
   await context.grantPermissions(['microphone']);
   await probeMicrophone(page);
   await openPractice(page);
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await page.locator('#recordStart').click();
   await expect(page.locator('#recordStatus')).toContainText('Recording…');
@@ -69,7 +71,9 @@ test('private expression requires opt-in and never sends, scores, stores, or upl
   await expect(page.locator('#recordConsent')).not.toBeChecked();
   await expect(page.locator('#recordStart')).toBeDisabled();
   await page.locator('#expressWords').fill('I am furious and need space.');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#rehearsedWords').fill('I need a realistic deadline.');
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   expect(await page.evaluate(() => micCalls)).toBe(0);
   await expect(page.locator('#yourReply')).toHaveValue('');
@@ -82,12 +86,16 @@ test('private expression requires opt-in and never sends, scores, stores, or upl
 
 test('rehearsal transfers only the chosen draft; sending remains a separate action', async ({ page }) => {
   await openPractice(page);
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#practiceWords')).toBeFocused();
   await expect(page.locator('#practiceStatus')).toContainText('Write a rehearsal draft first');
   await page.locator('#expressWords').fill('My private first reaction');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#rehearsedWords').fill('My private reflection');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('I need us to agree on a realistic deadline.');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#yourReply')).toHaveValue('I need us to agree on a realistic deadline.');
   await expect(page.locator('#yourReply')).toBeFocused();
@@ -101,13 +109,16 @@ test('rehearsal transfers only the chosen draft; sending remains a separate acti
 
 test('roleplay is unscored by default; scoring remains an explicit choice across replay', async ({ page }) => {
   await page.goto('/simulator/01/');
+  if (await page.locator('#expressStudio').evaluate(n => n.open)) await page.locator('#returnToReply').click();
   await page.locator('#choices button').nth(0).click();
+  await replies(page);
   await page.locator('#choices button').nth(1).click();
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#scoreArea')).toBeHidden();
   await expect(page.locator('#score')).toHaveText('');
   await expect(page.locator('#scoreDetails')).toHaveText('');
   await expect(page.locator('#exploreNote')).toBeVisible();
+  await feedback(page);
   await page.locator('#practiceScoreToggle').check();
   await expect(page.locator('#scoreArea')).toBeVisible();
   await expect(page.locator('#score')).toHaveText('94/100');
@@ -122,9 +133,13 @@ test('roleplay is unscored by default; scoring remains an explicit choice across
 
 test('moving a draft after completion starts a fresh, unsubmitted roleplay', async ({ page }) => {
   await openPractice(page);
+  if (await page.locator('#expressStudio').evaluate(n => n.open)) await page.locator('#returnToReply').click();
   await page.locator('#choices button').nth(0).click();
+  await replies(page);
   await page.locator('#choices button').nth(1).click();
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('I want to reset this conversation.');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
   await expect(page.locator('#yourReply')).toHaveValue('I want to reset this conversation.');
@@ -156,6 +171,7 @@ for (const action of ['withdraw consent', 'close practice', 'hide page']) {
     await context.grantPermissions(['microphone']);
     await probeMicrophone(page);
     await openPractice(page);
+    await reveal(page, 'recordingPanel');
     await page.locator('#recordConsent').check();
     await page.locator('#recordStart').click();
     await expect(page.locator('#recordStatus')).toContainText('Recording…');
@@ -177,7 +193,9 @@ for (const action of ['withdraw consent', 'close practice', 'hide page']) {
 test('real page navigation clears private writing and audio before leaving', async ({ page, context }) => {
   await recordTake(page, context);
   await page.locator('#expressWords').fill('Private expression');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#rehearsedWords').fill('Private reflection');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('Private draft');
   await page.evaluate(() => {
     addEventListener('pagehide', () => {
@@ -234,11 +252,14 @@ test('permission denial leaves writing and rehearsal usable', async ({ page }) =
     navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException('Denied', 'NotAllowedError'));
   });
   await openPractice(page);
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await page.locator('#recordStart').click();
   await expect(page.locator('#recordStatus')).toContainText('permission was declined');
   await expect(page.locator('#recordStart')).toBeEnabled();
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('A written alternative');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#yourReply')).toHaveValue('A written alternative');
 });
@@ -246,10 +267,13 @@ test('permission denial leaves writing and rehearsal usable', async ({ page }) =
 test('unsupported recording offers writing without requesting microphone access', async ({ page }) => {
   await page.addInitScript(() => { window.MediaRecorder = undefined; });
   await openPractice(page);
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await expect(page.locator('#recordStart')).toBeDisabled();
   await expect(page.locator('#recordStatus')).toContainText('not supported');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('No microphone needed');
+  await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceTransfer').click();
   await expect(page.locator('#yourReply')).toHaveValue('No microphone needed');
 });
@@ -265,6 +289,7 @@ for (const cancel of ['delete', 'withdraw consent', 'hide page']) {
       });
     });
     await openPractice(page);
+    await reveal(page, 'recordingPanel');
     await page.locator('#recordConsent').check();
     await page.locator('#recordStart').click();
     await expect(page.locator('#recordStatus')).toContainText('Waiting');
@@ -301,6 +326,7 @@ test('deletion during finalization prevents stale audio; overlapping starts are 
     };
   });
   await openPractice(page);
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await page.locator('#recordStart').click();
   await expect(page.locator('#recordStart')).toBeDisabled();
@@ -319,6 +345,7 @@ test('90-second limit stops recording and releases the microphone', async ({ pag
   await probeMicrophone(page);
   await openPractice(page);
   await page.clock.install();
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').check();
   await page.locator('#recordStart').click();
   await expect(page.locator('#recordStatus')).toContainText('Recording…');
@@ -334,6 +361,7 @@ test('optional practice is keyboard accessible and fits a narrow mobile viewport
   await summary.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('#expressWords')).toBeVisible();
+  await reveal(page, 'recordingPanel');
   await page.locator('#recordConsent').focus();
   await page.keyboard.press('Space');
   await expect(page.locator('#recordStart')).toBeEnabled();
