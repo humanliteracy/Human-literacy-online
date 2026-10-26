@@ -118,10 +118,7 @@
     window.addEventListener('resize', resizeOptions);
     $('expressStudio').addEventListener('toggle', resizeOptions);
     $('coachReview').addEventListener('toggle', () => {
-      if (!confirmed) return;
-      $('coachChoices').classList.toggle('hidden', $('coachReview').open);
-      if ($('coachReview').open) $('coachUnderstandingTitle').focus();
-      else resizeOptions();
+      if (!$('coachReview').open) resizeOptions();
     });
     for (const [value, path] of Object.entries(paths)) {
       const option = document.createElement('option');

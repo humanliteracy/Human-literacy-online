@@ -158,6 +158,7 @@ for (const width of [320, 390]) {
       await page.keyboard.press('Enter');
       await page.keyboard.press('Tab');
       await expect(page.locator('#coachPath')).toBeFocused();
+      await expect(page.locator('#coachChoices')).toBeHidden();
       await page.keyboard.press('Tab');
       await expect(page.locator('#coachGoal')).toBeFocused();
       await page.keyboard.press('ControlOrMeta+A');

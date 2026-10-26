@@ -64,6 +64,7 @@ textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;pa
 .coach-panel{border:2px solid #b9dad2;border-radius:18px;padding:20px;margin-top:24px;background:#f6fcfa}
 .coach-panel h3{margin-top:10px}.coach-panel select{width:100%;padding:12px;border:2px solid #c5e3dc;border-radius:12px;background:white;color:#17383d}
 #coachFlow:has(#coachUnderstanding.hidden):has(#coachChoices.hidden){display:none}
+#coachFlow:has(#coachReview[open]) #coachChoices{display:none}
 #expressionQuestion .primary,#coachConfirm{margin-top:12px}
 #coachEditExpression{margin-top:12px}
 .optional-panel{margin-top:12px}.character-view>summary{cursor:pointer;padding:12px 24px;color:#daeee8;min-height:44px}.scenario-context>summary{padding:10px 0}.mode-control{margin-top:20px}

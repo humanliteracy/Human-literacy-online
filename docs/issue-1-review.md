@@ -57,7 +57,7 @@ All captured inputs are synthetic. No founder answers, private register contents
 
 ## Verification
 
-On 26 October 2026: **85 browser tests passed, 0 failed, 0 skipped, 3.1 minutes**, with no retries. Thirteen shipped scripts parsed. The static audit found 13 pages, zero broken links/errors, and the ten existing lesson static-heading warnings; live lesson headings are checked in the browser. Four negative preview identity/integrity checks passed. `git diff --check` and protected-path comparisons passed. Exact independently downloaded preview verification is recorded in the founder handoff. Reproduce application checks with:
+On 26 October 2026: **85 browser tests passed, 0 failed, 0 skipped, 2.7 minutes**, with no retries. Thirteen shipped scripts parsed. The static audit found 13 pages, zero broken links/errors, and the ten existing lesson static-heading warnings; live lesson headings are checked in the browser. Four negative preview identity/integrity checks passed. `git diff --check` and protected-path comparisons passed. Exact independently downloaded preview verification is recorded in the founder handoff. Reproduce application checks with:
 
 ```sh
 BROWSER_EXECUTABLE_PATH=/usr/bin/chromium npm test
@@ -65,6 +65,8 @@ python3 review/check_integrity.py
 ```
 
 The existing 77 cases remain, with disclosure-opening steps adapted to the simplified UI. Eight focused cases were added: two mobile sequential/keyboard journeys, two explicit resignation confirmations, two pending-microphone close paths, and two dictation cancellation paths. These cover desktop and 320px/390px reflow, focus, alternatives, explicit sending, unscored defaults, all seven decisions, local media lifecycle, ten complete lesson workflows and approved videos. Tests fail on browser JavaScript exceptions.
+
+Reopening **Change goal** keeps native disclosure focus; Tab reaches the goal selector without a delayed focus change. A Chrome 156 CI run exposed that timing bug after Chrome 154 passed locally; it was corrected before the final handoff. CSS switches the visible question immediately, and the keyboard regression checks retain their fast Enter → Tab sequence.
 
 The tools disclosure cancels pending/active microphone use and dictation when closed; late results cannot restart or refill it. Advancing to goal review also stops live dictation/recording. The 90-second limit, consent withdrawal, delete, page hiding/navigation cleanup, playback, no uploads and no persistent response storage remain tested.
 
