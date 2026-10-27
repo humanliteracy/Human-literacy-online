@@ -19,12 +19,12 @@ for(const item of [
  [48,own,"Whatever. I don't care what happens."],
 ]){
  test(`historical ${item[0]}/100 conversation now has explanatory feedback without a numerical grade`,async({page})=>{
-  await send(page,item[1]);await send(page,item[2]);await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
+  await send(page,item[1]);if(item[0]===56)await expect(page.locator('#inputPanel')).toBeHidden();else await send(page,item[2]);await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await reveal(page,'reflectionReview');await expect(page.locator('#score')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText(/\b\d{1,3}\s*\/\s*100\b/);
   for(const id of ['madeClear','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample','unresolved','realWorldPractice'])await expect(page.locator('#'+id)).not.toBeEmpty();
-  await expect(page.locator('#history .mine')).toHaveCount(2);
-  await expect(page.locator('#history')).toContainText(item[1]);await expect(page.locator('#history')).toContainText(item[2]);
+  await expect(page.locator('#history .mine')).toHaveCount(item[0]===56?1:2);
+  await expect(page.locator('#history')).toContainText(item[1]);if(item[0]===56)await expect(page.locator('#history')).not.toContainText(item[2]);else await expect(page.locator('#history')).toContainText(item[2]);
  });
 }
 
@@ -81,7 +81,7 @@ test('moving a draft during turn two retains the conversation instead of silentl
  await send(page,'Can you clarify the deadline?');await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
  await page.locator('#openPractice').click();await reveal(page,'rehearsalPanel');await page.locator('#practiceWords').fill('I need support with this situation.');
  await page.locator('#practiceTransfer').click();await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');await expect(page.locator('#history .mine')).toHaveCount(1);
- await page.locator('#send').click();await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');await expect(page.locator('#history .mine')).toHaveCount(2);
+ await page.locator('#send').click();await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');await expect(page.locator('#history .mine')).toHaveCount(item[0]===56?1:2);
 });
 
 test('private cleanup removes cached goals and alternatives as well as visible private fields',async({page})=>{
