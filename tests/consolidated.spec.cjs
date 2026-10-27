@@ -155,3 +155,21 @@ test('a private resignation goal alone never becomes a stated resignation in fee
  await expect(page.locator('#outcome')).toContainText('clarify');await expect(page.locator('#outcome')).not.toContainText('decision to leave the job');
  await expect(page.locator('#reflectionBasis')).toContainText(goal);await expect(page.locator('#madeClear')).toContainText('asked for information');
 });
+
+for(const [name,literal,goal,path,expected] of [
+ ['fair solution',cases[0][1],'I want to explain what happened and find a fair solution.','custom',['own','clarify','recovery']],
+ ['no further work or updates',cases[3][1],cases[3][1],'custom',['refusal']],
+ ['privacy','I will not share personal information.','I want to keep my personal information private.','boundary',['refusal']],
+ ['respectful treatment','I will not be shouted at.','I want to set a limit on being shouted at.','boundary',['refusal','pause']],
+ ['uncertainty','I might quit.','I might quit, but I have not decided.','custom',['uncertain']],
+ ['clarification','What do you need from me?','I want to ask a question about the situation.','custom',['clarify']],
+ ['recovery without invented fault','The situation needs discussion.','I want to discuss facts before committing.','recovery',['clarify']],
+ ['deadline review without invented changes','Your deadline is ridiculous.','I want to clarify realistic scope and time.','scope',['clarify','scope']],
+ ['resignation without invented reasons','I am resigning.','I want to resign.','resign',['resign']],
+ ['neutral opener','A different concern.','A very particular outcome only I understand.','custom',['clarify']],
+])test(`all three generated ${name} alternatives work in the roleplay without private-goal provenance`,async({page})=>{
+ const result=await page.evaluate(({literal,goal,path})=>HumanLiteracyCoach.wordingFor({literal,goal,path}).options.map(([label,text])=>{
+  const analysis=HumanLiteracyDialogue.analyze(text);return {label,text,kind:analysis.kind,manager:HumanLiteracyDialogue.manager(analysis)};
+ }),{literal,goal,path});
+ expect(result).toHaveLength(3);for(const option of result){expect(expected).toContain(option.kind);expect(option.manager).not.toMatch(/script|prototype|not sure how that relates/i);expect(option.text).not.toBe(goal);}
+});

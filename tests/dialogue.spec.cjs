@@ -87,7 +87,7 @@ for (const [label, text, kind, firstReply, outcome] of cases) {
 
 for (const [path, kind, words] of [
   ['boundary', 'refusal', /refusal or limit/], ['resign', 'resign', /leave the job/],
-  ['scope', 'scope', /revised expectations about scope/], ['help', 'support', /support/],
+  ['scope', 'clarify', /clarify what you want understood/], ['help', 'support', /support/],
   ['pause', 'pause', /pause without resigning/], ['recovery', 'own', /next step|recovery plan/],
 ]) {
   test(`trusted static ${path} wording and follow-up retain the explicitly chosen goal`, async ({ page }) => {

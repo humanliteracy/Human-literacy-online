@@ -127,13 +127,13 @@
     const privacy = reading.flags.personalBoundary === 'privacy' || /^(?:i (?:want|would like) to|my goal is to) (?:keep my personal (?:details|information) private|(?:ask for|get) (?:help|support) without (?:sharing|disclosing) (?:my |more )?personal (?:details|information))\b/i.test(goal);
     if (['boundary','help','custom'].includes(path) && (privacy || original.kind === 'refusal' && original.flags.personalBoundary === 'privacy')) return {tailored:true,options:[
       option('Keep personal details private', path === 'help' || reading.kind === 'support' ? 'I need support with the work, and I choose not to share personal details. What help is available?' : 'I will not share personal information. What work details do you need to discuss?', 'States a privacy limit without accepting additional work.'),
-      option('Separate work from private details', 'I can discuss the work without discussing my personal details. What do we need to clarify?', 'Keeps the conversation on work information you choose to share.'),
-      option('Keep the limit brief', 'I am not sharing personal details. Please keep this discussion focused on the work.', 'Sets the same privacy boundary without giving a reason.'),
+      option('Separate work from private details', 'I will not discuss my personal details. Can you clarify the work question?', 'Keeps the conversation on work information you choose to share.'),
+      option('Keep the limit brief', 'I will not share personal information. Please keep this discussion focused on the work.', 'Sets the same privacy boundary without giving a reason.'),
     ]};
     if (['boundary','custom'].includes(path) && (reading.flags.personalBoundary === 'treatment' || original.kind === 'refusal' && original.flags.personalBoundary === 'treatment')) return {tailored:true,options:[
       option('Set a respectful limit', 'I will not be shouted at. We can speak respectfully or pause this conversation.', 'Sets a treatment boundary without resigning or accepting work.'),
       option('Ask for a pause', 'I need to pause this conversation. We can return to the work issue without shouting.', 'Separates a pause from a decision about the assignment.'),
-      option('Keep the limit brief', 'I will not continue this discussion while I am being shouted at.', 'States the limit without a work commitment.'),
+      option('Keep the limit brief', 'I will not be shouted at. I am not continuing this discussion.', 'States the limit without a work commitment.'),
     ]};
     if (['custom','recovery'].includes(path) && (reading.flags.explainFacts || reading.flags.fairSolution)) {
       const owns = reading.kind === 'own' || original.kind === 'own';
@@ -162,17 +162,17 @@
     ]};
     if (path === 'custom' && reading.kind === 'clarify') return {tailored:true,options:[
       option('Clarify the expectation', 'Can you clarify what you need from me before I decide on next steps?', 'Asks about expectations without accepting the assignment.'),
-      option('Ask what comes first', 'What do you need me to respond to first?', 'Focuses on one question instead of promising a solution.'),
-      option('Check understanding', 'Can we check the question before I make a commitment?', 'Makes understanding a separate step from agreeing.'),
+      option('Ask what comes first', 'Can you tell me what you need me to respond to first?', 'Focuses on one question instead of promising a solution.'),
+      option('Check understanding', 'Can you clarify the question before I make a commitment?', 'Makes understanding a separate step from agreeing.'),
     ]};
     if (chosen === 'recovery') return {tailored:true,options:[
       option('Start with what is known', original.kind === 'own' ? "I made a mistake. I'd like to explain my part before we agree on next steps." : 'Can we review the remaining work before I promise a new delivery time?', 'Uses only the accountability you stated; it does not invent a missed warning or a delivery promise.'),
       option('Check the facts together', 'Can we review the facts, priorities and support before agreeing on a realistic next step?', 'Invites a review without assuming fault or agreement.'),
-      option('Keep promises realistic', 'I want to check what remains before making a new commitment. What should we clarify first?', 'Separates checking the work from promising a result.'),
+      option('Keep promises realistic', 'Can you clarify what remains before I make a new commitment?', 'Separates checking the work from promising a result.'),
     ]};
     if (chosen === 'scope' && !((original.kind === 'scope' && /scope (?:has |was )?changed|requirements (?:have |were )?changed|added (?:more |the )?work/i.test(literal)) || (reading.kind === 'scope' && /scope (?:has |was )?changed|requirements (?:have |were )?changed|added (?:more |the )?work/i.test(goal)))) return {tailored:true,options:[
       option('Review before committing', 'Can we review the scope, deadline and available support before I commit?', 'Asks about expectations without inventing a scope change.'),
-      option('Ask about priorities', 'Which work is most important, and what can change about the scope or deadline?', 'Makes the tradeoff a question rather than a promise.'),
+      option('Ask about priorities', 'Can you clarify the priority and what can change about the scope or deadline?', 'Makes the tradeoff a question rather than a promise.'),
       option('Clarify the deadline', 'Can you clarify the deadline and what needs to be delivered?', 'Asks one practical question without claiming the work changed.'),
     ]};
     if (chosen === 'resign' && !/^the expectations are unreasonable\. i quit\.?$/i.test(literal.trim())) return {tailored:true,options:[
@@ -182,9 +182,9 @@
     ]};
     if (paths[chosen]?.options.length) return {tailored:path === 'custom',options:paths[chosen].options};
     return {tailored:false,options:[
-      option('Ask to explain', "I'd like to explain what I mean. Could we check our understanding before deciding?", 'A neutral opener; it does not claim to express your specific goal.'),
+      option('Ask to explain', "Can you clarify what you need me to respond to? I'd like to explain my point before deciding.", 'A neutral opener; it does not claim to express your specific goal.'),
       option('Check the question', 'Can you clarify what you need me to respond to?', 'Asks one question without making a new commitment.'),
-      option('Introduce your concern', 'I have a different concern. Could I explain it first?', 'Makes room for your own words; it does not invent the concern.'),
+      option('Introduce your concern', 'Can I explain a different concern before we decide?', 'Makes room for your own words; it does not invent the concern.'),
     ]};
   }
 
