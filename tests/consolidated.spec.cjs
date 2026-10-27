@@ -17,6 +17,7 @@ const cases=[
  ['denied treatment boundary is not attributed','I never said I will not be shouted at.','unknown',/not sure how that relates/i,/cannot reliably determine/i],
  ['negated fairness is not a constructive proposal','I will not find a fair solution.','unknown',/not sure how that relates/i,/cannot reliably determine/i],
  ['third-person fairness is not the learner intention','Jordan wants to find a fair solution.','unknown',/not sure how that relates/i,/cannot reliably determine/i],
+ ['contradictory resignation stays unresolved','I resign. I am not resigning.','conflict',/different directions/i,/conflicting signals/i],
  ['ordinary unfamiliar wording stays in character','The previous handoff took a different route.','unknown',/What would you like me to understand/i,/cannot reliably determine/i],
 ];
 test.beforeEach(async({page})=>{page.newErrors=[];page.on('pageerror',e=>page.newErrors.push(e.message));await page.goto('/simulator/01/');});

@@ -179,7 +179,7 @@
       const decision = analysis.kind === 'resign' ? 'You have stated resignation, not agreement to finish the assignment. ' : analysis.kind === 'refusal' ? 'Your refusal or limit is explicit. ' : '';
       return decision + 'Personal attacks make the exchange harder. We can pause or discuss the decision without attacking the person.';
     }
-    if (analysis.flags.notResigning && analysis.kind !== 'pause') return 'You have said you are not resigning. That does not mean you have agreed to the assignment. What would you like to clarify next?';
+    if (analysis.flags.notResigning && !['pause','conflict','uncertain'].includes(analysis.kind)) return 'You have said you are not resigning. That does not mean you have agreed to the assignment. What would you like to clarify next?';
     // Jordan hears submitted words, never a private goal from Help me draft.
     const path = turn === 1 && reflectionPaths[options.previous?.kind];
     if (path === 'resign' && ['plan', 'clarify', 'own', 'repair', 'recovery'].includes(analysis.kind)) return 'You chose to leave the job. We can clarify notice, final pay, timing and any handover without treating this as acceptance of the assignment.';
@@ -252,7 +252,7 @@
       const statedDecision = ['resign','refusal','pause'].includes(kind) && !current.flags.personalBoundary ? reflectionPaths[kind] : null;
       const earlierDecision = ['resign','refusal','pause'].includes(first.kind) && ['plan','clarify','own','repair','recovery'].includes(kind) ? first.reflectionPath : null;
       const compatibleGoal = !current.flags.goalMismatch && goalPath !== 'custom' ? goalPath : null;
-      const path = current.flags.notResigning && kind !== 'pause' ? 'custom' : statedDecision || earlierDecision || compatibleGoal || reflectionPaths[kind];
+      const path = current.flags.notResigning && !['pause','conflict','uncertain'].includes(kind) ? 'custom' : statedDecision || earlierDecision || compatibleGoal || reflectionPaths[kind];
       contextualPath = path;
       const outcomes = {
         resign: 'You state a decision to leave the job. The work assignment is not accepted; notice, final pay and any handover remain open.',
@@ -280,7 +280,7 @@
       help: teaching.support[6], pause: teaching.pause[6], recovery: teaching.repair[6], custom: teaching.unknown[6],
     };
     if (current.flags.personalBoundary && !unsafe) outcome = 'You state a personal refusal or limit. ' + selected + 'No new work commitment should be assumed.';
-    if (current.flags.notResigning && kind !== 'pause' && !unsafe) outcome = 'You say you are not resigning. That is not acceptance of the assignment; your next decision remains open.';
+    if (current.flags.notResigning && !['pause','conflict','uncertain'].includes(kind) && !unsafe) outcome = 'You say you are not resigning. That is not acceptance of the assignment; your next decision remains open.';
     const explanationAndSolution = kind === 'own' && current.flags.explainFacts && current.flags.fairSolution;
     return {
       outcome,
