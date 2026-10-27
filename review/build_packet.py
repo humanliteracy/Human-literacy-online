@@ -43,7 +43,8 @@ summary = {
     'unreleased': True, 'testCount': count, 'reviewedRuntimeRevision': runtime,
     'runtimeHash': after['assetHash'],
     'sourceIdentity': 'Full delivery SHA is supplied by the verified launcher and local preview banner; captured runtime hashes must match it.',
-    'runs': [r['stats'] for r in runs], 'retries': 0, 'localResultLabel':'Diagnostic result, not counted as a complete pass when unexpected is nonzero',
+    'runs': [r['stats'] for r in runs], 'retries': 0,
+    'localResultLabel': 'Complete local pass' if runs[-1]['stats']['unexpected'] == 0 else 'Diagnostic result; not counted as a complete pass',
     'limits': ['Bounded scripted language, not general language understanding.',
                'Synthetic media/provider tests; no live microphone, live dictation or screen-reader certification.',
                'Founder acceptance of this exact updated Chromebook revision is pending.'],
@@ -93,9 +94,9 @@ folder with: python3 -m http.server 8000 --bind 127.0.0.1
 Then open http://localhost:8000/ on that computer. No public hosting is involved.
 
 Founder checks (three only):
-1. Complete a main conversation; use Back/Forward and read the takeaway.
-2. Try a refusal, resignation or an unexpected/hostile reply.
-3. Try one optional Coach or recording/listen-back feature.
+1. Explain your part and a fictional timeline; use Back/Forward and read the takeaway.
+2. Try one refusal or confirmed resignation.
+3. Change a private drafting goal to risks/support; optionally record/listen back.
 
 reviewedRuntimeRevision: {runtime}
 runtimeHash: {after['assetHash']}
@@ -119,10 +120,10 @@ def figure(file, label=None):
     return f'<figure><a href="{escaped}"><img loading="lazy" src="{escaped}" alt="{html.escape(label or file, quote=True)}"></a><figcaption>{html.escape(label or file)}</figcaption></figure>'
 
 featured = ''.join(figure(file, label) for file, label in [
-    ('before/390-fair-solution-wording.png', 'BEFORE: a private goal echoed as the spoken reply'),
-    ('after/390-fair-solution-wording.png', 'AFTER: editable spoken wording with meaningful alternatives'),
-    ('after/390-second-turn.png', 'AFTER: a clear refusal receives a workplace response'),
-    ('after/390-fair-solution-feedback.png', 'AFTER: concise feedback; wording detail remains optional'),
+    ('before/390-explanation-reaction.png', 'BEFORE: a request to explain my part was unfamiliar'),
+    ('after/390-explanation-reaction.png', 'AFTER: Jordan invites the explanation before a plan'),
+    ('before/390-risks-support.png', 'BEFORE: an offered risks/support explanation got a generic response'),
+    ('after/390-explanation-feedback.png', 'AFTER: feedback distinguishes an account from verified facts'),
 ] if file in payload)
 galleries = []
 for folder in ['before', 'after']:
@@ -133,10 +134,10 @@ for folder in ['before', 'after']:
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unreleased Human Literacy review</title>
 <style>body{{font:18px/1.5 system-ui;max-width:1100px;margin:auto;padding:20px;color:#14363a}}aside{{background:#122c35;color:white;padding:16px}}a{{color:#075e58}}summary{{padding:16px;cursor:pointer;border:1px solid #597e77;margin-top:16px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}}figure{{margin:10px 0}}img{{width:100%;max-height:500px;object-fit:contain;object-position:top;border:1px solid #597e77}}figcaption{{overflow-wrap:anywhere}}video{{max-width:100%}}:focus-visible{{outline:3px solid #855600}}</style></head><body>
 <aside>UNRELEASED · SYNTHETIC REVIEW EVIDENCE</aside><h1>Communication Coach review</h1>
-<p><strong>Full CI: {count} passed, 0 failed, 0 skipped</strong> in {len(ci['runs']) if ci else 0} independently verified run(s). Local diagnostics: {runs[-1]['stats']['expected']} passed, {runs[-1]['stats']['unexpected']} timed out, 0 skipped. No time limits or assertions were relaxed. Full delivery SHA appears in the preview banner; runtime hashes connect these captures to that exact source.</p>
-<p><a href="README.txt">Viewing and founder checks</a> · <a href="engineering-review.md">Engineering review</a> · <a href="report/index.html">Local Playwright diagnostic report</a> · <a href="results.json">Results</a> · <a href="after/capture-results.json">Runtime integrity manifest</a></p>
-<h2>Three founder checks</h2><ol><li>Main conversation, explicit Say this, Back/Forward and takeaway.</li><li>One refusal/resignation or unexpected/hostile reply.</li><li>One optional Coach or local recording/listen-back feature.</li></ol>
-<p>Before: several clear refusals and personal attacks were unrecognized; custom wording could simply repeat a private goal. After: bounded recognition, Jordan stays in character, private goals become editable spoken alternatives, and reflection has five core explanations with optional detail. Unsupported numerical grades remain disabled.</p>
+<p><strong>Full CI: {count} passed, 0 failed, 0 skipped</strong> in {len(ci['runs']) if ci else 0} independently verified run(s). Local: {runs[-1]['stats']['expected']} passed, {runs[-1]['stats']['unexpected']} {'timed out' if runs[-1]['stats']['unexpected'] else 'failed'}, 0 skipped. No time limits or assertions were relaxed. Full delivery SHA appears in the preview banner; runtime hashes connect these captures to that exact source.</p>
+<p><a href="README.txt">Viewing and founder checks</a> · <a href="engineering-review.md">Engineering review</a> · <a href="report/index.html">Local Playwright report</a> · <a href="results.json">Results</a> · <a href="after/capture-results.json">Runtime integrity manifest</a></p>
+<h2>Three founder checks</h2><ol><li>Explain your part and a fictional timeline; use Back/Forward and read the takeaway.</li><li>Try one refusal or confirmed resignation.</li><li>Change a private drafting goal to risks/support; optionally record/listen back.</li></ol>
+<p>Before: requests to explain a part or risks/support could receive generic clarification or premature planning. After: Jordan acknowledges those topics and invites an explanation, drafts retain stated actions, and the main reflection explains why Jordan responded. Technical matching detail remains optional. Explicit submission, learner choices, privacy, all ten lessons and the unscored default are preserved.</p>
 <p>Scripted language coverage is limited. Synthetic tests do not establish physical microphone quality, live dictation reliability or screen-reader compatibility. Founder acceptance of this exact revision is pending.</p>
 <details open><summary>Four useful review images</summary><div class="grid">{featured}</div></details>
 <details><summary>Silent synthetic walkthrough</summary><video controls preload="none" src="after/synthetic-walkthrough.mp4" aria-label="Silent typed-only synthetic walkthrough"></video><p><a href="after/synthetic-walkthrough-trace.zip">Typed-only trace ZIP</a>; no microphone recording.</p></details>

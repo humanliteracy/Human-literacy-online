@@ -32,6 +32,9 @@ for(const width of [1120,768,320,390]){
  await page.locator('#yourReply').fill(fair);await page.locator('#send').click();await page.locator('#replay').click();for(let t=0;t<2;t++){await page.locator('#yourReply').fill(fair);await page.locator('#send').click();}await page.locator('#reflectionReview>summary').click();await capture('fair-solution-feedback');
  metrics.push(await page.evaluate(()=>({width:innerWidth,reflectionHeight:document.getElementById('endPanel').getBoundingClientRect().height,visibleFeedbackFields:[...document.querySelectorAll('#reflectionReview dd')].filter(n=>n.checkVisibility()).length})));
  await page.locator('#replay').click();await page.locator('#yourReply').fill('My favorite color is blue, and I had pancakes for breakfast.');await page.locator('#send').click();await capture('unrelated-response');
+ await page.goto(base+'/simulator/01/');await page.locator('#yourReply').fill('I want to explain my part.');await page.locator('#send').click();await capture('explanation-reaction');
+ await page.locator('#yourReply').fill('I was waiting for client approval.');await page.locator('#send').click();await page.locator('#reflectionReview>summary').click();await capture('explanation-feedback');
+ await page.locator('#replay').click();await page.locator('#choices button').first().click();await page.locator('#send').click();await page.locator('#replyMore>summary').click();await page.locator('#choices button').nth(1).click();await page.locator('#send').click();await capture('risks-support');
  if(errors.length)throw Error(JSON.stringify(errors));await context.close();
 }
 // A typed-only trace and silent walkthrough use a fresh context with no mic access.
