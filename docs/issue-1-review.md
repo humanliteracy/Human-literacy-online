@@ -1,79 +1,82 @@
-# Communication Coach: founder simplification review
+# Unreleased Communication Coach review candidate
 
-Draft PR: <https://github.com/humanliteracy/Human-literacy-online/pull/2> · [Changed files](https://github.com/humanliteracy/Human-literacy-online/pull/2/files).
+Draft PR: <https://github.com/humanliteracy/Human-literacy-online/pull/2> · [Changed files](https://github.com/humanliteracy/Human-literacy-online/pull/2/files). This is a scripted, static prototype. It has no AI model, backend, account, paid runtime dependency or automatic assessment service.
 
-Work continues on `feat/issue-1-communication-coach`. The checkout was clean and its local/remote head matched `e9c9042d251502505b4f32efd69d22a1deaab4a6` before editing. Issue #4 preview work remains committed separately on `design/issue-4-independent-preview`; it was not reset, merged, or overwritten.
+## Ownership and previous work
 
-The founder reported successful Chromebook access and a complicated experience, referencing E18 in the Master Project Register. This revision applies the six requirements supplied with that review. The register itself was not available through this checkout or connected tools; its original wording has not been independently retrieved. Founder acceptance of this updated revision remains pending.
+The resumed checkout was `feat/simulator-quality-review`, based on PR #2 head `e43dbe71008b97cf649c513db66e0d23d20f109a`, with substantial uncommitted work from the previous quality review. Its saved serial regression run completed **178 passed**. Earlier saved runs included 174/176 (two real state/phrase bugs, corrected), and 175/178 (two local browser-driver timeouts and one case-sensitive expectation). The implementation, original 85-case suite, speech/a11y/state additions and capture tools were inspected and reused. No competing agent or worktree was active. Following the latest founder instruction, logical commits continue in the existing draft PR #2 by fast-forwarding its head; no competing Coach PR is created. The prior task's wall-clock duration is not an independent acceptance result; the saved changes and machine-readable test artifacts establish what completed.
 
-## Resulting experience
+Issue #4's separately owned local branch `design/issue-4-independent-preview` remains at `04a6f1c9871bca4cc440e8c3e99b0e713c30df7e`. Its loopback preview wrapper is reused, rather than introducing hosting or a competing preview platform. The founder confirmed Chromebook access to the earlier revision, but reported complexity. Acceptance of this exact updated candidate is still pending. E18's interpretation here comes from the founder's supplied review; the private Master Project Register has not been independently retrieved or included in public evidence.
 
-1. **Reply:** one suggested response, with all remaining authored responses under **More responses**. Own wording is always available. **Help me draft** starts the optional Coach.
-2. **Express:** one private text field and **Next**. No recording, reflection field, or rehearsal draft competes with this question.
-3. **Goal:** confirm or change the communication path and editable goal. **Why this suggestion?** retains the literal expression, tentative reading and rejection option. Unknown wording requires the learner to clarify; no intent is inferred.
-4. **Wording:** one editable suggestion. **More responses (2)** retains both alternatives; **Change goal** and **Edit first reaction** remain available. Editing the goal invalidates stale suggestions.
-5. **Reply and send:** **Use this wording** fills the reply, closes private drafting and focuses the reply. Nothing is sent until the learner chooses **Say this**. A second conversational turn remains available.
-6. **Finish:** one relevant takeaway and one optional practical action. **What remains open** retains consequences/questions and goal detail; the transcript is available separately on request.
+## Changes and audit findings
 
-Only one primary question is shown at a time. Jordan's question can be reopened as reference while drafting. The original illustration, transcript, existing optional feedback settings, recording/listening, browser dictation, rehearsal and detailed privacy explanation remain accessible through native keyboard-operable disclosures. No functionality is replaced by a screenshot or a mock service.
-
-All seven learner-selected paths remain: refusal/boundaries, resignation, scope, support, pause, recovery and custom. There is no forced agreement. Scoring stays off by default; the existing opt-in remains tucked away. No new scoring, account, backend, AI service, provider key or dependency is introduced.
-
-## Resignation correction
-
-Previously, typing **I am confirming my decision to resign.** could fall through the direct script to a generic request for a project plan. The direct final resignation reply also asked the learner to confirm again. The exact confirmation now follows the resignation branch and Jordan explicitly acknowledges it, discusses notice/pay/timing/handover and does not accept the assignment on the learner's behalf. The coached response also stops asking for repeated confirmation. Direct and coached-then-edited confirmation are both tested.
-
-## Before/after: visible work and interaction effort
-
-Baseline is the previous PR revision `e9c9042`. The same synthetic resignation example, Chromium, fonts and 844px viewport height were used. Counts include only rendered controls, excluding closed-disclosure descendants. [Raw measurements and definitions](founder-simple-metrics.json).
-
-| Moment | Before | After |
+| Priority | Finding | Result |
 | --- | --- | --- |
-| Open private drafting | Reply plus Express, Listen Back and Rehearse stacked together; 6 visible fields | One expression question; 1 visible field |
-| Review goal | Earlier work areas remain, with 8 visible fields | One goal question; path and editable goal, 2 visible fields |
-| Choose wording | Earlier work areas remain, with 7 visible fields | One editable suggestion, 1 visible field |
-| Return to reply | Private stack remains open | Drafting closes; reply receives focus |
-| Finish | Multiple reflection prompts and open drafting stack | One takeaway, one optional action; details and drafting folded |
-| Required decisions for this example | 6 clicks and 1 text entry | 6 clicks and 1 text entry |
+| High | Main suggestions submitted automatically | Selection now only fills and focuses an editable draft. Only **Say this** submits. The same rule applies to optional Coach transfers. |
+| High | “I will not send an update” could trigger praise and a 94/100 grade | Conservative phrase matching recognizes refusal; unrelated/ambiguous wording gets an honest clarification fallback. Unsupported numerical scoring and its opt-in control are removed. |
+| High | Resignation, refusal or privacy boundaries could be treated as recovery-plan agreement | Explicit decisions remain context. Resignation confirmation is acknowledged; no forced agreement, disclosure or acceptance of work. Follow-ups reflect the selected or established path. |
+| High | Reported/denied statements could be praised as accountability | Matching checks the phrase's own clause. Denied/reported responsibility, requests and refusals do not become the visitor's admission; a direct threat in a later clause is still recognized. |
+| High | Lost draft edits, stale goal wording and silent turn resets | Cached goal/alternative drafts survive backward editing; changed paths update proposed goals. Transfers during turn two retain that conversation. An overwritten reply can be restored. Explicitly clearing a goal is respected. |
+| High | Dictation could duplicate final results, overwrite later typing or hang | Final result indices are consumed once per session; typing cancels recognition; stale callbacks cannot refill fields. Clear errors, no-word recovery, a 60-second dictation cap and bounded stop wait retain typing access. |
+| High | Focus visibility/control contrast and long-goal reflow | Darker focus/borders, hover text and speaker text; wrapping for long literals. Empty replies expose an associated accessible error. Logical focus after advancing and restoring progress. |
+| Medium | No conversation Back/Forward | In-memory snapshots restore prior replies, unfinished drafts and completion. Forward never sends. Editing an earlier draft preserves valid later progress until **Say this** deliberately replaces its dependent replies. |
+| Medium | Too much concurrent reading | One question, one suggested response, alternatives on request. Recording, dictation, rehearsal, interpretation and detailed feedback remain optional disclosures. Finish shows one takeaway and one optional practical action. |
 
-The six clicks are Help me draft → Next → Use my goal → Use this wording → Say this → follow-up response. This revision reduces concurrent reading, fields and scrolling; it does **not** claim fewer required decision clicks. Explicit transfer and sending remain separate. No optional disclosure must be opened for this default example.
+A threat pauses the exchange; a later work-plan phrase does not erase it. Profanity alone is separated from a personal attack. Scope disputes, help requests, breaks, contradictions, uncertainty, blame, boundary-setting and unfamiliar wording have distinct limited responses. Exact authored options can supply provenance only when the wording still matches; edited/custom wording is not trusted merely because it contains a keyword. This remains bounded scripted interpretation, not natural-language understanding or prediction of real employment outcomes.
 
-| Width | Open expression area | Wording area | Completion card |
-| --- | --- | --- | --- |
-| 320px | 2922 → 568px (81% shorter) | 3626 → 890px (75% shorter) | 934 → 666px (29% shorter) |
-| 390px | 2534 → 568px (78% shorter) | 3168 → 819px (74% shorter) | 760 → 519px (32% shorter) |
+Optional feedback explains communicated wording, normalized phrase evidence, a constructive element, possible difficulty, why Jordan responds, a skill, another possible interpretation and a comparison example. It retains unresolved questions and possible consequences. It does not grade ability/personality, guarantee success, or require agreement. Qualitative feedback is available to all; numerical grades are disabled entirely.
 
-Area heights cover the full private drafting disclosure, including its visible optional menus; completion heights cover the completion card. Revealing tools, alternatives, long custom wording or goal detail intentionally adds space.
+## Before and after: revision e43dbe7
 
-## Screenshots
+| Task | Before | Updated candidate |
+| --- | --- | --- |
+| Choose a main suggestion | Immediately submits; cannot review first | Fills an editable draft, then **Say this** submits |
+| Default two-reply route | 2 clicks, both implicit submissions | 4 deliberate clicks: select → Say this, twice |
+| Type both replies | Two text entries + 2 Say this clicks | Unchanged |
+| Coached two-reply route | Help → Next → Use goal → Use wording → Say this → follow-up (auto-sends) | Same route plus explicit Say this for the follow-up: 7 clicks + expression entry |
+| Review prior work | Restart/re-enter or inspect transcript | Back/Forward restore saved stages and drafts, without sending |
+| First-turn visible response choices | One suggestion plus expandable alternatives | Preserved; follow-up suggestions now reflect earlier decisions |
+| Reflection | Takeaway/action, with optional numeric grade | Takeaway/action; optional evidence and consequences, no numerical grade |
+| Negated “update” example | False recovery-plan praise and 94/100 | Refusal is acknowledged; no work agreement inferred |
 
-[Before: 390px stacked expression](screenshots/founder-before-express-390.png) · [After: one expression question](screenshots/founder-simple-express-390.png) · [Goal question](screenshots/founder-simple-goal-390.png) · [Initial reply](screenshots/founder-simple-entry-390.png).
+The extra deliberate sending click is intentional consent, not an efficiency regression to hide. Back/Forward are shown only after a reply is submitted. Advanced features are unnecessary for the default journey. All alternatives remain accessible through native disclosures. Historical 94/88/67/56/48 inputs are preserved in focused complete-conversation regressions, now requiring explanatory feedback and no grade.
 
-[Desktop wording](screenshots/founder-simple-wording-1120.png) · [320px wording](screenshots/founder-simple-wording-320.png) · [390px wording](screenshots/founder-simple-wording-390.png).
+## Automated validation
 
-[Desktop reflection](screenshots/founder-simple-reflection-1120.png) · [320px reflection](screenshots/founder-simple-reflection-320.png) · [390px reflection](screenshots/founder-simple-reflection-390.png).
+On 27 October 2026, two complete serial Chromium 154 runs each passed **190 tests, 0 failed, 0 skipped**: 203.7s and 238.5s. No retries. Both used final runtime code frozen at `cbe6217f7e80577bc2d10234bea81a71507b624f`. An intermediate repeat had **189 passed, 1 total-test timeout, 0 skipped** (276.7s). Its trace shows widespread local browser/driver delays, including simple field reads taking 3–5 seconds; correct resignation states and no JavaScript exception were observed before the 30-second budget expired. That diagnostic is retained. Assertions, retries and time limits were unchanged. This local instability is reported rather than counted as a pass.
 
-All captured inputs are synthetic. No founder answers, private register contents or raw audio are included.
+Both independent GitHub CI runs also passed **190/190** with Chrome for Testing **156.0.8078.4**, two workers and the unchanged workflow: [push run](https://github.com/humanliteracy/Human-literacy-online/actions/runs/40499293838) and [PR run](https://github.com/humanliteracy/Human-literacy-online/actions/runs/40499297402). Fourteen shipped scripts parsed; static audit and four negative preview-integrity checks passed. Full results and the interactive HTML report are in the packet. Final delivery checks are linked from PR #2; runtime hashes connect the captured/tested code to that exact delivery revision.
 
-## Verification
+Developer reproduction: `npm ci`, `npx playwright install --with-deps chromium`, `npm test`. To use the installed system browser locally: `BROWSER_EXECUTABLE_PATH=/usr/bin/chromium npx playwright test --workers=1`. Founder preview needs only Python, not this development toolchain.
 
-On 26 October 2026: **85 browser tests passed, 0 failed, 0 skipped, 2.7 minutes**, with no retries. Thirteen shipped scripts parsed. The static audit found 13 pages, zero broken links/errors, and the ten existing lesson static-heading warnings; live lesson headings are checked in the browser. Four negative preview identity/integrity checks passed. `git diff --check` and protected-path comparisons passed. Exact independently downloaded preview verification is recorded in the founder handoff. Reproduce application checks with:
+Original 85 browser cases are retained. Their intentional changes replace automatic-choice submission with selection plus Say this, and numerical expectations with meaningful qualitative fields. No test is skipped or weakened to hide an unresolved failure; no retries or increased timeouts were added. New coverage includes complete speech-act conversations, selected/typed equivalence, decision context, privacy cleanup including hidden feedback, cached edits, long goals, draft restoration, navigation, negative speech-provider lifecycle, keyboard access, contrast samples, reduced motion, injection literals and mobile reflow.
 
-```sh
-BROWSER_EXECUTABLE_PATH=/usr/bin/chromium npm test
-python3 review/check_integrity.py
-```
+The static audit checks 13 pages with zero broken links/errors. Its ten pre-existing static H1 warnings are from lesson headings created by JavaScript; full lesson workflows and live headings are covered in browser tests. Four preview negative checks reject malformed identities/checksums and corrupt/truncated bytes before binding or opening. Dependency audit: zero known vulnerabilities; no package/lockfile/workflow or runtime dependency change.
 
-The existing 77 cases remain, with disclosure-opening steps adapted to the simplified UI. Eight focused cases were added: two mobile sequential/keyboard journeys, two explicit resignation confirmations, two pending-microphone close paths, and two dictation cancellation paths. These cover desktop and 320px/390px reflow, focus, alternatives, explicit sending, unscored defaults, all seven decisions, local media lifecycle, ten complete lesson workflows and approved videos. Tests fail on browser JavaScript exceptions.
+Accessibility checks target WCAG 2.2 AA behavior: labels, landmarks, unique IDs, accessible errors/status, visible focus, keyboard-operable disclosures and navigation, sampled contrast, reduced motion, 44px control targets and wrapping at 320/390/768/1120px including 200% root text size. These are focused automated checks, not certification. Browser zoom/assistive technology combinations and real screen-reader output need human evaluation.
 
-Reopening **Change goal** keeps native disclosure focus; Tab reaches the goal selector without a delayed focus change. A Chrome 156 CI run exposed that timing bug after Chrome 154 passed locally; it was corrected before the final handoff. CSS switches the visible question immediately, and the keyboard regression checks retain their fast Enter → Tab sequence.
+## Review packet and independent preview
 
-The tools disclosure cancels pending/active microphone use and dictation when closed; late results cannot restart or refill it. Advancing to goal review also stops live dictation/recording. The 90-second limit, consent withdrawal, delete, page hiding/navigation cleanup, playback, no uploads and no persistent response storage remain tested.
+[Download the committed review packet](../review/evidence.zip). Unzip it and open `index.html`: desktop/tablet/320px/390px screenshots, labelled before/after evidence, test results, Playwright HTML report, a synthetic typed-only trace, a silent walkthrough, runtime integrity manifest, limitations and the three founder checks. Screenshots display an unreleased identity; simulated voice failures are explicitly marked simulated. No founder responses, private register material or microphone recordings are included. The trace records only synthetic typed work.
 
-The local review wrapper is reused from Issue #4 in [review/local_preview.py](../review/local_preview.py), parameterized for an immutable candidate SHA and independently supplied archive checksum. Its small founder launch block verifies the wrapper itself before execution, then verifies the source archive. It binds only loopback, requires a fresh HttpOnly/SameSite session, rejects foreign Host/Origin and writes, serves an immutable in-memory allowlist, and adds an unreleased/full-source-SHA banner only to HTTP responses. Lesson source bytes are unchanged.
+Use the pinned launch block in the founder handoff on the Chromebook's existing Linux Terminal with Python 3.9+. It verifies the wrapper SHA-256 before executing, then checks the complete immutable GitHub source archive against a separately supplied SHA-256. No GitHub authentication, npm, account, paid hosting, CI artifact download or new permissions are needed. Keep Terminal running; open its printed link in Chrome on that same Chromebook. The browser shows **UNRELEASED · LOCAL REVIEW** and the full source revision. Ctrl+C stops it. The first download needs internet access to public GitHub; the loaded simulator itself makes no external request unless separately consented browser dictation is chosen.
 
-Limits: automated Chromium with synthetic microphone and mocked speech-provider lifecycle; no live external speech service, physical microphone/phone or screen-reader software is claimed as tested. Founder Chromebook access succeeded for the earlier revision; this updated candidate still needs the founder's own opening and interaction confirmation. This is not a full accessibility audit.
+The wrapper binds only `127.0.0.1`, with a fresh launch token and HttpOnly/SameSite=Strict session, foreign Host/Origin/cross-site rejection, read-only methods, no-cache headers and an immutable in-memory allowlist. Only the source site and synthetic evidence are served. No git metadata, credentials, arbitrary filesystem or private materials are exposed. The response-only revision badge does not alter lesson bytes. Recordings are local, consent-based, time-limited, never automatically played or transcribed, deleted on closing the tools/navigation, and never uploaded by the site. Browser dictation is separately consented and may use the browser provider's service; it is not a local recorder or an AI service added by this project.
 
-## Release boundary
+The source archive is the persistent review delivery route; this packet does not require a new CI workflow or artifact charge. Existing CI failure artifacts retain their existing seven-day policy. It is not described as a new persistent CI artifact. Library/Drive delivery is unavailable in this environment; verified GitHub source plus a locally served/downloadable packet provides the independent route.
 
-All ten approved lesson files, both approved videos, homepage, unrelated work, dependency declarations and shared browser/CI configuration are preserved. GitHub Pages remains configured to publish `main`; updating this draft branch does not publish the site. No merge, production deploy, paid service, account or billing activation is authorized. Next gate: founder tests the exact unreleased candidate; any later release requires separate explicit approval.
+## Limits and founder acceptance
+
+Automated Chromium and simulated media/provider events do not demonstrate physical microphone quality, actual Chromebook speech recognition, live speech service reliability or screen-reader output. Record and listen back remains usable independently of dictation; typing is always available. No end-to-end live speech claim is made. Scripted language coverage is deliberately limited, so unfamiliar language can trigger clarification even when a person would understand it. The simulator has two conversational decisions; it is not a general conversation engine or employment adviser.
+
+Only three founder checks are requested, using synthetic examples:
+
+1. Complete one main conversation. Select wording, edit if desired, explicitly Say this, use Back/Forward, finish and read the takeaway.
+2. Retry with a refusal/resignation or unexpected/hostile phrase. Confirm the response respects the decision and does not invent a grade or agreement.
+3. Try one optional Coach or recording/listen-back feature. Check that the distinction between a private draft and a submitted reply is clear.
+
+Report only whether these felt simple and whether any behavior was wrong; no repeated feature-by-feature technical testing is required. Engineering checks precede founder acceptance; later merge/public release requires separate explicit authorization.
+
+## Release status
+
+Unreleased draft review only. All ten approved lessons, both videos, homepage/support, shared test configuration, dependencies and CI workflow remain byte-for-byte unchanged from e43dbe7. Public `main` remains `bcb4e4f0a2b1f363b829a47c8c78e59bec4d2e10`; GitHub Pages remains on main. No merge, public deployment, paid service or spending is authorized or performed.

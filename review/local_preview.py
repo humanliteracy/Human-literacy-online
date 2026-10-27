@@ -26,10 +26,10 @@ def run(revision, expected_checksum):
         raise ValueError('The independently supplied archive checksum is required')
     SHA, CHECKSUM = revision, expected_checksum
     URL = 'https://codeload.github.com/humanliteracy/Human-literacy-online/zip/' + SHA
-    print('Downloading the existing public PR revision (about 29 MB)...', flush=True)
+    print('Downloading the pinned public review source and evidence...', flush=True)
     with urlopen(URL, timeout=90) as response:
-        archive = response.read(40_000_001)
-    if len(archive) > 40_000_000 or hashlib.sha256(archive).hexdigest() != CHECKSUM:
+        archive = response.read(67_108_865)
+    if len(archive) > 67_108_864 or hashlib.sha256(archive).hexdigest() != CHECKSUM:
         raise SystemExit('Integrity check failed. Nothing was opened. Do not bypass this check.')
     files = {}
     with zipfile.ZipFile(io.BytesIO(archive)) as source:
@@ -38,7 +38,7 @@ def run(revision, expected_checksum):
             if not name.startswith(prefix) or name.endswith('/'):
                 continue
             path = name[len(prefix):]
-            if path in ('index.html', 'LICENSE', 'CONTENT-LICENSE.md') or path.startswith(
+            if path in ('index.html', 'LICENSE', 'CONTENT-LICENSE.md', 'review/evidence.zip') or path.startswith(
                     ('lessons/', 'simulator/', 'support/', 'media/', 'docs/screenshots/')):
                 files['/' + path] = source.read(name)
     assert all('/lessons/%02d/index.html' % n in files for n in range(1, 11))
@@ -48,24 +48,25 @@ def run(revision, expected_checksum):
     cookie_name = 'local_review_' + secrets.token_hex(8)
     badge = ('<aside role="note" id="__review_identity" data-source-sha="' + SHA + '" '
              'style="padding:12px;background:#122c35;color:white;font:14px/1.5 system-ui;'
-             'overflow-wrap:anywhere"><strong>UNRELEASED · LOCAL REVIEW</strong><br>PR #2 · '
+             'overflow-wrap:anywhere"><strong>UNRELEASED · LOCAL REVIEW</strong><br>Life Simulator · '
              + SHA + '<br><a style="color:white" href="/__review/">Review instructions</a></aside>')
     landing = ('<!doctype html><html lang="en"><meta charset="utf-8">'
                '<meta name="viewport" content="width=device-width,initial-scale=1">'
-               '<title>Local Coach review</title><body style="font:18px/1.5 system-ui;'
+               '<title>Unreleased Life Simulator review</title><body style="font:18px/1.5 system-ui;'
                'max-width:700px;padding:20px;margin:auto;overflow-wrap:anywhere">' + badge +
-               '<h1>Unreleased Communication Coach</h1><p><a href="/simulator/01/">Open Coach</a>'
-               ' · <a href="/">All ten lessons</a></p><ol><li>Choose Help me draft.</li>'
-               '<li>Type a synthetic example: The expectations are unreasonable. I quit</li>'
-               '<li>Choose Next. Confirm or change your goal.</li>'
-               '<li>Try More responses (2), edit wording, then Use this wording and Say this.</li>'
-               '<li>Review consequences, open questions and the optional next step.</li></ol>'
-               '<p>Tab/Shift+Tab navigates; Enter or Space activates controls. Chrome DevTools '
-               'device toolbar can test 320px and 390px widths. Default scoring is off.</p>'
-               '<p>Use synthetic examples. Browser dictation is optional and may use an external '
-               'speech service; leave it off for this review. The prototype is scripted.</p>'
-               '<p>Ctrl+C in Terminal stops the server and expires this session. No uploads, '
-               'accounts or server-side response storage.</p></body></html>').encode()
+               '<h1>Unreleased Life Simulator</h1><p><a href="/simulator/01/">Open the simulator</a>'
+               ' · <a href="/">All ten lessons</a></p>'
+               '<p>Use the same Chromebook and Chrome session. This is local only; no website has been published.</p>'
+               '<ol><li>Complete one main conversation: choose or type wording, then choose Say this for each reply. Use Back/Forward to review saved progress, then read the takeaway.</li>'
+               '<li>Retry with one unexpected or hostile response. Check that Jordan asks for clarification or responds appropriately without a fake grade.</li>'
+               '<li>Try one optional feature: Help me draft, or local recording and playback. Typing is always available.</li></ol>'
+               '<p>Use synthetic examples. Browser dictation has separate external-service consent and may be unreliable; leave it off for private words. This is a scripted prototype, not AI.</p>'
+               '<p><a href="/review/evidence.zip" download="human-literacy-review.zip">Download the review packet</a> '
+               '(test report, screenshots, silent synthetic walkthrough, limitations and acceptance checklist).</p>'
+               '<p>Automated results do not replace your acceptance of this exact version. No screen-reader software, physical microphone or live speech provider is claimed as tested.</p>'
+               '<p>Keep this launch link private. Ctrl+C in Terminal stops the server and expires the session. '
+               'No uploads, accounts or server-side response storage.</p></body></html>').encode()
+
 
 
     class Handler(BaseHTTPRequestHandler):
