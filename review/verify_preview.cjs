@@ -130,6 +130,9 @@ async function exercise(page, base, width) {
     assert.equal(packet.status,200);assert.deepEqual(packet.body,execFileSync('git',['show',sourceSha+':review/evidence.zip'],{maxBuffer:64*1024*1024}));
     fs.writeFileSync(path.join(output,'downloaded-evidence.zip'),packet.body);
     const evidence=JSON.parse(execFileSync('python3',['-c','import json,sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); print(z.read("after/capture-results.json").decode())',path.join(output,'downloaded-evidence.zip')],{encoding:'utf8'}));
+    const summary=JSON.parse(execFileSync('python3',['-c','import sys,zipfile; print(zipfile.ZipFile(sys.argv[1]).read("results.json").decode())',path.join(output,'downloaded-evidence.zip')],{encoding:'utf8'}));
+    const testCount=summary.testCount;
+    assert.ok(Number.isInteger(testCount)&&testCount>=190);
     const crypto=require('node:crypto');
     for(const [file,digest] of Object.entries(evidence.runtimeFiles)){
       const bytes=execFileSync('git',['show',sourceSha+':'+file],{maxBuffer:64*1024*1024});
@@ -148,11 +151,12 @@ async function exercise(page, base, width) {
     const image=reportPage.locator('details[open] img').first();await image.scrollIntoViewIfNeeded();await image.evaluate(n=>n.decode());
     assert.equal(await image.evaluate(n=>n.naturalWidth),390);
     await reportPage.locator('a[href="report/index.html"]').click();
-    await reportPage.waitForFunction(()=>/Passed\s*190/.test(document.body.innerText));
+    const reportStats=summary.runs[summary.runs.length-1];
+    await reportPage.waitForFunction(stats=>new RegExp('Passed\\s*'+stats.expected+'\\b').test(document.body.innerText)&&(!stats.unexpected||new RegExp('Failed\\s*'+stats.unexpected+'\\b').test(document.body.innerText)),reportStats);
     assert.match(await reportPage.locator('body').innerText(),/navigation/);
     assert.deepEqual(await reportPage.evaluate(()=>Object.fromEntries(Object.entries(localStorage))),{theme:'system'});
     await reportContext.close();
-    pass('Packet gallery and interactive 190-test report open directly inside the authenticated preview');
+    pass('Packet gallery, '+testCount+'-case CI proof and truthful local diagnostic report open inside the authenticated preview');
     for (const width of [1120,320,390]) {
       await exercise(page, server.base_url, width);
       pass(`${width}px Coach: CSS, alternatives, keyboard/focus, explicit submission, reflection, unscored default`);
