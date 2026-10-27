@@ -63,7 +63,7 @@ test('drafts retain both a work refusal and the refusal to provide another updat
  const options=await page.locator('.coach-option textarea').evaluateAll(nodes=>nodes.map(n=>n.value));
  for(const text of options){expect(text).toMatch(/will not continue working.*or provide another update/);expect(text).not.toMatch(/resign|I can send|I will send/);}
  await page.locator('.coach-option button').first().click();await page.locator('#send').click();await expect(page.locator('#bossWords')).toContainText('refusal or limit');
- await expect(page.locator('#choices')).toContainText('My decision is still no');
+ await expect(page.locator('#choices')).toContainText('My answer to this request is no');
 });
 
 for(const [name,literal,goal,path,required] of [
@@ -90,7 +90,7 @@ test('private goals do not leak into Jordan or override a submitted pause decisi
  await draft(page,'The expectations are unreasonable. I quit','I want to resign rather than accept these expectations.','resign');
  await page.locator('.coach-option button').first().click();await send(page,'I need a pause. I am not resigning.');
  await expect(page.locator('#bossWords')).toContainText('pause');await expect(page.locator('#bossWords')).not.toContainText(/selected|your goal is|chose to leave/);
- await expect(page.locator('#choices')).toContainText('not resigning');
+ await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#outcome')).toContainText('pause without resigning');
 });
 
 test('unsupported custom goals get transparent neutral openers and stay out of the spoken draft',async({page})=>{
@@ -134,7 +134,9 @@ test('an automatically proposed uncertain goal remains uncertain when drafting',
 });
 
 for(const [first,expected] of [['I am resigning.',/chose to leave/],['I will not complete this work.',/earlier refusal or limit/],['I need a pause.',/asked for a pause/]])test(`later explanation does not erase the submitted decision: ${first}`,async({page})=>{
- await send(page,first);await send(page,cases[0][1]);await expect(page.locator('#bossWords')).toContainText(expected);
+ await send(page,first);
+ if(first==='I need a pause.'){await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#outcome')).toContainText('pause without resigning');await expect(page.locator('#history .mine')).toHaveCount(1);return;}
+ await send(page,cases[0][1]);await expect(page.locator('#bossWords')).toContainText(expected);
  await expect(page.locator('#outcome')).not.toContainText('propose a concrete next step');
 });
 
@@ -142,7 +144,7 @@ for(const [path,goal,first,last,outcome] of [
  ['recovery','I want to discuss my part and realistic next steps.','I made a mistake.','I will not provide another update.',/refusal or limit/],
  ['resign','I want to resign rather than accept these expectations.','I need a pause. I am not resigning.','I need a pause. I am not resigning.',/pause without resigning/],
 ])test(`a submitted decision controls feedback even when the private goal differs: ${path}`,async({page})=>{
- await draft(page,first,goal,path);await page.locator('.coach-option button').first().click();await send(page,first);await send(page,last);
+ await draft(page,first,goal,path);await page.locator('.coach-option button').first().click();await send(page,first);if(path!=='resign')await send(page,last);else await expect(page.locator('#inputPanel')).toBeHidden();
  await expect(page.locator('#outcome')).toContainText(outcome);await expect(page.locator('#madeClear')).not.toContainText('conflicting signals');
  await expect(page.locator('#reflectionBasis')).toContainText(goal);await expect(page.locator('#reflectionBasis')).toContainText('differ from this private goal');
  await expect(page.locator('#bossWords')).not.toContainText(/selected goal|script|your goal is/i);

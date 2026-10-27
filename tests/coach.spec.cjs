@@ -25,11 +25,14 @@ async function moveFirst(page) {
   await expect(page.locator('#history .bubble')).toHaveCount(1);
   await expect(page.locator('#yourReply')).toBeFocused();
 }
-async function completeCoachedRoleplay(page) {
+async function completeCoachedRoleplay(page, closes = false) {
   await page.locator('#send').click();
-  await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
-  await page.locator('#choices button').first().click();
-  await page.locator('#send').click();
+  if(closes){await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#history .mine')).toHaveCount(1);}
+  else {
+    await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
+    await page.locator('#choices button').first().click();
+    await page.locator('#send').click();
+  }
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#scoreArea')).toBeHidden();
 }
@@ -135,7 +138,7 @@ test('rejecting an interpretation leaves the expression intact and lets the lear
   await page.locator('#coachGoal').fill('I want a pause, not resignation.');
   await confirm(page);
   await moveFirst(page);
-  await completeCoachedRoleplay(page);
+  await completeCoachedRoleplay(page,true);
   await expect(page.locator('#realWorldPractice')).toContainText('asking for a pause');
 });
 

@@ -94,7 +94,11 @@ for (const width of [320, 390]) {
       await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
       await expect(page.locator('#replyHeading')).toBeFocused();
       await page.keyboard.press('Tab');
-      await expect(page.locator('#choices button').first()).toBeFocused();
+      await expect(page.locator('#yourReply')).toBeFocused();
+      await page.keyboard.press('Tab');await expect(page.locator('#send')).toBeFocused();
+      await page.keyboard.press('Tab');await expect(page.locator('#openPractice')).toBeFocused();
+      if(await page.locator('#finishHere').isVisible()){await page.keyboard.press('Tab');await expect(page.locator('#finishHere')).toBeFocused();}
+      await page.keyboard.press('Tab');await expect(page.locator('#choices button').first()).toBeFocused();
       await page.keyboard.press('Enter');
       await expect(page.locator('#yourReply')).toBeFocused();
       await page.keyboard.press('Tab');
@@ -113,7 +117,11 @@ for (const width of [320, 390]) {
       await page.keyboard.press('Enter');
       await expect(page.locator('#replyHeading')).toBeFocused();
       await page.keyboard.press('Tab');
-      await expect(page.locator('#choices button').first()).toBeFocused();
+      await expect(page.locator('#yourReply')).toBeFocused();
+      await page.keyboard.press('Tab');await expect(page.locator('#send')).toBeFocused();
+      await page.keyboard.press('Tab');await expect(page.locator('#openPractice')).toBeFocused();
+      if(await page.locator('#finishHere').isVisible()){await page.keyboard.press('Tab');await expect(page.locator('#finishHere')).toBeFocused();}
+      await page.keyboard.press('Tab');await expect(page.locator('#choices button').first()).toBeFocused();
     });
 
     test('short action labels fit at each stage without narrow multi-line buttons', async ({ page }) => {
@@ -148,8 +156,8 @@ for (const width of [320, 390]) {
         await expect(page.locator('#yourReply')).toBeFocused();
         await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
         await page.locator('#send').click();
-        await page.locator('#choices button').first().click();
-        await page.locator('#send').click();
+        if(path==='pause') {await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#history .mine')).toHaveCount(1);}
+        else {await page.locator('#choices button').first().click();await page.locator('#send').click();}
         await expect(page.locator('#outcome')).toContainText(consequence);
         await expect(page.locator('#reflectionBasis')).toContainText('My own decision: '+path);
         if(path==='scope')await expect(page.locator('#history .mine').last()).toContainText('Please confirm the agreed scope');

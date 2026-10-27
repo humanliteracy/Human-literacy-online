@@ -68,7 +68,9 @@ for (const [decision, context] of [
   ['I will not complete this work.', /earlier refusal or limit/],
   ['I need to pause this conversation.', /asked for a pause/],
 ]) test(`explaining does not erase the earlier decision: ${decision}`, async ({page}) => {
-  await say(page, decision); await say(page, 'I want to explain my part.');
+  await say(page, decision);
+  if(decision==='I need to pause this conversation.'){await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#history .mine')).toHaveCount(1);await expect(page.locator('#outcome')).toContainText('pause without resigning');return;}
+  await say(page, 'I want to explain my part.');
   await expect(page.locator('#bossWords')).toContainText(context);
   await expect(page.locator('#bossWords')).toContainText('Go ahead and explain');
   await expect(page.locator('#outcome')).toContainText(/leave the job|refusal or limit|pause without resigning/);

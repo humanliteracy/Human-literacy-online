@@ -33,7 +33,7 @@ const cases = [
   ['nonsense with former plan keywords', 'The pancakes finish an update on the moon.', 'unknown', /not sure how that relates/i, /not established a shared meaning or a useful recovery plan/i],
   ['ambiguous wording', 'Maybe something else.', 'unknown', /not sure how that relates/i, /not established a shared meaning/i],
   ['previously unseen ordinary wording', 'My neighbor borrowed my umbrella.', 'unknown', /not sure how that relates/i, /not established a shared meaning/i],
-  ['pause is explicitly not resignation', 'I am not resigning. I need a pause.', 'pause', /not treat a break as resignation/i, /pause without resigning/i],
+  ['pause is explicitly not resignation', 'I am not resigning. I need a pause.', 'pause', /break is not resignation/i, /pause without resigning/i],
   ['negated resignation statement', 'I do not mean I quit.', 'clarify', /not resigning/i, /not acceptance of the assignment/i],
   ['quoted resignation', 'When I said "I quit", I was quoting the example.', 'uncertain', /uncertain or quoted words/i, /decision about leaving remains open/i],
   ['conditional resignation', 'If this keeps happening, I might quit.', 'uncertain', /not assume a resignation/i, /decision about leaving remains open/i],
@@ -59,12 +59,16 @@ for (const [label, text, kind, firstReply, outcome] of cases) {
     await page.locator('#yourReply').fill(text);
     await page.locator('#send').click();
     await expect(page.locator('#bossWords')).toContainText(firstReply);
-    await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
-    await page.locator('#yourReply').fill(text);
-    await page.locator('#send').click();
+    const closes = ['pause','threat'].includes(kind);
+    if (closes) await expect(page.locator('#inputPanel')).toBeHidden();
+    else {
+      await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
+      await page.locator('#yourReply').fill(text);
+      await page.locator('#send').click();
+    }
     await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
     await expect(page.locator('#outcome')).toContainText(outcome);
-    await expect(page.locator('#history .mine')).toHaveCount(2);
+    await expect(page.locator('#history .mine')).toHaveCount(closes ? 1 : 2);
     await expect(page.locator('#history .mine').first()).toContainText(text);
     await expect(page.locator('#history .mine').last()).toContainText(text);
     await expect(page.locator('#realWorldPractice')).not.toBeEmpty();
@@ -102,6 +106,13 @@ for (const [path, kind, words] of [
     await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
     await page.locator('#send').click();
     await expect(page.locator('#bossWords')).not.toContainText('cannot reliably connect');
+    if(path==='pause'){
+      await expect(page.locator('#inputPanel')).toBeHidden();
+      await expect(page.locator('#outcome')).toContainText(words);
+      await expect(page.locator('#reflectionBasis')).toContainText('My chosen goal: '+path);
+      await expect(page.locator('#history .mine')).toHaveCount(1);
+      return;
+    }
     const followup = await page.locator('#choices button').first().innerText();
     await page.locator('#choices button').first().click();
     await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
@@ -138,9 +149,10 @@ test('a threat is not repaired automatically by a later project-plan phrase', as
   await page.goto('/simulator/01/');
   await page.locator('#yourReply').fill('I will hurt you.');
   await page.locator('#send').click();
-  await page.locator('#yourReply').fill('I will send a status update in 30 minutes.');
-  await page.locator('#send').click();
-  await expect(page.locator('#bossWords')).toContainText('address the threat and safety');
+  await expect(page.locator('#inputPanel')).toBeHidden();
+  await expect(page.locator('#history .mine')).toHaveCount(1);
+  const reaction=await page.evaluate(()=>HumanLiteracyDialogue.manager(HumanLiteracyDialogue.analyze('I will send a status update in 30 minutes.'),{previous:HumanLiteracyDialogue.analyze('I will hurt you.')}));
+  expect(reaction).toContain('address the threat and safety');
   await expect(page.locator('#outcome')).toContainText('exchange pauses because of a threat');
   await expect(page.locator('#outcome')).not.toContainText('propose a concrete next step');
 });

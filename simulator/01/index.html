@@ -106,7 +106,7 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
   <div class="intro">
     <div class="kicker">Life Simulator · Prototype 01</div>
     <h1>The Missed Deadline</h1>
-    <p class="sub">Practise clarity, boundaries and next steps in a scripted, fictional workplace. Choose or write a reply, then Say this. Different approaches can lead to different possible outcomes. Mistakes are welcome; you control your words and decisions.</p>
+    <p class="sub">Practise a scripted workplace conversation. Type your reply or use optional wording. You control your decisions; there is no score.</p>
 
   </div>
 
@@ -120,13 +120,13 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
 
     <section class="content" id="inputPanel" aria-labelledby="replyHeading">
       <h2 id="replyHeading" class="response-title" tabindex="-1">How do you respond?</h2>
-      <p class="micro">Choose wording to put it in your draft, or write your own. Only Say this sends it to Jordan. No grade.</p>
-      <div class="choices" id="choices"></div>
+      <p id="replyInstruction" class="micro">Write what you want to say. Only Say this sends it to Jordan.</p>
       <p id="replyStatus" class="micro" role="status"></p>
       <div id="replyGoalPanel" class="hidden"><p id="replyGoal" class="micro"></p><button id="clearReplyGoal" class="secondary" type="button">Clear goal</button></div>
-      <label class="write-label" for="yourReply">Or use your own words</label>
+      <label class="write-label" for="yourReply">Your reply</label>
       <textarea id="yourReply" aria-describedby="replyStatus" maxlength="600" autocomplete="off" placeholder="Type what you would say…"></textarea>
-      <div class="actions"><button id="send" type="button" class="primary">Say this →</button><button id="openPractice" type="button" class="secondary" aria-controls="expressStudio" aria-label="Help me draft a response">Help me draft</button><button id="restoreReplyDraft" class="secondary hidden" type="button">Restore prior draft</button></div>
+      <div class="actions"><button id="send" type="button" class="primary">Say this →</button><button id="openPractice" type="button" class="secondary" aria-controls="expressStudio" aria-label="Help me draft a response">Help me draft</button><button id="restoreReplyDraft" class="secondary hidden" type="button">Restore prior draft</button><button id="finishHere" class="secondary hidden" type="button">Finish here</button></div>
+      <div class="choices" id="choices" aria-label="Optional suggested wording"></div>
     </section>
 
     <section id="endPanel" class="content hidden" aria-live="polite">
@@ -269,14 +269,14 @@ const SECOND=[
 ];
 const $=id=>document.getElementById(id);
 const dialogue=window.HumanLiteracyDialogue;
-let turn=0,log=[],firstAnalysis=null,lastAnalysis=null,lastFeedback=null;
+let turn=0,completed=false,log=[],firstAnalysis=null,lastAnalysis=null,lastFeedback=null;
 let progress=[],furthestTurn=0;
 let coaching=null,dictation=null,pendingCoachContext=null,conversationGoal=null,selectedAuthored=null,replyBackup=null;
 const coachPaths=window.HumanLiteracyCoach.paths;
 const pathKinds={boundary:'refusal',resign:'resign',scope:'scope',help:'support',pause:'pause',recovery:'recovery',custom:'clarify'};
 // Conversation history stays in this page's memory only. Navigation never sends.
 function saveProgress(){
-  progress[turn]=structuredClone({turn,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup,
+  progress[turn]=structuredClone({turn,completed,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup,
     draft:$('yourReply').value,status:$('replyStatus').textContent,boss:$('bossWords').textContent,kind:$('bossWords').dataset.dialogueKind||''});
 }
 function showNavigation(){
@@ -290,10 +290,10 @@ function navigateTo(destination){
   discardRecording('Conversation navigation. Audio deleted. Microphone off.');
   saveProgress();
   const saved=structuredClone(progress[destination]);
-  ({turn,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup}=saved);
+  ({turn,completed,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup}=saved);
   const pending=pendingCoachContext,authored=selectedAuthored,backup=replyBackup;
   showHistory();$('bossWords').textContent=saved.boss;$('bossWords').dataset.dialogueKind=saved.kind;
-  if(turn===2)finish();
+  if(completed)finish();
   else{
     showTurn();pendingCoachContext=pending;selectedAuthored=authored;replyBackup=backup;
     $('yourReply').value=saved.draft;$('replyStatus').textContent=saved.status;
@@ -343,9 +343,18 @@ function choose(option){
 }
 function optionsForTurn(){
   const container=$('choices');container.replaceChildren();
+  const caption=document.createElement('p');caption.className='micro';caption.textContent='Optional wording for your draft';container.append(caption);
   const path=(firstAnalysis?.flags.goalMismatch||conversationGoal?.path==='custom')?firstAnalysis.reflectionPath:conversationGoal?.path||(firstAnalysis?.matched?firstAnalysis.reflectionPath:null);
   let choices=turn===0?FIRST:SECOND;
   if(turn===1&&path&&coachPaths[path])choices=coachPaths[path].followups.map(text=>({kind:pathKinds[path],text}));
+  if(turn===1&&firstAnalysis?.kind==='refusal'&&!firstAnalysis.flags.conditionalRefusal)choices=[
+    {kind:'refusal',text:'My answer to this request is no. I am not offering other work.'},
+    {kind:'clarify',text:'Can you clarify the practical process without assuming my agreement?'}
+  ];
+  if(turn===1&&firstAnalysis?.kind==='refusal'&&firstAnalysis.flags.temporaryRefusal){
+    const timing=firstAnalysis.text.match(/\b(today|right now|for now)\b/i)?.[0]||'for now';
+    choices=[{kind:'refusal',text:'I will not accept this assignment '+timing+'. I am not making a commitment about later work.'},{kind:'clarify',text:'Can you clarify the practical process without assuming my agreement?'}];
+  }
   if(turn===1&&firstAnalysis?.kind==='threat')choices=[
     {kind:'pause',text:'I need to stop this exchange. I will step away without threatening anyone.'},
     {kind:'clarify',text:'I want to express my concern without threatening harm.'}
@@ -367,13 +376,15 @@ function showTurn(){
 $('expressStudio').open=false;$('scenarioContext').open=true;
 $('inputPanel').classList.remove('hidden');$('endPanel').classList.add('hidden');
 $('sceneProgress').textContent='SCENE '+(turn+1)+' OF 2';
-$('replyHeading').textContent=turn===0?'How do you respond?':'What do you do now?';
+$('replyHeading').textContent=turn===0?'How do you respond?':'Anything else? (optional)';
+$('replyInstruction').textContent=turn===0?'Write what you want to say. Only Say this sends it to Jordan.':'Add a reply, or choose Finish here. Unsent writing stays a draft.';
+$('finishHere').classList.toggle('hidden',turn===0);
 $('yourReply').value='';$('yourReply').removeAttribute('aria-invalid');$('replyStatus').textContent='';selectedAuthored=null;replyBackup=null;$('restoreReplyDraft').classList.add('hidden');optionsForTurn();showReplyGoal();
 pendingCoachContext=null;
 }
 function replyFromManager(text){$('bossWords').textContent=text;message('Jordan · manager',text)}
 function submit(){
-  if(turn>=2)return;
+  if(completed)return;
   const text=$('yourReply').value.trim();
   if(!text){$('replyStatus').textContent='Write a reply or choose a suggestion before selecting Say this.';$('yourReply').setAttribute('aria-invalid','true');$('yourReply').focus();return}
   saveProgress();progress.length=turn+1;
@@ -391,26 +402,32 @@ function submit(){
   message('You',text);
   $('bossWords').dataset.dialogueKind=analysis.kind;
   replyFromManager(dialogue.manager(analysis,{turn,previous:firstAnalysis,goal:conversationGoal}));
-  if(turn===0){firstAnalysis=analysis;turn=1;showTurn();$('replyHeading').focus({preventScroll:true});}
-  else{lastAnalysis=analysis;finish();}
+  if(turn===0)firstAnalysis=analysis;
+  else lastAnalysis=analysis;
+  turn+=1;
+  if(analysis.flags.closeConversation||turn>=2){lastAnalysis=analysis;finish();}
+  else{showTurn();$('replyHeading').focus({preventScroll:true});}
   furthestTurn=turn;saveProgress();showNavigation();
   $('navigationStatus').textContent='Reply sent. Back reviews earlier replies; Say this on an earlier reply replaces later replies.';
 }
 function finish(){
-  turn=2;lastFeedback=dialogue.feedback(firstAnalysis,lastAnalysis,{goal:conversationGoal});
+  completed=true;
+  dictation?.cancel('Conversation ended. Browser dictation off.');
+  discardRecording('Conversation ended. Audio deleted. Microphone off.');
+  lastFeedback=dialogue.feedback(firstAnalysis,lastAnalysis,{goal:conversationGoal});
   $('sceneProgress').textContent='SIMULATION COMPLETE';
   $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
   $('outcome').textContent=lastFeedback.outcome;$('madeClear').textContent=lastFeedback.communicated;
   $('unresolved').textContent=lastFeedback.unresolved;$('realWorldPractice').textContent=lastFeedback.action;
   for(const [id,key] of Object.entries({feedbackConstructive:'constructive',feedbackDifficulty:'difficulty',feedbackWhy:'why',feedbackSkill:'skill',feedbackAlternative:'alternative',feedbackImprovement:'improvement',feedbackExample:'example'}))$(id).textContent=lastFeedback[key];
-  $('feedbackEvidence').textContent=[firstAnalysis,lastAnalysis].map((analysis,index)=>'Reply '+(index+1)+': '+(analysis.evidence.length?analysis.evidence.map(item=>'“'+item.text+'”').join('; '):'No reliable scripted match.')).join(' ');
+  $('feedbackEvidence').textContent=(log.filter(entry=>entry.who==='You').length===1?[firstAnalysis]:[firstAnalysis,lastAnalysis]).map((analysis,index)=>'Reply '+(index+1)+': '+(analysis.evidence.length?analysis.evidence.map(item=>'“'+item.text+'”').join('; '):'No reliable scripted match.')).join(' ');
   $('reflectionBasis').textContent=conversationGoal?(conversationGoal.goal?'You chose this practice goal: '+conversationGoal.goal:'You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.'):lastFeedback.basis;
-  if(lastAnalysis.flags.goalMismatch)$('reflectionBasis').textContent+=' Your submitted words differ from this private goal. You can keep the words or revisit the goal.';
+  if((lastAnalysis||firstAnalysis).flags.goalMismatch)$('reflectionBasis').textContent+=' Your submitted words differ from this private goal. You can keep the words or revisit the goal.';
   $('expressStudio').open=false;$('reflectionReview').open=false;$('feedbackEvidencePanel').open=false;$('completionTitle').focus({preventScroll:true});
   $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
 function reset(){
-  progress=[];furthestTurn=0;turn=0;log=[];firstAnalysis=null;lastAnalysis=null;lastFeedback=null;pendingCoachContext=null;conversationGoal=null;selectedAuthored=null;replyBackup=null;
+  progress=[];furthestTurn=0;turn=0;completed=false;log=[];firstAnalysis=null;lastAnalysis=null;lastFeedback=null;pendingCoachContext=null;conversationGoal=null;selectedAuthored=null;replyBackup=null;
   const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
   $('bossWords').textContent=opening;delete $('bossWords').dataset.dialogueKind;
   message('Jordan · manager',opening);showTurn();$('reflectionReview').open=false;
@@ -419,6 +436,13 @@ function reset(){
   saveProgress();showNavigation();window.scrollTo(0,0);
 }
 $('send').addEventListener('click',submit);
+$('finishHere').addEventListener('click',()=>{
+  if(completed||turn===0)return;
+  saveProgress();turn+=1;
+  replyFromManager('We will leave this conversation here. No further reply or new work agreement is assumed.');
+  finish();furthestTurn=turn;saveProgress();showNavigation();
+  $('navigationStatus').textContent='Conversation ended. Nothing from your unfinished draft was sent. Back restores it.';
+});
 $('yourReply').addEventListener('input',()=>{
   selectedAuthored=null;$('yourReply').removeAttribute('aria-invalid');$('replyStatus').textContent='';
 });
@@ -513,11 +537,11 @@ function syncWorkspace(){
   showNavigation();
   const active=$('expressStudio').open;
   $('scenarioContext').open=!active;
-  $('inputPanel').classList.toggle('hidden',active||turn===2);
+  $('inputPanel').classList.toggle('hidden',active||completed);
   if(active)$('endPanel').classList.add('hidden');
-  else if(turn===2)$('endPanel').classList.remove('hidden');
+  else if(completed)$('endPanel').classList.remove('hidden');
 }
-$('returnToReply').addEventListener('click',()=>{$('expressStudio').open=false;syncWorkspace();(turn===2?$('completionTitle'):$('yourReply')).focus()});
+$('returnToReply').addEventListener('click',()=>{$('expressStudio').open=false;syncWorkspace();(completed?$('completionTitle'):$('yourReply')).focus()});
 $('expressStudio').addEventListener('toggle',()=>{
   syncWorkspace();
   if(!$('expressStudio').open){
@@ -550,7 +574,7 @@ function clearPrivatePractice(){
 }
 $('practiceClear').addEventListener('click',clearPrivatePractice);
 function moveDraft(words,context=null){
-  if(turn>=2)reset();
+  if(completed)reset();
   keepPriorDraft(words);
   $('yourReply').value=words;$('yourReply').removeAttribute('aria-invalid');selectedAuthored=null;
   pendingCoachContext=context?{...context,words}:null;
@@ -572,7 +596,7 @@ document.addEventListener('visibilitychange',()=>{
 });
 if(!recordingSupported)$('recordStatus').textContent='Recording is not supported here. Writing and rehearsal still work.';
 recordingControls();
-coaching=window.HumanLiteracyCoach.createCoach({moveDraft,isComplete:()=>turn===2,onChange:()=>{},onAdvance:()=>{
+coaching=window.HumanLiteracyCoach.createCoach({moveDraft,isComplete:()=>completed,onChange:()=>{},onAdvance:()=>{
   dictation?.cancel('Dictation stopped. Review your goal.');
   if(privateRecorder.state==='pending')discardRecording('Microphone request canceled before reviewing your goal.');
   else if(privateRecorder.state==='recording')stopRecord();

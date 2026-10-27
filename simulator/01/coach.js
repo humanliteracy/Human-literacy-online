@@ -128,6 +128,11 @@
     const ownOpening = ownedClause ? ownedClause.trim().replace(/[,\s]+$/, '') + '. ' : '';
     const chosen = path === 'custom' ? reading.reflectionPath : path;
     const option = (label, words, difference) => [label, words, difference];
+    if (path === 'custom' && reading.kind === 'stop') return {tailored:true,options:[
+      option('Ask to be left alone', 'Please leave me alone.', 'Ends this interaction without a reason, work promise or employment decision.'),
+      option('End the discussion', 'I want to end this conversation.', 'Keeps the end request explicit; it does not offer to negotiate.'),
+      option('Keep it brief', 'Please stop this conversation.', 'Asks for closure without changing your intention.'),
+    ]};
     const privacy = reading.flags.personalBoundary === 'privacy' || /^(?:i (?:want|would like) to|my goal is to) (?:keep my personal (?:details|information) private|(?:ask for|get) (?:help|support) without (?:sharing|disclosing) (?:my |more )?personal (?:details|information))\b/i.test(goal);
     if (['boundary','help','custom'].includes(path) && (privacy || original.kind === 'refusal' && original.flags.personalBoundary === 'privacy')) return {tailored:true,options:[
       option('Keep personal details private', path === 'help' || reading.kind === 'support' ? 'I need support with the work, and I choose not to share personal details. What help is available?' : 'I will not share personal information. What work details do you need to discuss?', 'States a privacy limit without accepting additional work.'),
@@ -157,15 +162,29 @@
       ]};
     }
     const refusalContext = [reading.kind === 'refusal' ? goal : '', original.kind === 'refusal' ? literal : ''].join(' ');
-    if (['boundary','custom'].includes(path) && reading.kind === 'refusal' && /any more work|further work|continue working|another update/i.test(refusalContext)) {
+    if (chosen === 'boundary' && (reading.flags.temporaryRefusal || original.flags.temporaryRefusal)) {
+      const timing=refusalContext.match(/\b(today|right now|for now)\b/i)?.[0];
+      if(timing)return {tailored:true,options:[
+        option('Keep the time limit', 'I will not accept this assignment ' + timing + '.', 'Preserves the stated timing without turning it into a permanent refusal or resignation.'),
+        option('Keep later decisions open', 'I will not accept this assignment ' + timing + '. I am not making a commitment about later work.', 'Adds no promise after the time limit.'),
+        option('State no with the timing', 'My answer to this request is no ' + timing + '.', 'Keeps the refusal and its timing, without an offer of help.'),
+      ]};
+    }
+    if (['boundary','custom'].includes(path) && (reading.kind === 'refusal' || original.kind === 'refusal') && /any more work|further work|continue working|another update/i.test(refusalContext)) {
       const noUpdate = /(?:not|refuse to) provide (?:another|any) update/i.test(refusalContext);
-      const limit = noUpdate ? 'I will not continue working on this project or provide another update.' : 'I am not doing any more work on this project.';
+      const noWork = /any more work|further work|continue working/i.test(refusalContext);
+      const limit = noUpdate && noWork ? 'I will not continue working on this project or provide another update.' : noUpdate ? 'I will not provide another update.' : 'I am not doing any more work on this project.';
       return {tailored:true,options:[
         option('State the limit', limit + ' We need to clarify what happens next.', 'Keeps the work refusal explicit without turning it into resignation.'),
         option('Ask about next steps', limit + ' What needs to be clarified about responsibilities?', 'Adds one practical question without offering more work.'),
         option('Keep the decision brief', limit, 'States the same limit without an explanation or alternative offer.'),
       ]};
     }
+    if (chosen === 'boundary' && !reading.flags.conditionalRefusal && !original.flags.conditionalRefusal) return {tailored:true,options:[
+      option('Direct and firm', 'I am not accepting this request.', 'States no without a condition or an offer of other help.'),
+      option('Prevent an assumed agreement', 'I will not accept this request. Please do not treat that as agreement.', 'Keeps the refusal firm; it does not invite negotiation.'),
+      option('Keep it brief', 'My answer to this request is no.', 'The refusal needs no explanation or alternative offer.'),
+    ]};
     if (path === 'custom' && reading.kind === 'uncertain') return {tailored:true,options:[
       option('Keep the decision open', "I'm considering leaving this job, but I haven't decided. I want to discuss my options.", 'Makes uncertainty explicit; this is not a resignation.'),
       option('Ask for information', "Before I decide whether to leave this job, can you explain the practical options?", 'Asks for information without committing to stay or leave.'),
@@ -301,13 +320,14 @@
         reviewedLiteral = literal;
         $('coachLiteral').textContent = literal;
         const reading = window.HumanLiteracyDialogue.analyze(literal);
-        const recognized = reading.matched && ['own','refusal','resign','scope','support','pause','clarify','repair','recovery','plan','uncertain','explain'].includes(reading.kind);
-        const proposed = recognized ? reading.reflectionPath : '';
+        const recognized = reading.matched && ['own','refusal','resign','scope','support','pause','clarify','repair','recovery','plan','uncertain','explain','stop'].includes(reading.kind);
+        const proposed = reading.kind === 'stop' ? 'custom' : recognized ? reading.reflectionPath : '';
         $('coachHearing').textContent = example?.hearing || (recognized ? 'These words may relate to ' + window.HumanLiteracyDialogue.goalLabels[proposed] + '. A listener may still need more detail.' : 'I do not have a scripted reading for these words. Please choose what you want to communicate.');
         $('coachTentative').textContent = example?.tentative || 'This is a limited wording match, not a reading of your feelings or whole intention. You can change or reject the proposed goal.';
         $('coachPath').value = example?.path || proposed; lastPath = $('coachPath').value;
         $('coachGoal').value = example?.goal || (reading.kind === 'uncertain' ? 'I might quit, but I have not decided.' : defaultGoals[proposed] || '');
         if (reading.kind === 'clarify') $('coachGoal').value = 'I want to clarify what is expected.';
+        if (reading.kind === 'stop') $('coachGoal').value = 'I want to end this conversation.';
         if (reading.flags.personalBoundary === 'privacy') $('coachGoal').value = 'I want to keep my personal information private.';
         if (reading.flags.personalBoundary === 'treatment') $('coachGoal').value = 'I want to set a limit on being shouted at.';
         if (reading.flags.explainFacts && reading.flags.fairSolution) $('coachGoal').value = 'I want to explain what happened and find a fair solution.';

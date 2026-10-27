@@ -9,7 +9,7 @@
     own: 'recovery', repair: 'recovery', recovery: 'recovery', plan: 'recovery', scope: 'scope', refusal: 'boundary',
     support: 'help', pause: 'pause', resign: 'resign', clarify: 'custom', uncertain: 'custom',
     anger: 'custom', hostile: 'custom', blame: 'custom', conflict: 'custom', threat: 'custom',
-    disengage: 'pause', unrelated: 'custom', unknown: 'custom', explain: 'custom',
+    disengage: 'pause', stop: 'pause', unrelated: 'custom', unknown: 'custom', explain: 'custom',
   };
   const authoredKinds = {
     own: 'own', boundary: 'scope', blame: 'blame', hostile: 'disengage', repair: 'repair',
@@ -23,6 +23,9 @@
   const clauseEnd = '(?=$|[.!?;,]|\\s+(?:because|and|but|so|please)\\b)';
   const positiveResign = new RegExp("\\bi (?:quit(?: (?:this|the|my) job)?|resign(?: from (?:this|the|my) job)?|(?:am|'m) resigning(?: from (?:this|the|my) job)?|(?:am|'m) leaving (?:this|the|my) job|have decided to (?:resign|leave (?:this|the|my) job)|confirm my resignation|am confirming my decision to resign)" + '\\s*' + clauseEnd, 'g');
   const negativeResign = /\bi (?:(?:am|'m) not resigning|(?:do not|don't|will not|won't) (?:want to )?(?:resign|quit)|(?:am|'m) not (?:saying|confirming) (?:that )?i (?:resign|quit)|(?:do not|don't|never) (?:say|mean) (?:that )?i (?:resign|quit))\b|\bnot (?:a|my) resignation\b/g;
+  const formalResign = /\bi (?:hereby resign|resign effective (?:immediately|today)|am (?:submitting|tendering|handing in) my resignation|have decided to quit (?:this|the|my) job|am leaving (?:this|the) company)\b/;
+  const resignationDeclaration = /(?:^|[.!?;])\s*(?:(?:please )?accept (?:this as my|my) resignation|(?:this is|consider this) my resignation|my (?:decision to resign|resignation) is final)\b/;
+  const stopRequest = /\b(?:please )?(?:leave me alone|stop (?:talking to me|contacting me|asking me questions|this (?:conversation|discussion|meeting))|end this (?:conversation|discussion)|do not (?:contact me|ask me any more questions))\b|\bi (?:(?:want|need|would like) to (?:stop|end) (?:this|the|our) (?:conversation|discussion|meeting)|am ending (?:this|the|our) (?:conversation|discussion)|do not want to (?:talk|discuss this) (?:anymore|any further|right now))\b|^(?:please )?(?:stop|enough|fuck off|shut up)[.! ]*$/;
   const uncertainty = /\b(?:might|may|maybe|perhaps|considering|thinking (?:about|of)|not sure|unsure|if|would|could|should|suppose|imagine|joking)\b/;
   const leavingTopic = /\b(?:resign(?:ation|ing)?|quit(?:ting)?|leav(?:e|ing) (?:this|the|my) job|take this job and shove it)\b/;
   const threat = /\bi (?:will|'ll|am going to|'m going to|want to|intend to|plan to) (?:hurt|kill|punch|hit|attack|shoot) (?:you|him|her|them|someone)\b/;
@@ -30,9 +33,12 @@
   const profanity = /\b(?:fuck(?:ing)?|shit|damn|asshole|kiss my ass)\b/;
   const reportedOrQuestioned = /\b(?:you|he|she|they|someone) (?:said|says|asked)\b|\b(?:what if|did i say|when i said|suppose i|imagine i|i said|i never said|do not (?:assume|think|say) (?:that )?i)\b/;
   const pause = /\bi (?:need|want|would like) to (?:pause|take a break)\b|\bi (?:(?:need|want|request|am asking for) (?:a |some )?(?:break|pause|time to think|space)|(?:cannot|can't) continue (?:this|the) (?:conversation|discussion|meeting))\b|\b(?:can|could) we (?:pause|take a break)\b|\bplease (?:give me (?:a moment|some space)|let me (?:pause|take a break))\b/;
+  const ordinaryPause = /\b(?:please pause|let us take a break|let's take a break|can we pick this up later|i (?:need|would like) (?:a moment|a minute|a break))\b/;
   const scope = /\b(?:the|this|our|project) scope (?:has |was )?(?:changed|expanded|increased)\b|\b(?:scope|deadline|expectations) (?:is|are) (?:unrealistic|unreasonable)\b|\bi (?:cannot|can't|will not|won't) (?:meet|commit to) (?:the |this |that |an? )?(?:original |current |expanded )?(?:deadline|scope|combination|expectations)\b|\bi (?:need|require) more time (?:because|to|for)\b|\b(?:reduce|adjust|revise|renegotiate|change) (?:the |this |our )?(?:scope|deadline|expectations)\b/;
   const refusal = /\bi (?:(?:will not|won't|refuse to|cannot|can't) (?:accept|take on|complete|finish|do|send|deliver|work|commit|agree)|(?:am|'m) not (?:accepting|agreeing|committing))\b|\bmy answer (?:to (?:this|the) request )?is no\b|\bi (?:will not|won't) (?:be shouted at|discuss (?:my |these )?personal details|share (?:my |more )?personal information)\b/;
   const furtherRefusal = /\bi (?:am not (?:doing|taking on) (?:any (?:more )?|more |additional )?(?:work|this (?:work|project|assignment)|the (?:work|project|assignment))|(?:refuse to|will not|cannot) (?:continue (?:working|to work)|provide (?:another |any (?:more )?|an? )?(?:update|report))|am not (?:continuing (?:to work|with (?:this|the) (?:work|project))|working on (?:this|the) (?:project|assignment)))\b/;
+  const ordinaryRefusal = /\bi (?:decline (?:this|the) (?:assignment|request|task)|do not agree to (?:take this on|accept (?:this|the) (?:assignment|request))|am not willing to (?:do|accept|take on|work on) (?:this|the) (?:work|project|assignment|request)|will not do (?:it|that))\b/;
+  const negotiation = /\b(?:can|could) we (?:negotiate|discuss) (?:different|other|revised) (?:conditions|terms|expectations)\b|\bi (?:am (?:willing|open) to discuss|would discuss|will consider) (?:different|other|revised) (?:conditions|terms|expectations)\b/;
   const deadlineConcern = /\b(?:your|the|this|our) (?:deadline|timeline|schedule) is (?:ridiculous|unworkable|too tight|unrealistic|unreasonable)\b|\b(?:the |project )?(?:requirements|priorities) (?:have |were )?changed\b|\byou (?:have )?added more work\b/;
   const ordinaryHelp = /\b(?:can|could) i (?:get|have) (?:some |more )?(?:help|support|assistance)\b/;
   const ordinaryClarification = /\bcan i (?:explain|describe|tell you)\b|\bwhat (?:do you need from me|should i do next|is most important|needs to happen next)\b|\b(?:can|could) you (?:be more specific|tell me what you need)\b/;
@@ -42,6 +48,7 @@
   const workAccount = /\b(?:i was waiting for (?:the |an? )?(?:client |manager |project )?(?:approval|feedback|information)|the (?:client |project )?approval arrived (?:late|after (?:the |our )?(?:deadline|agreed handoff)))\b/;
   const fairSolution = /\b(?:find|agree on|discuss|decide on|work (?:toward|towards)) (?:a )?fair (?:solution|way forward|next step)\b/;
   const unrelated = /^(?:my favou?rite colou?r is [a-z-]+(?:,? and i had (?:pancakes|toast|eggs) for breakfast)?|i had (?:pancakes|toast|eggs) for breakfast)[.!]?$/;
+  const unrelatedQuestion = /^(?:what(?:'s| is) (?:your favou?rite (?:colou?r|movie|food)|for dinner|the weather(?: like)?)|why is the sky blue|can we talk about (?:dinner|football|movies)|how (?:is|about) the weather)[?! .]*$/;
   const positiveWork = /\bi (?:will|agree to|commit to) (?:finish|complete|do|send|deliver|take on|accept)\b/;
   const support = /\bi (?:need|want|am asking for|would like) (?:some |additional |more )?(?:help|support|assistance)\b|\b(?:can|could) (?:you|someone|we) help (?:me|us)\b|\bwhat (?:help|support|adjustments) (?:is|are) available\b/;
   const accountability = /\bi (?:underestimated (?:the|this|my) (?:work|task|time)|should have (?:warned|flagged|told|notified)|forgot to (?:send|flag|tell|notify)|take responsibility for|made (?:a|the) mistake)\b|\b(?:the delay was|that was|it was) my (?:mistake|responsibility|fault)\b/;
@@ -58,17 +65,26 @@
     const original = String(text).trim();
     const value = normalize(original);
     const goalPath = Object.hasOwn(goalLabels, options.goal?.path) ? options.goal.path : null;
-    const negativeMatches = Array.from(value.matchAll(negativeResign));
-    const positiveMatches = Array.from(value.matchAll(positiveResign)).filter(match => !negativeMatches.some(negative => match.index >= negative.index && match.index < negative.index + negative[0].length));
+    let negativeMatches = Array.from(value.matchAll(negativeResign));
+    let positiveMatches = [...value.matchAll(positiveResign), ...value.matchAll(new RegExp(formalResign.source,'g')), ...value.matchAll(new RegExp(resignationDeclaration.source,'g'))].filter(match => !negativeMatches.some(negative => match.index >= negative.index && match.index < negative.index + negative[0].length));
     const negatedAttribution = /\bi (?:do not|am not|never) (?:think|say|mean|believe|call|calling|saying|want|intend|plan)\b/;
     // Only attribute a matched phrase when its own clause is asserted. A later
     // direct statement remains eligible after a quoted/denied earlier clause.
     const asserted = found => {
       const prefix=value.slice(0,found.index).split(/[.!?;]|\bbut\b|\bhowever\b/).pop();
       return !reportedOrQuestioned.test(prefix) && !negatedAttribution.test(prefix)
+        && !/\b(?:(?:do|can|will|should) not|never)\s*$/.test(prefix)
         && !/\b(?:if|suppose|imagine|what if)\b/.test(prefix);
     };
     const findAsserted = expression => Array.from(value.matchAll(new RegExp(expression.source,'g'))).find(asserted);
+    negativeMatches = negativeMatches.filter(asserted);
+    // A later polite request ("I resign and would like notice details") does
+    // not turn a definitive decision into uncertainty. Check its own prefix.
+    positiveMatches = positiveMatches.filter(found => {
+      const prefix=value.slice(0,found.index).split(/[.!?;]|\bbut\b/).pop();
+      return asserted(found) && !uncertainty.test(prefix) && !/\b(?:do not|never|not)\s*$/.test(prefix);
+    });
+    const directStop=findAsserted(stopRequest);
     const directThreat=findAsserted(threat),directInsult=findAsserted(targetInsult);
     const fairMatch=findAsserted(fairSolution);
     const fairPrefix=fairMatch ? value.slice(0,fairMatch.index).split(/[.!?;]|\bbut\b|\bhowever\b/).pop() : '';
@@ -76,12 +92,16 @@
     const reportedAggression = !directThreat && !directInsult && (reportedOrQuestioned.test(value) || negatedAttribution.test(value)) && (threat.test(value) || targetInsult.test(value));
     const flags = {
       profane: profanity.test(value), personalAttack: Boolean(directInsult),
-      reportedSpeech: reportedAggression,
+      reportedSpeech: reportedAggression && !directStop && !positiveMatches.length,
       explainFacts: Boolean(explainMatch),
       explainPart: Boolean(explainMatch && /my (?:part|role)/.test(explainMatch[0])),
       explainRisks: Boolean(explainMatch && /\brisks?\b/.test(explainMatch[0])),
       explainSupport: Boolean(explainMatch && /\b(?:help|support)\b/.test(explainMatch[0])),
       workAccount: Boolean(accountMatch),
+      closeConversation: Boolean(directStop),
+      conditionalRefusal: /\b(?:unless|until|only if|under (?:these|current|different) conditions|different conditions|revised terms)\b/.test(value),
+      temporaryRefusal: /\b(?:today|right now|for now)\b/.test(value),
+      unrelatedQuestion: unrelatedQuestion.test(value),
       fairSolution: Boolean(fairMatch && /\bi (?:want|would like) to\b|\b(?:can|could) we\b/.test(fairPrefix) && !/\b(?:not|never|cannot)\b/.test(fairPrefix)),
       notResigning: negativeMatches.length > 0, goalMismatch: false, unverifiedCommitment: false,
       personalBoundary: findAsserted(/\bi (?:will not|cannot) be shouted at\b/) ? 'treatment' : findAsserted(/\bi (?:will not|cannot) (?:share (?:my |more )?personal information|discuss (?:my |these )?personal details)\b/) ? 'privacy' : null,
@@ -97,26 +117,32 @@
     const inconsistentWork = negativeDelivery && positiveDelivery && !/\b(?:until|unless|before|under (?:these|current) conditions|today|tomorrow|revised|with support)\b/.test(value);
     const leavingClause = value.split(/[.!?;]/).filter(part => leavingTopic.test(part)).join(' ');
     const pureQuestion = value.endsWith('?') && !/[.!;]/.test(value.slice(0, -1));
-    if (reportedAggression) {
+    if (flags.reportedSpeech) {
       // A quoted or questioned threat is not asserted as the learner's intention.
       kind = 'unknown';
     } else if (decide('threat', threat)) {
-      flags.stopConversation = true;
+      flags.stopConversation = true; flags.closeConversation = true;
     } else if ((positiveMatches.length && negativeMatches.length) || inconsistentWork) {
       kind = 'conflict'; match = original;
+    } else if (positiveMatches.length && !pureQuestion) {
+      kind = 'resign'; match = positiveMatches[0][0];
     } else if (reportedOrQuestioned.test(leavingClause) && leavingTopic.test(value)) {
       kind = 'uncertain'; match = original;
     } else if (leavingTopic.test(value) && (uncertainty.test(leavingClause) || pureQuestion || /\bi (?:want to|wish i could) (?:resign|quit|leave (?:this|the|my) job)\b|take this job and shove it/.test(value))) {
       kind = 'uncertain'; match = original;
     } else if (positiveMatches.length) {
       kind = 'resign'; match = positiveMatches[0][0];
-    } else if (decide('pause', pause)) {
+    } else if (decide('pause', pause) || decide('pause', ordinaryPause)) {
       // Explicitly requesting a break never becomes a resignation.
-    } else if (directInsult && (decide('refusal', refusal) || decide('refusal', furtherRefusal))) {
+    } else if (directStop) {
+      kind = /\b(?:for now|for (?:a (?:moment|minute)|\d+ minutes?))\b/.test(value) ? 'pause' : 'stop'; match = directStop[0];
+      // A stop request can coexist with a separate explicit assignment refusal.
+      decide('refusal', refusal) || decide('refusal', furtherRefusal) || decide('refusal', ordinaryRefusal);
+    } else if (directInsult && (decide('refusal', refusal) || decide('refusal', furtherRefusal) || decide('refusal', ordinaryRefusal))) {
       // A personal attack does not erase an explicitly stated refusal.
     } else if (decide('hostile', targetInsult)) {
       // Delivery and a chosen goal are kept separate.
-    } else if (decide('scope', scope) || decide('scope', deadlineConcern) || decide('refusal', refusal) || decide('refusal', furtherRefusal) || decide('support', support) || decide('support', ordinaryHelp) || decide('repair', repair) || decide('own', accountability) || decide('blame', blame) || decide('clarify', clarification) || decide('clarify', ordinaryClarification) || decide('anger', anger)) {
+    } else if (decide('scope', scope) || decide('scope', deadlineConcern) || decide('refusal', refusal) || decide('refusal', furtherRefusal) || decide('refusal', ordinaryRefusal) || decide('scope', negotiation) || decide('support', support) || decide('support', ordinaryHelp) || decide('repair', repair) || decide('own', accountability) || decide('blame', blame) || decide('clarify', clarification) || decide('clarify', ordinaryClarification) || decide('anger', anger)) {
       // These are bounded speech acts; they do not establish the whole intention.
     } else if (value && disengage.test(value)) {
       kind = 'disengage'; match = original;
@@ -128,14 +154,17 @@
       kind = 'recovery'; match = original;
     } else if (flags.explainFacts) {
       kind = 'clarify'; match = findAsserted(explanation)[0];
-    } else if (unrelated.test(value)) {
+    } else if (unrelated.test(value) || flags.unrelatedQuestion) {
       kind = 'unrelated'; match = original;
+    } else if (/^(?:(?:this is|that is|that's) )?(?:bullshit|shit|fuck this)[.! ]*$/.test(value)) {
+      kind = 'anger'; match = original;
     } else if (flags.notResigning) {
       kind = 'clarify'; match = negativeMatches[0][0];
     } else if (options.authoredText === original && Object.hasOwn(authoredKinds, options.authoredKind)) {
       kind = authoredKinds[options.authoredKind]; match = original;
       basis = 'An authored example matched exactly. This is a scripted illustration, not a measurement.';
     }
+    if (kind === 'pause') flags.closeConversation = true;
     if (match && !basis.startsWith('An authored')) basis = 'A stated phrase matched a limited script. Other meanings and real outcomes remain unverified.';
     const incompatible = {
       resign: ['scope', 'refusal', 'pause', 'support'], pause: ['resign'],
@@ -157,10 +186,11 @@
     clarify: ["You are asking for clarification. Which expectation or fact do you need me to explain first?", "We still need a shared understanding. Let's clarify the specific question before assuming a commitment."],
     plan: ["You have proposed a work update. What is still uncertain, and is that timing realistic?", "That is a proposed next step. We still need to check the remaining work, risks and timing; delivery is not guaranteed."],
     scope: ["You are asking to revisit scope or timing. Which expectation needs to change before you can commit?", "We have identified a scope or timing limit. Any adjustment still needs agreement; I cannot promise approval."],
-    refusal: ["Your refusal or limit is clear. I will not treat that as agreement. We need to review what's unfinished and who will update the client. Is this final, or are there conditions you would discuss?", "Your refusal or limit is explicit. I need to review responsibilities and the client update; we may still disagree about what is owed. What needs to be clarified?"],
+    refusal: ["Your refusal or limit is clear. I will not treat that as agreement or ask you to offer other help. The unfinished work and client update still need to be addressed separately.", "Your refusal or limit is explicit. No new work commitment is assumed. The unfinished work and any responsibilities still need to be clarified separately."],
     support: ["You are asking for support. What help would be useful? You choose what personal details to share.", "You have requested support. We still need to establish what is available and what you want to explore."],
-    pause: ["You are asking for a pause. I will not treat a break as resignation or agreement to more work. Would you like to say when or how to continue?", "We can pause this conversation. When or how to resume, and the original work issue, remain open."],
-    resign: ["You have said you are resigning. I will not treat that as agreement to finish this assignment. What practical details would you like to clarify?", "You have confirmed that you are resigning. We can discuss notice, final pay, timing and any handover. I will not treat this as agreement to finish the assignment."],
+    pause: ["You are asking for a pause. We will stop here. A break is not resignation or agreement to more work; you choose whether to return to this discussion.", "We can pause this conversation. We will stop here without assuming resignation or agreement to more work."],
+    stop: ["I'll leave you alone and stop this conversation here. You do not need to explain further.", "I'll stop here. You do not need to reply again."],
+    resign: ["You have said you are resigning. Your decision is clear. The next step is formal offboarding: confirming the process for written notice, final pay, return of work equipment and any separately agreed handover. I will not treat that as agreement to finish this assignment.", "You have confirmed that you are resigning. This moves to formal offboarding, including the applicable notice process, final pay, equipment return and any separately agreed handover. I will not treat this as agreement to finish the assignment."],
     uncertain: ["I will not assume a resignation from uncertain or quoted words. Are you deciding to resign, asking for a pause, or considering your options?", "Your decision about leaving is not established by this wording. You can clarify it or take time; no work agreement should be assumed."],
     hostile: ["I will discuss the deadline, but personal attacks are not acceptable. What specifically is unworkable, or would you prefer to pause?", "We can discuss your concern without personal attacks. If we cannot do that now, we will pause; the work issue still needs attention."],
     anger: ["You have expressed a strong reaction. I will not assume a refusal or resignation. What would you like me to understand or change?", "The reaction is clear, but the request or decision still needs clarification. You can name a limit, ask for support or pause."],
@@ -171,14 +201,20 @@
     recovery: ["You are choosing to check the work before promising a recovery plan. What facts or limits should we clarify first?", "You have proposed checking the facts before a commitment. The remaining work, support and realistic timing still need agreement."],
     disengage: ["You are ending or stepping away from the exchange. Would you like to request a pause or clarify a decision?", "We will pause this exchange. It has not established agreement about the assignment or what happens next."],
     unrelated: ["That doesn't explain what happened with the project. Can you tell me about the work, or what you want to do next?", "We still haven't addressed the missed deadline. I need to understand the work's status or your decision before I can update the client."],
-    unknown: ["I'm not sure how that relates to the deadline. What would you like me to understand about the work or your decision?", "I still need to understand your point. Are you asking a question, setting a limit, or making a decision?"],
+    unknown: ["I'm not sure how that relates to the deadline. What would you like me to understand about the work or your decision?", "We haven't reached a shared understanding. I'll leave this discussion here without assuming a decision or a work agreement."],
   };
 
   function manager(analysis, options = {}) {
     const turn = options.turn === 1 ? 1 : 0;
     if (analysis.kind === 'threat') return responses.threat[turn];
     if (options.previous?.kind === 'threat') return 'We need to address the threat and safety before resuming a work discussion. No assignment agreement has been made.';
+    if (analysis.flags.closeConversation) {
+      if (analysis.kind === 'resign') return responses.resign[turn] + " I'll stop this conversation now; you do not need to reply again.";
+      if (analysis.kind === 'refusal') return 'Your refusal or limit is clear. I will not treat it as agreement. ' + responses.stop[turn];
+      return responses[analysis.kind === 'pause' ? 'pause' : 'stop'][turn];
+    }
     if (analysis.flags.reportedSpeech) return "I don't want to misread that. Are you quoting someone, disagreeing with those words, or raising a concern?";
+    if (analysis.flags.unrelatedQuestion) return turn === 0 ? "That's a different topic. Let's keep this discussion about the project, or leave it here." : "We'll leave this discussion here. The missed deadline and any next step remain unresolved.";
     if (analysis.flags.personalBoundary === 'treatment') return turn === 0
       ? 'You have stated a refusal or limit about being shouted at. We can discuss the work respectfully. Would you like to pause or clarify the work issue?'
       : 'Your limit on being shouted at remains clear. It is not acceptance of more work; responsibilities and any next step still need clarification.';
@@ -190,6 +226,8 @@
       return decision + 'Personal attacks make the exchange harder. We can pause or discuss the decision without attacking the person.';
     }
     if (analysis.flags.notResigning && !['pause','conflict','uncertain'].includes(analysis.kind)) return 'You have said you are not resigning. That does not mean you have agreed to the assignment. What would you like to clarify next?';
+    if (analysis.kind === 'refusal' && analysis.flags.temporaryRefusal) return 'You have stated a time-limited refusal. That is not resignation or an offer of other help; no agreement about later work is assumed.';
+    if (analysis.kind === 'refusal' && analysis.flags.conditionalRefusal) return 'Your refusal or limit under these conditions is clear. We can discuss different terms without treating that as acceptance of the current request.';
     // Jordan hears submitted words, never a private goal from Help me draft.
     const path = turn === 1 && reflectionPaths[options.previous?.kind];
     const invitation = analysis.flags.explainFacts ? ' Go ahead and explain ' + explanationSubject(analysis) + '; that does not change your earlier decision.' : '';
@@ -215,6 +253,7 @@
 
   // Qualitative teaching points describe visible wording, not personality or ability.
   const teaching = {
+    stop: ['Ending an interaction', 'You asked to stop the interaction or be left alone.', 'A direct stop request makes the boundary explicit without requiring a reason.', 'The work issue remains unresolved; stopping does not imply agreement or resignation.', 'Jordan ends the exchange because you asked to stop; no clarification is required.', 'Ending this conversation does not establish whether you want to return later.', 'If useful, privately note the boundary you want to keep. No further reply is required.', '“Please leave me alone” is a complete stop request; no alternative offer is needed.'],
     explain: ['Explaining before deciding', 'You offered an explanation about the work.', 'Asking to be heard can make room for relevant information before a decision.', 'An offer to explain is not yet the explanation or an agreed plan.', 'Jordan invites the explanation because the details have not yet been heard.', 'The listener might hear a request to be heard, rather than a promise to fix the delay.', 'Privately note one fact or question you want to explain, without adding an unchosen commitment.', 'For example: “I want to explain my part before we decide on next steps.”'],
     own: ['Accountability', 'You named an action you could have taken.', 'Owning a specific action can make the discussion more concrete.', 'Taking responsibility does not establish every cause of a delay.', 'The manager asks what remains because accountability alone does not produce a plan.', 'Another person might need more facts before understanding your part.', 'Separate one action you own from factors you do not control.', 'Instead of “Everything is my fault,” try “I should have flagged the risk earlier; here is what remains.”'],
     clarify: ['Clarification and listening', 'You asked for information or clarified a decision.', 'A specific question can reduce assumptions before a commitment.', 'A general question may still leave the exact information needed unclear.', 'The manager asks for the specific expectation or fact to clarify.', 'The other person may hear uncertainty rather than disagreement.', 'Ask one question that checks a specific expectation.', 'Instead of “What?”, try “Which deadline and scope are you asking me to commit to?”'],
@@ -309,16 +348,21 @@
       outcome = account ? 'You offered an account of the delay. It still needs checking together; no work agreement is established.' : 'You asked to explain ' + explanationSubject(current) + '. Being heard comes before deciding a next step; no recovery plan is agreed.';
       unresolved = 'The explanation, shared understanding and any chosen next step still need discussion.';
     }
+    if (kind === 'stop') {
+      outcome = first.kind === 'resign' ? 'Your resignation stands. This conversation ends; formal offboarding remains separate from accepting the assignment.' : first.kind === 'refusal' ? 'Your refusal stands. This conversation ends without an agreement to more work.' : 'You ended the conversation. No further explanation, work agreement or resignation is assumed.';
+      unresolved = first.kind === 'resign' ? 'The applicable offboarding process, notice, final pay, equipment return and any agreed handover remain practical matters.' : 'The work issue remains open. You do not have to explain the stop request or decide now whether to return.';
+    }
+    if(kind === 'refusal' && current.flags.temporaryRefusal) outcome='You state a time-limited refusal or limit. This is not resignation or agreement to later work.';
     return {
       outcome,
-      communicated: explanationAndSolution ? 'You acknowledged a mistake, asked to explain what happened and proposed finding a fair solution.' : explanationOffer ? (kind === 'own' ? 'You named your part in the delay and asked to explain ' : 'You offered to explain ') + explanationSubject(current) + '.' : account ? 'You described waiting for input or the timing of approval; this is your account, not a verified cause.' : communicated,
+      communicated: kind === 'refusal' && current.flags.temporaryRefusal ? 'You stated a time-limited refusal of the assignment.' : current.flags.unrelatedQuestion ? 'You asked about another topic rather than the missed deadline.' : explanationAndSolution ? 'You acknowledged a mistake, asked to explain what happened and proposed finding a fair solution.' : explanationOffer ? (kind === 'own' ? 'You named your part in the delay and asked to explain ' : 'You offered to explain ') + explanationSubject(current) + '.' : account ? 'You described waiting for input or the timing of approval; this is your account, not a verified cause.' : communicated,
       constructive: explanationAndSolution ? 'You combined accountability with a request to hear the facts, instead of accepting all blame or promising a fix before discussing it.' : explanationOffer ? 'You made room to discuss ' + explanationSubject(current) + ' without treating an explanation as agreement to more work.' : account ? 'You gave a concrete timeline detail that both people can check.' : constructive,
       difficulty: current.flags.personalBoundary ? 'The work issue and any support still need clarification; a privacy or treatment boundary does not settle those questions.' : current.flags.personalAttack ? 'A personal attack can obstruct discussion of your decision. ' + difficulty : explanationOffer ? 'The details have not yet been heard or checked; asking to explain does not settle responsibility or a plan.' : account ? 'The account does not establish every cause, responsibility or realistic next step.' : difficulty,
-      why: current.flags.personalBoundary ? 'The manager separates your personal boundary from the work issue instead of requiring you to negotiate privacy or respectful treatment.' : explanationOffer ? 'Jordan invites ' + explanationSubject(current) + ' because you asked to be heard before deciding what happens next.' : account ? 'Jordan acknowledges your account and asks to check the timeline rather than assigning blame or assuming delivery.' : why,
-      skill, alternative, unresolved,
-      improvement: explanationAndSolution ? 'Add one specific fact about what happened and ask what a fair next step would require; leave the decision open until you have discussed it.' : explanationOffer || account ? 'Add one relevant timeline detail, risk or support need in your own words. Separate what you observed from what still needs checking.' : kind === 'refusal' ? 'Keep the refusal clear. If you choose, add what needs clarifying about unfinished work or responsibilities; you do not have to offer more work.' : kind === 'hostile' ? 'Replace the personal judgment with the specific deadline concern; keep any limit or disagreement you want to communicate.' : kind === 'unrelated' ? 'Connect the next reply to the work, a question or an explicit decision; personal facts alone do not explain the missed deadline.' : kind === 'unknown' ? 'Make one request or decision explicit, or choose a goal yourself. This script cannot judge unfamiliar language.' : 'Clarify the specific limit, fact or next step that remains open.',
-      example: explanationOffer || account ? 'For example: “I want to explain my part before we decide on next steps.” Add only facts that fit your situation.' : example,
-      action: ['resign','boundary','pause'].includes(contextualPath) ? contextActions[contextualPath] : explanationOffer || account ? 'Privately note one relevant fact, risk or support need you want to explain. You choose whether to share it.' : contextualPath && contextualPath !== 'custom' ? contextActions[contextualPath] || action : action,
+      why: current.flags.unrelatedQuestion ? 'Jordan keeps this work conversation on its subject without inventing an answer or treating a topic change as agreement.' : current.flags.personalBoundary ? 'The manager separates your personal boundary from the work issue instead of requiring you to negotiate privacy or respectful treatment.' : explanationOffer ? 'Jordan invites ' + explanationSubject(current) + ' because you asked to be heard before deciding what happens next.' : account ? 'Jordan acknowledges your account and asks to check the timeline rather than assigning blame or assuming delivery.' : why,
+      skill, alternative: kind === 'refusal' && !current.flags.conditionalRefusal ? 'A refusal of this assignment is not a resignation from employment or an offer to negotiate.' : alternative, unresolved,
+      improvement: kind === 'stop' ? 'The stop request needs no further explanation. If you choose, keep it brief and direct.' : kind === 'pause' ? 'The pause is clear. You may choose whether or when to return; no additional explanation is required.' : kind === 'resign' ? 'If you choose, put the decision in writing and confirm the applicable offboarding process; you do not need to offer more work or reconsider.' : explanationAndSolution ? 'Add one specific fact about what happened and ask what a fair next step would require; leave the decision open until you have discussed it.' : explanationOffer || account ? 'Add one relevant timeline detail, risk or support need in your own words. Separate what you observed from what still needs checking.' : kind === 'refusal' ? 'Keep the refusal clear. If you choose, add what needs clarifying about unfinished work or responsibilities; you do not have to offer more work.' : kind === 'hostile' ? 'Replace the personal judgment with the specific deadline concern; keep any limit or disagreement you want to communicate.' : kind === 'unrelated' ? 'Connect the next reply to the work, a question or an explicit decision, or choose to end the conversation.' : kind === 'unknown' ? 'Make one request or decision explicit, or choose a goal yourself. This script cannot judge unfamiliar language.' : 'Clarify the specific limit, fact or next step that remains open.',
+      example: current.flags.unrelatedQuestion ? 'For this work discussion, you can ask “Can you clarify the deadline?” or choose to stop.' : explanationOffer || account ? 'For example: “I want to explain my part before we decide on next steps.” Add only facts that fit your situation.' : example,
+      action: kind === 'stop' ? action : ['resign','boundary','pause'].includes(contextualPath) ? contextActions[contextualPath] : explanationOffer || account ? 'Privately note one relevant fact, risk or support need you want to explain. You choose whether to share it.' : contextualPath && contextualPath !== 'custom' ? contextActions[contextualPath] || action : action,
       basis: selected + current.basis, kind, goalPath,
     };
   }

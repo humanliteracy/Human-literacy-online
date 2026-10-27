@@ -56,6 +56,7 @@ test('editing a transferred draft preserves the explicit goal, exposes a mismatc
  await goal(page);await page.locator('.coach-option button').first().click();
  await page.locator('#yourReply').fill('I need a break. I am not resigning.');await expect(page.locator('#replyGoal')).toContainText('Leave or resign');
  await page.locator('#send').click();await expect(page.locator('#bossWords')).toContainText('pause');await expect(page.locator('#bossWords')).not.toContainText('selected goal');
+ await expect(page.locator('#inputPanel')).toBeHidden();await page.locator('#conversationBack').click();
  await page.locator('#clearReplyGoal').click();await expect(page.locator('#replyGoalPanel')).toBeHidden();
  await send(page,'I need a break. I am not resigning.');await expect(page.locator('#outcome')).toContainText('pause');
  await expect(page.locator('#outcome')).not.toContainText('You state a decision to leave');
@@ -73,7 +74,7 @@ test('changing paths updates the proposed goal without silently retaining resign
  await goal(page);await page.locator('#coachReview>summary').click();await page.locator('#coachPath').selectOption('pause');
  await expect(page.locator('#coachGoal')).toHaveValue(/pause.*not resign/);await page.locator('#coachConfirm').click();
  await page.locator('.coach-option button').first().click();await page.locator('#send').click();await expect(page.locator('#bossWords')).toContainText('pause');
- await page.locator('#choices button').first().click();await page.locator('#send').click();await expect(page.locator('#outcome')).toContainText('without resigning');
+ await expect(page.locator('#inputPanel')).toBeHidden();await expect(page.locator('#history .mine')).toHaveCount(1);await expect(page.locator('#outcome')).toContainText('without resigning');
 });
 
 test('moving a draft during turn two retains the conversation instead of silently starting over',async({page})=>{

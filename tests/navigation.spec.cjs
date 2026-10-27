@@ -26,7 +26,7 @@ test('editing an earlier reply does not send until Say this, then replaces only 
  await page.locator('#conversationBack').click();await expect(page.locator('#yourReply')).toHaveValue('I will not complete this work.');
  await page.locator('#send').click();await expect(page.locator('#conversationForward')).toBeDisabled();
  await expect(page.locator('#history .mine')).toHaveCount(1);await expect(page.locator('#history')).not.toContainText('I am resigning.');
- await expect(page.locator('#choices')).toContainText('My decision is still no under the current conditions.');
+ await expect(page.locator('#choices')).toContainText('My answer to this request is no.');
  await send(page,'Can you clarify the deadline?');await expect(page.locator('#bossWords')).toContainText('earlier refusal or limit');
 });
 test('leaving clears saved navigation and cannot resurrect submitted text',async({page})=>{
