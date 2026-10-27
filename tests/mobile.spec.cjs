@@ -132,7 +132,7 @@ for (const width of [320, 390]) {
       const paths = [
         ['boundary', 'refusal or limit', 'decline'],
         ['resign', 'leave the job', 'resignation statement'],
-        ['scope', 'revised expectations', 'what changed'],
+        ['scope', 'clarify', 'one question'],
         ['help', 'need for support', 'support'],
         ['pause', 'pause', 'asking for a pause'],
         ['recovery', 'recovery plan', 'what remains'],
@@ -151,6 +151,8 @@ for (const width of [320, 390]) {
         await page.locator('#choices button').first().click();
         await page.locator('#send').click();
         await expect(page.locator('#outcome')).toContainText(consequence);
+        await expect(page.locator('#reflectionBasis')).toContainText('My own decision: '+path);
+        if(path==='scope')await expect(page.locator('#history .mine').last()).toContainText('Please confirm the agreed scope');
         await expect(page.locator('#unresolved')).not.toBeEmpty();
         await expect(page.locator('#realWorldPractice')).toContainText(action);
         await expect(page.locator('#scoreArea')).toBeHidden();
