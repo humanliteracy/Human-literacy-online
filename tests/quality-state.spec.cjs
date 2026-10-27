@@ -22,7 +22,7 @@ for(const item of [
   await send(page,item[1]);await send(page,item[2]);await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await reveal(page,'reflectionReview');await expect(page.locator('#score')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText(/\b\d{1,3}\s*\/\s*100\b/);
-  for(const id of ['feedbackCommunicated','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample','unresolved','realWorldPractice'])await expect(page.locator('#'+id)).not.toBeEmpty();
+  for(const id of ['madeClear','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample','unresolved','realWorldPractice'])await expect(page.locator('#'+id)).not.toBeEmpty();
   await expect(page.locator('#history .mine')).toHaveCount(2);
   await expect(page.locator('#history')).toContainText(item[1]);await expect(page.locator('#history')).toContainText(item[2]);
  });
@@ -55,7 +55,7 @@ test('replacing a user draft permits restoring it without sending either version
 test('editing a transferred draft preserves the explicit goal, exposes a mismatch, and permits clearing it',async({page})=>{
  await goal(page);await page.locator('.coach-option button').first().click();
  await page.locator('#yourReply').fill('I need a break. I am not resigning.');await expect(page.locator('#replyGoal')).toContainText('Leave or resign');
- await page.locator('#send').click();await expect(page.locator('#bossWords')).toContainText('selected goal');await expect(page.locator('#bossWords')).toContainText('point elsewhere');
+ await page.locator('#send').click();await expect(page.locator('#bossWords')).toContainText('pause');await expect(page.locator('#bossWords')).not.toContainText('selected goal');
  await page.locator('#clearReplyGoal').click();await expect(page.locator('#replyGoalPanel')).toBeHidden();
  await send(page,'I need a break. I am not resigning.');await expect(page.locator('#outcome')).toContainText('pause');
  await expect(page.locator('#outcome')).not.toContainText('You state a decision to leave');
@@ -99,7 +99,8 @@ test('pagehide clears roleplay text, transcript, private fields and any restorab
 test('a 600-character custom goal is preserved without truncating its final decision',async({page})=>{
  await goal(page,'custom','My own goal.');await page.locator('#coachReview>summary').click();
  const ending=' I am not agreeing to this assignment.';const text='A'.repeat(600-ending.length)+ending;
- await page.locator('#coachGoal').fill(text);await page.locator('#coachConfirm').click();await expect(page.locator('#coachWording0')).toHaveValue(text);
+ await page.locator('#coachGoal').fill(text);await page.locator('#coachConfirm').click();await expect(page.locator('#coachGoal')).toHaveValue(text);
+ await expect(page.locator('#coachWording0')).toHaveValue(/not accepting/);await expect(page.locator('#coachWording0')).not.toHaveValue(text);
 });
 
 test('pagehide erases submitted matched phrases from hidden educational feedback too',async({page})=>{

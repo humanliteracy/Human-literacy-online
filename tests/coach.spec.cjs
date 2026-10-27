@@ -69,7 +69,7 @@ test('resignation is a legitimate path, keeps that decision, and receives releva
   await page.locator('#choices button').first().click();
   await page.locator('#send').click();
   await expect(page.locator('#reflectionBasis')).toContainText('resign');
-  await expect(page.locator('#madeClear')).toContainText('resign');
+  await expect(page.locator('#madeClear')).toContainText('decision to leave the job');
   await expect(page.locator('#unresolved')).toContainText('final pay');
   await expect(page.locator('#realWorldPractice')).toContainText('resignation statement');
   await expect(page.locator('#realWorldPractice')).not.toContainText('realistically commit');
@@ -105,7 +105,7 @@ test('unexpected wording asks for clarification rather than inventing an interpr
   await page.locator('#coachPath').selectOption('custom');
   await page.locator('#coachGoal').fill('I want to ask a question about the situation.');
   await confirm(page);
-  await expect(page.locator('#coachWording0')).toHaveValue(/ask a question/);
+  await expect(page.locator('#coachWording0')).toHaveValue(/clarify what you need/);
 });
 
 test('unknown free-form roleplay wording does not receive a fabricated numerical score', async ({ page }) => {
@@ -185,7 +185,9 @@ test('literal words and custom goals are displayed as text, never interpreted as
   await page.locator('#coachGoal').fill(text);
   await confirm(page);
   await expect(page.locator('#coachChosenGoal img')).toHaveCount(0);
-  expect(await page.locator('#coachWording0').inputValue()).toContain(text);
+  await expect(page.locator('#coachGoal')).toHaveValue(text);
+  expect(await page.locator('#coachWording0').inputValue()).not.toContain(text);
+  await expect(page.locator('#coachWordsNotice')).toContainText('neutral openers');
   expect(await page.evaluate(() => window.injected)).toBeUndefined();
 });
 

@@ -104,6 +104,100 @@
     ['i need more time because the scope changed', { path: 'scope', goal: 'I want revised expectations that respect the scope change and my capacity.', hearing: 'A hypothetical manager may hear a request to revisit scope and time, rather than a promise to meet the original deadline.', tentative: 'You might be communicating a need for realistic expectations. You decide what facts and limits matter to you.' }],
   ]);
 
+  function readGoal(goal) {
+    const dialogue = window.HumanLiteracyDialogue;
+    const direct = dialogue.analyze(goal);
+    if (direct.matched && direct.kind !== 'unrelated') return direct;
+    // A private purpose is not a spoken decision. These bounded conversions
+    // select editable wording recipes only; Jordan never receives this text.
+    const purpose = goal.trim().replace(/[’‘]/g, "'").match(/^(?:i (?:want|would like|need) to|my goal is to)\s+(.+)$/i)?.[1];
+    if (!purpose) return direct;
+    if (/^(?:ask for|request) (?:some |more )?(?:help|support|assistance)\b/i.test(purpose)) return dialogue.analyze('I need support.');
+    if (/^(?:ask a question|clarify|understand)\b/i.test(purpose)) return dialogue.analyze('Can you clarify the situation?');
+    if (/^(?:decline|refuse) (?:this|the|any more) (?:request|assignment|work|project)\b/i.test(purpose)) return dialogue.analyze('I will not accept this request.');
+    if (/^(?:take a break|pause)(?:\b)/i.test(purpose)) return dialogue.analyze('I need a pause.');
+    if (/^resign(?:\b)/i.test(purpose)) return dialogue.analyze('I am resigning.');
+    return dialogue.analyze('I want to ' + purpose);
+  }
+
+  function wordingFor({path, goal, literal}) {
+    const reading = readGoal(goal), original = window.HumanLiteracyDialogue.analyze(literal);
+    const chosen = path === 'custom' ? reading.reflectionPath : path;
+    const option = (label, words, difference) => [label, words, difference];
+    const privacy = reading.flags.personalBoundary === 'privacy' || /^(?:i (?:want|would like) to|my goal is to) (?:keep my personal (?:details|information) private|(?:ask for|get) (?:help|support) without (?:sharing|disclosing) (?:my |more )?personal (?:details|information))\b/i.test(goal);
+    if (['boundary','help','custom'].includes(path) && (privacy || original.kind === 'refusal' && original.flags.personalBoundary === 'privacy')) return {tailored:true,options:[
+      option('Keep personal details private', path === 'help' || reading.kind === 'support' ? 'I need support with the work, and I choose not to share personal details. What help is available?' : 'I will not share personal information. What work details do you need to discuss?', 'States a privacy limit without accepting additional work.'),
+      option('Separate work from private details', 'I can discuss the work without discussing my personal details. What do we need to clarify?', 'Keeps the conversation on work information you choose to share.'),
+      option('Keep the limit brief', 'I am not sharing personal details. Please keep this discussion focused on the work.', 'Sets the same privacy boundary without giving a reason.'),
+    ]};
+    if (['boundary','custom'].includes(path) && (reading.flags.personalBoundary === 'treatment' || original.kind === 'refusal' && original.flags.personalBoundary === 'treatment')) return {tailored:true,options:[
+      option('Set a respectful limit', 'I will not be shouted at. We can speak respectfully or pause this conversation.', 'Sets a treatment boundary without resigning or accepting work.'),
+      option('Ask for a pause', 'I need to pause this conversation. We can return to the work issue without shouting.', 'Separates a pause from a decision about the assignment.'),
+      option('Keep the limit brief', 'I will not continue this discussion while I am being shouted at.', 'States the limit without a work commitment.'),
+    ]};
+    if (['custom','recovery'].includes(path) && (reading.flags.explainFacts || reading.flags.fairSolution)) {
+      const owns = reading.kind === 'own' || original.kind === 'own';
+      const opening = owns ? 'I made a mistake. ' : '';
+      const fair = reading.flags.fairSolution ? 'a fair next step' : 'what happens next';
+      return {tailored:true, options:[
+        option('Explain before deciding', opening + "I'd like to explain what happened before we decide on " + fair + '.', owns ? 'Names a mistake without accepting all blame or promising a fix.' : 'Asks to be heard before a decision, without adding an admission.'),
+        option('Invite a discussion', 'Can I explain my perspective, then discuss ' + fair + ' with you?', 'Invites both perspectives without assuming you already agree.'),
+        option('Keep it brief', opening + 'Can we discuss what happened and ' + fair + '?', 'Keeps the request concise and leaves the decision open.'),
+      ]};
+    }
+    const refusalContext = [reading.kind === 'refusal' ? goal : '', original.kind === 'refusal' ? literal : ''].join(' ');
+    if (['boundary','custom'].includes(path) && reading.kind === 'refusal' && /any more work|further work|continue working|another update/i.test(refusalContext)) {
+      const noUpdate = /(?:not|refuse to) provide (?:another|any) update/i.test(refusalContext);
+      const limit = noUpdate ? 'I will not continue working on this project or provide another update.' : 'I am not doing any more work on this project.';
+      return {tailored:true,options:[
+        option('State the limit', limit + ' We need to clarify what happens next.', 'Keeps the work refusal explicit without turning it into resignation.'),
+        option('Ask about next steps', limit + ' What needs to be clarified about responsibilities?', 'Adds one practical question without offering more work.'),
+        option('Keep the decision brief', limit, 'States the same limit without an explanation or alternative offer.'),
+      ]};
+    }
+    if (path === 'custom' && reading.kind === 'uncertain') return {tailored:true,options:[
+      option('Keep the decision open', "I'm considering leaving this job, but I haven't decided. I want to discuss my options.", 'Makes uncertainty explicit; this is not a resignation.'),
+      option('Ask for information', "Before I decide whether to leave this job, can you explain the practical options?", 'Asks for information without committing to stay or leave.'),
+      option('Ask for time', 'I might leave this job, but I have not made a decision. I need time to consider my options.', 'Requests space while keeping the decision yours.'),
+    ]};
+    if (path === 'custom' && reading.kind === 'clarify') return {tailored:true,options:[
+      option('Clarify the expectation', 'Can you clarify what you need from me before I decide on next steps?', 'Asks about expectations without accepting the assignment.'),
+      option('Ask what comes first', 'What do you need me to respond to first?', 'Focuses on one question instead of promising a solution.'),
+      option('Check understanding', 'Can we check the question before I make a commitment?', 'Makes understanding a separate step from agreeing.'),
+    ]};
+    if (chosen === 'recovery') return {tailored:true,options:[
+      option('Start with what is known', original.kind === 'own' ? "I made a mistake. I'd like to explain my part before we agree on next steps." : 'Can we review the remaining work before I promise a new delivery time?', 'Uses only the accountability you stated; it does not invent a missed warning or a delivery promise.'),
+      option('Check the facts together', 'Can we review the facts, priorities and support before agreeing on a realistic next step?', 'Invites a review without assuming fault or agreement.'),
+      option('Keep promises realistic', 'I want to check what remains before making a new commitment. What should we clarify first?', 'Separates checking the work from promising a result.'),
+    ]};
+    if (chosen === 'scope' && !((original.kind === 'scope' && /scope (?:has |was )?changed|requirements (?:have |were )?changed|added (?:more |the )?work/i.test(literal)) || (reading.kind === 'scope' && /scope (?:has |was )?changed|requirements (?:have |were )?changed|added (?:more |the )?work/i.test(goal)))) return {tailored:true,options:[
+      option('Review before committing', 'Can we review the scope, deadline and available support before I commit?', 'Asks about expectations without inventing a scope change.'),
+      option('Ask about priorities', 'Which work is most important, and what can change about the scope or deadline?', 'Makes the tradeoff a question rather than a promise.'),
+      option('Clarify the deadline', 'Can you clarify the deadline and what needs to be delivered?', 'Asks one practical question without claiming the work changed.'),
+    ]};
+    if (chosen === 'resign' && !/^the expectations are unreasonable\. i quit\.?$/i.test(literal.trim())) return {tailored:true,options:[
+      option('State the decision', 'I am resigning from this job. Please explain the practical next steps.', 'States resignation without inventing a reason.'),
+      option('Ask about the process', 'I have decided to leave this job. Can we clarify notice and any handover?', 'Asks about practical details without accepting the assignment.'),
+      option('Keep it brief', 'I am resigning. Who should I speak with about the process?', 'Keeps the decision explicit without sharing extra details.'),
+    ]};
+    if (paths[chosen]?.options.length) return {tailored:path === 'custom',options:paths[chosen].options};
+    return {tailored:false,options:[
+      option('Ask to explain', "I'd like to explain what I mean. Could we check our understanding before deciding?", 'A neutral opener; it does not claim to express your specific goal.'),
+      option('Check the question', 'Can you clarify what you need me to respond to?', 'Asks one question without making a new commitment.'),
+      option('Introduce your concern', 'I have a different concern. Could I explain it first?', 'Makes room for your own words; it does not invent the concern.'),
+    ]};
+  }
+
+  const differences = {
+    boundary:['States no without offering another assignment.','Discusses different conditions while retaining the current refusal.','Offers to explain the limit without changing no.'],
+    resign:['States resignation and asks about next steps.','Explains a reason; discussing a handover is not accepting the assignment.','Asks who to contact about notice and a handover.'],
+    scope:['Names the scope change and a deadline limit.','Puts scope, time and support options on the table.','States the tradeoff before making a commitment.'],
+    help:['Names a need for support.','Keeps personal details private while asking about help.','Asks who can help discuss adjustments before more work is accepted.'],
+    pause:['Asks when to return and explicitly rules out resignation.','States a present limit on continuing the discussion.','Offers a different time or format without a new work commitment.'],
+    recovery:['Owns a specific action without promising delivery.','Checks the remaining work before setting a time.','Invites a shared review of facts and priorities.'],
+    custom:['States a request or decision to review.','Invites clarification without assuming agreement.','Keeps the next decision open.'],
+  };
+
   function createCoach({ moveDraft, onChange, onAdvance, isComplete = () => false }) {
     const $ = id => document.getElementById(id);
     let confirmed = null, reviewedLiteral = null, lastPath = '';
@@ -127,7 +221,9 @@
     function updateTransferNotice() {
       $('coachWordsNotice').textContent = isComplete()
         ? 'Using wording starts a new conversation and replaces the completed transcript. Private drafts stay available.'
-        : 'Use this wording fills your draft. You still choose Say this.';
+        : $('coachWordsNotice').dataset.neutral === 'true'
+          ? 'These are neutral openers, not a tailored rewrite. Edit to fit; only Say this sends your reply.'
+          : 'Your goal stays private. Use this wording fills your reply; only Say this sends it.';
       for (const button of $('coachOptions').querySelectorAll('button')) {
         const label = button.dataset.optionLabel;
         button.textContent = isComplete() ? 'Use in new conversation' : 'Use this wording';
@@ -193,11 +289,18 @@
         const example = examples.get(normalized.endsWith('.') ? normalized.slice(0, -1) : normalized);
         reviewedLiteral = literal;
         $('coachLiteral').textContent = literal;
-        $('coachHearing').textContent = example?.hearing || 'I do not have a scripted reading for these words. I cannot tell what a manager would hear. Please clarify your communication goal yourself.';
-        $('coachTentative').textContent = example?.tentative || 'No intention or feeling is inferred. Choose a path and describe what you want to communicate, or keep your own wording.';
-        $('coachPath').value = example?.path || ''; lastPath = $('coachPath').value;
-        $('coachGoal').value = example?.goal || '';
-        $('coachStatus').textContent = example ? 'Check this suggested goal.' : 'Please clarify your goal; no scripted reading matches.';
+        const reading = window.HumanLiteracyDialogue.analyze(literal);
+        const recognized = reading.matched && ['own','refusal','resign','scope','support','pause','clarify','repair','recovery','plan','uncertain'].includes(reading.kind);
+        const proposed = recognized ? reading.reflectionPath : '';
+        $('coachHearing').textContent = example?.hearing || (recognized ? 'These words may relate to ' + window.HumanLiteracyDialogue.goalLabels[proposed] + '. A listener may still need more detail.' : 'I do not have a scripted reading for these words. Please choose what you want to communicate.');
+        $('coachTentative').textContent = example?.tentative || 'This is a limited wording match, not a reading of your feelings or whole intention. You can change or reject the proposed goal.';
+        $('coachPath').value = example?.path || proposed; lastPath = $('coachPath').value;
+        $('coachGoal').value = example?.goal || (reading.kind === 'uncertain' ? 'I might quit, but I have not decided.' : defaultGoals[proposed] || '');
+        if (reading.kind === 'clarify') $('coachGoal').value = 'I want to clarify what is expected.';
+        if (reading.flags.personalBoundary === 'privacy') $('coachGoal').value = 'I want to keep my personal information private.';
+        if (reading.flags.personalBoundary === 'treatment') $('coachGoal').value = 'I want to set a limit on being shouted at.';
+        if (reading.flags.explainFacts && reading.flags.fairSolution) $('coachGoal').value = 'I want to explain what happened and find a fair solution.';
+        $('coachStatus').textContent = example || recognized ? 'Check this proposed goal; change it if needed.' : 'Please clarify your goal.';
       }
       $('expressWords').removeAttribute('aria-invalid');
       $('expressionQuestion').classList.add('hidden'); $('coachUnderstanding').classList.remove('hidden');
@@ -223,27 +326,27 @@
         const summary = document.createElement('summary'); summary.textContent = 'More responses (2)';
         const additional = document.createElement('div'); more.append(summary, additional);
         more.addEventListener('toggle', resizeOptions);
-        const complete = (prefix, suffix = '') => prefix.length + goal.length + suffix.length <= 600 ? prefix + goal + suffix : goal;
-        const options = path === 'custom' ? [
-          ['State your own goal', goal],
-          ['Invite clarification', complete('My goal is: ', ' Can we clarify it before deciding next steps?')],
-          ['Keep decisions open', complete('Before I make a commitment: ')],
-        ] : paths[path].options;
+        const wording = wordingFor({path,goal,literal:reviewedLiteral || ''});
+        const options = wording.options;
+        $('coachWordsNotice').textContent = wording.tailored ? 'Your goal stays private. Review these editable ways to say it.' : path === 'custom' ? 'No tailored rewrite fits this goal yet. These are neutral openers; edit them to fit.' : 'Your goal stays private. Review the wording before moving it.';
+        $('coachWordsNotice').dataset.tailored = String(wording.tailored);
+        $('coachWordsNotice').dataset.neutral = String(path === 'custom' && !wording.tailored);
         const saved = drafts.get(key);
-        options.forEach(([label, words], index) => {
+        options.forEach(([label, words, difference], index) => {
           const article = document.createElement('article'); article.className = 'coach-option';
           const fieldId = 'coachWording' + index;
           const heading = document.createElement('label'); heading.className = 'write-label'; heading.htmlFor = fieldId; heading.textContent = label;
-          const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = saved?.[index] ?? words;
+          const explanation = document.createElement('p'); explanation.id = fieldId+'Difference'; explanation.className='micro'; explanation.textContent=difference || differences[path][index];
+          const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = saved?.[index] ?? words; input.setAttribute('aria-describedby',explanation.id);
           input.addEventListener('input', resizeOptions);
           const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.dataset.optionLabel = label;
           button.addEventListener('click', () => {
             if (!input.value.trim()) { input.focus(); $('coachStatus').textContent = 'Enter wording you want to try, or choose another option.'; return; }
             $('practiceWords').value = input.value; saveOptions();
-            moveDraft(input.value.trim(), { path: confirmed.path, goal: confirmed.goal });
+            moveDraft(input.value, { path: confirmed.path, goal: confirmed.goal });
             $('coachStatus').textContent = 'Draft moved. Nothing was sent.';
           });
-          article.append(heading, input, button); (index === 0 ? $('coachOptions') : additional).append(article);
+          article.append(heading, explanation, input, button); (index === 0 ? $('coachOptions') : additional).append(article);
         });
         $('coachOptions').append(more);
       }
@@ -257,5 +360,5 @@
       target.focus();
     }, getContext: () => confirmed ? { path: confirmed.path, goal: confirmed.goal } : null };
   }
-  window.HumanLiteracyCoach = { paths, createCoach };
+  window.HumanLiteracyCoach = { paths, createCoach, wordingFor };
 })();

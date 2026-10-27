@@ -140,23 +140,26 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <details id="reflectionReview" class="reflection-review">
         <summary>Why this happened and what to try</summary>
         <div id="scoreArea">
-          <p id="scoreDetails" class="small">No numerical rubric is applied. This script cannot reliably grade authored choices or unrecognized wording. This feedback explains observable wording and possible consequences.</p>
+          <p id="scoreDetails" class="small">No numerical rubric or grade is applied: this script matches limited wording, not communication ability. For unrecognized wording, no assessment is claimed.</p>
           <dl class="feedback-dimensions">
-            <dt>What your response communicated</dt><dd id="feedbackCommunicated"></dd>
-            <dt>Normalized wording this script matched</dt><dd id="feedbackEvidence"></dd>
+            <dt>What your response communicated</dt><dd id="madeClear"></dd>
             <dt>What was constructive</dt><dd id="feedbackConstructive"></dd>
             <dt>What might create difficulty</dt><dd id="feedbackDifficulty"></dd>
-            <dt>Why Jordan might respond this way</dt><dd id="feedbackWhy"></dd>
-            <dt>Skill to practise</dt><dd id="feedbackSkill"></dd>
             <dt>Another possible interpretation</dt><dd id="feedbackAlternative"></dd>
             <dt>One way to improve the next response</dt><dd id="feedbackImprovement"></dd>
-            <dt>Example to compare</dt><dd id="feedbackExample"></dd>
           </dl>
         </div>
         <h3>What remains open</h3>
         <p id="unresolved"></p>
-        <p id="reflectionBasis" class="micro"></p>
-        <h3>What your words may make clear</h3><p id="madeClear"></p>
+        <details id="feedbackEvidencePanel" class="optional-panel"><summary>Wording and practice detail</summary>
+          <dl class="feedback-dimensions">
+            <dt>Normalized wording this script matched</dt><dd id="feedbackEvidence"></dd>
+            <dt>Why Jordan might respond this way</dt><dd id="feedbackWhy"></dd>
+            <dt>Skill to practise</dt><dd id="feedbackSkill"></dd>
+            <dt>Example to compare</dt><dd id="feedbackExample"></dd>
+          </dl>
+          <p id="reflectionBasis" class="micro"></p>
+        </details>
       </details>
       <p class="micro">Try again starts a new conversation. Private drafts stay until you clear them or leave the page.</p>
       <div class="actions"><button id="replay" class="primary" type="button">Try again</button><a class="secondary" style="text-decoration:none" href="../../">Back to all lessons</a></div>
@@ -179,8 +182,8 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
             <summary>Change goal</summary>
             <h3 id="coachUnderstandingTitle" tabindex="-1">What do you want to communicate?</h3>
             <select id="coachPath" aria-labelledby="coachUnderstandingTitle" aria-describedby="coachStatus"><option value="">Choose your own path…</option></select>
-            <label class="write-label" for="coachGoal">My goal</label>
-            <textarea id="coachGoal" aria-describedby="coachStatus" maxlength="600" autocomplete="off"></textarea>
+            <label class="write-label" for="coachGoal">My goal (private)</label>
+            <textarea id="coachGoal" aria-describedby="coachStatus" maxlength="600" autocomplete="off" placeholder="What do you want to achieve? This is not your spoken reply."></textarea>
             <button id="coachConfirm" class="primary" type="button" aria-label="Use my goal and show options">Use my goal</button>
             <details id="readingDetails" class="optional-panel">
               <summary>Why this suggestion?</summary>
@@ -340,7 +343,7 @@ function choose(option){
 }
 function optionsForTurn(){
   const container=$('choices');container.replaceChildren();
-  const path=conversationGoal?.path||(firstAnalysis?.matched?firstAnalysis.reflectionPath:null);
+  const path=(firstAnalysis?.flags.goalMismatch||conversationGoal?.path==='custom')?firstAnalysis.reflectionPath:conversationGoal?.path||(firstAnalysis?.matched?firstAnalysis.reflectionPath:null);
   let choices=turn===0?FIRST:SECOND;
   if(turn===1&&path&&coachPaths[path])choices=coachPaths[path].followups.map(text=>({kind:pathKinds[path],text}));
   if(turn===1&&firstAnalysis?.kind==='threat')choices=[
@@ -394,10 +397,10 @@ function finish(){
   $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
   $('outcome').textContent=lastFeedback.outcome;$('madeClear').textContent=lastFeedback.communicated;
   $('unresolved').textContent=lastFeedback.unresolved;$('realWorldPractice').textContent=lastFeedback.action;
-  for(const [id,key] of Object.entries({feedbackCommunicated:'communicated',feedbackConstructive:'constructive',feedbackDifficulty:'difficulty',feedbackWhy:'why',feedbackSkill:'skill',feedbackAlternative:'alternative',feedbackImprovement:'improvement',feedbackExample:'example'}))$(id).textContent=lastFeedback[key];
+  for(const [id,key] of Object.entries({feedbackConstructive:'constructive',feedbackDifficulty:'difficulty',feedbackWhy:'why',feedbackSkill:'skill',feedbackAlternative:'alternative',feedbackImprovement:'improvement',feedbackExample:'example'}))$(id).textContent=lastFeedback[key];
   $('feedbackEvidence').textContent=[firstAnalysis,lastAnalysis].map((analysis,index)=>'Reply '+(index+1)+': '+(analysis.evidence.length?analysis.evidence.map(item=>'“'+item.text+'”').join('; '):'No reliable scripted match.')).join(' ');
   $('reflectionBasis').textContent=conversationGoal?(conversationGoal.goal?'You chose this practice goal: '+conversationGoal.goal:'You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.'):lastFeedback.basis;
-  $('expressStudio').open=false;$('reflectionReview').open=false;$('completionTitle').focus({preventScroll:true});
+  $('expressStudio').open=false;$('reflectionReview').open=false;$('feedbackEvidencePanel').open=false;$('completionTitle').focus({preventScroll:true});
   $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
 function reset(){
@@ -405,7 +408,7 @@ function reset(){
   const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
   $('bossWords').textContent=opening;delete $('bossWords').dataset.dialogueKind;
   message('Jordan · manager',opening);showTurn();$('reflectionReview').open=false;
-  for(const id of ['outcome','realWorldPractice','reflectionBasis','madeClear','unresolved','feedbackEvidence','feedbackCommunicated','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample'])$(id).textContent='';
+  for(const id of ['outcome','realWorldPractice','reflectionBasis','madeClear','unresolved','feedbackEvidence','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample'])$(id).textContent='';
   $('navigationStatus').textContent='Review earlier replies without starting over. Forward restores saved progress; Say this replaces later replies.';
   saveProgress();showNavigation();window.scrollTo(0,0);
 }

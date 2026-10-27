@@ -103,6 +103,10 @@ for (const width of [320, 390]) {
       await page.keyboard.press('Tab');
       await expect(page.locator('#reflectionReview > summary')).toBeFocused();
       await page.keyboard.press('Enter');
+      await expect(page.locator('#reflectionBasis')).toBeHidden();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('#feedbackEvidencePanel > summary')).toBeFocused();
+      await page.keyboard.press('Enter');
       await expect(page.locator('#reflectionBasis')).toBeVisible();
       await page.keyboard.press('Tab');
       await expect(page.locator('#replay')).toBeFocused();
@@ -224,7 +228,7 @@ for (const width of [320, 390]) {
       expect(await page.locator('#endPanel').evaluate(n => n.getBoundingClientRect().height)).toBeLessThan(1200);
       await readableActions(page);
       await page.locator('#reflectionReview > summary').click();
-      await expect(page.locator('#madeClear')).toContainText('decision to resign');
+      await expect(page.locator('#madeClear')).toContainText('decision to leave the job');
       await expect(page.locator('#reflectionBasis')).toContainText('I want to resign');
     });
 
