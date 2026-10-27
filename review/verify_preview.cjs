@@ -79,6 +79,29 @@ async function exercise(page, base, width) {
   assert.equal(await page.locator('#completionTitle').evaluate(n => n === document.activeElement), true);
   assert.deepEqual(await page.evaluate(() => [document.cookie, localStorage.length, sessionStorage.length]), ['', 0, 0]);
   await page.locator('#endPanel').screenshot({ path: path.join(output, `reflection-${width}.png`) });
+  await page.goto(base+'/simulator/01/');
+  await page.locator('#yourReply').fill('Please leave me alone.');await page.locator('#send').click();
+  assert.equal(await page.locator('#inputPanel').isVisible(),false);
+  assert.match(await page.locator('#bossWords').innerText(),/leave you alone.*stop/i);
+  assert.doesNotMatch(await page.locator('#bossWords').innerText(),/\?/);
+  assert.equal(await page.locator('#history .mine').count(),1);
+  await page.locator('#conversationBack').focus();await page.keyboard.press('Enter');
+  assert.equal(await page.locator('#yourReply').inputValue(),'Please leave me alone.');
+  await page.locator('#conversationForward').focus();await page.keyboard.press('Enter');
+  assert.equal(await page.locator('#completionTitle').evaluate(n=>n===document.activeElement),true);
+  await page.screenshot({path:path.join(output,`stop-${width}.png`),fullPage:true});
+  await page.goto(base+'/simulator/01/');
+  await page.locator('#yourReply').fill('Please accept this as my resignation.');await page.locator('#send').click();
+  assert.match(await page.locator('#bossWords').innerText(),/formal offboarding/);
+  await page.locator('#yourReply').fill('Unsent notice question.');await page.locator('#finishHere').click();
+  assert.equal(await page.locator('#history .mine').count(),1);
+  assert.match(await page.locator('#outcome').innerText(),/decision to leave the job/);
+  await page.locator('#conversationBack').click();
+  assert.equal(await page.locator('#yourReply').inputValue(),'Unsent notice question.');
+  await page.locator('#conversationForward').click();
+  assert.equal(await page.locator('#inputPanel').isVisible(),false);
+  assert.equal(await page.locator('#history .mine').count(),1);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
 }
 
 (async () => {
@@ -151,15 +174,22 @@ async function exercise(page, base, width) {
     const image=reportPage.locator('details[open] img').first();await image.scrollIntoViewIfNeeded();await image.evaluate(n=>n.decode());
     assert.equal(await image.evaluate(n=>n.naturalWidth),390);
     await reportPage.locator('a[href="report/index.html"]').click();
-    const reportStats=summary.runs[summary.runs.length-1];
+    const reportStats=summary.reportKind==='ci-log-derived'?{expected:testCount,unexpected:0}:summary.runs[summary.runs.length-1];
     await reportPage.waitForFunction(stats=>new RegExp('Passed\\s*'+stats.expected+'\\b').test(document.body.innerText)&&(!stats.unexpected||new RegExp('Failed\\s*'+stats.unexpected+'\\b').test(document.body.innerText)),reportStats);
     assert.match(await reportPage.locator('body').innerText(),/navigation/);
-    assert.deepEqual(await reportPage.evaluate(()=>Object.fromEntries(Object.entries(localStorage))),{theme:'system'});
+    if(summary.reportKind==='ci-log-derived'){
+      assert.equal(await reportPage.locator('#testedSource').innerText(),summary.testedSourceRevision);
+      await reportPage.locator('#filter').fill('navigation');
+      assert.ok(await reportPage.locator('tbody tr:visible').count()>0);
+      await reportPage.locator('#filter').fill('');
+      assert.equal(await reportPage.locator('tbody tr:visible').count(),testCount);
+    }
+    assert.deepEqual(await reportPage.evaluate(()=>Object.fromEntries(Object.entries(localStorage))),summary.reportKind==='ci-log-derived'?{}:{theme:'system'});
     await reportContext.close();
-    pass('Packet gallery, '+testCount+'-case CI proof and truthful local diagnostic report open inside the authenticated preview');
+    pass('Packet gallery and '+testCount+'-case verified report open inside the authenticated preview');
     for (const width of [1120,320,390]) {
       await exercise(page, server.base_url, width);
-      pass(`${width}px Coach: CSS, alternatives, keyboard/focus, explicit submission, reflection, unscored default`);
+      pass(`${width}px: Coach, keyboard/focus, stop closure, offboarding, unsent drafts, navigation and unscored default`);
     }
     const second = await start(path.resolve(launcher));
     try {
