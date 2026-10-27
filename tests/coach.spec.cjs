@@ -29,6 +29,7 @@ async function completeCoachedRoleplay(page) {
   await page.locator('#send').click();
   await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
   await page.locator('#choices button').first().click();
+  await page.locator('#send').click();
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#scoreArea')).toBeHidden();
 }
@@ -48,8 +49,7 @@ test('strong expression has a tentative, rejectable reading and can preserve a f
   await expect(page.locator('#outcome')).toContainText('refusal or limit');
   await expect(page.locator('#realWorldPractice')).toContainText('decline');
   await feedback(page);
-  await page.locator('#practiceScoreToggle').check();
-  await expect(page.locator('#score')).toHaveText('');
+  await expect(page.locator('#score')).toHaveCount(0);
   await expect(page.locator('#scoreDetails')).toContainText('No numerical rubric');
 });
 
@@ -67,6 +67,7 @@ test('resignation is a legitimate path, keeps that decision, and receives releva
   await expect(page.locator('#bossWords')).toContainText('not treat that as agreement to finish');
   await expect(page.locator('#choices')).toContainText('decision to resign');
   await page.locator('#choices button').first().click();
+  await page.locator('#send').click();
   await expect(page.locator('#reflectionBasis')).toContainText('resign');
   await expect(page.locator('#madeClear')).toContainText('resign');
   await expect(page.locator('#unresolved')).toContainText('final pay');
@@ -114,8 +115,7 @@ test('unknown free-form roleplay wording does not receive a fabricated numerical
   await page.locator('#yourReply').fill('purple orbital teapot');
   await page.locator('#send').click();
   await feedback(page);
-  await page.locator('#practiceScoreToggle').check();
-  await expect(page.locator('#score')).toHaveText('');
+  await expect(page.locator('#score')).toHaveCount(0);
   await expect(page.locator('#scoreDetails')).toContainText('unrecognized wording');
   await expect(page.locator('#realWorldPractice')).toContainText('one question');
 });
@@ -218,6 +218,7 @@ test('cleared private goal wording cannot reappear after a roleplay completes', 
   await page.locator('#practiceClear').click();
   await page.locator('#returnToReply').click();
   await page.locator('#choices button').first().click();
+  await page.locator('#send').click();
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#coachGoal')).toHaveValue('');
   await expect(page.locator('#reflectionBasis')).toContainText('Leave or resign');
@@ -273,7 +274,6 @@ for (const [path, goal, reflection] of [
     await expect(page.locator('#reflectionBasis')).toContainText(goal);
     await expect(page.locator('#realWorldPractice')).toContainText(reflection);
     await feedback(page);
-    await page.locator('#practiceScoreToggle').check();
-    await expect(page.locator('#score')).toHaveText('');
+    await expect(page.locator('#score')).toHaveCount(0);
   });
 }

@@ -14,10 +14,7 @@ async function reveal(page, id) {
   }
   if (!await target.evaluate(n => n.open)) await target.locator(':scope > summary').click();
 }
-async function feedback(page) {
-  if (!await page.locator('.mode-control').evaluate(n => n.open)) {
-    await page.locator('.mode-control > summary').click();
-  }
-}
+async function feedback(page) { await reveal(page, 'reflectionReview'); }
+
 async function replies(page) { await reveal(page, 'replyMore'); }
 module.exports = { reveal, feedback, replies };

@@ -92,10 +92,12 @@ for (const width of [320, 390]) {
       await expect(page.locator('#send')).toBeFocused();
       await page.keyboard.press('Enter');
       await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
-      await page.keyboard.press('Shift+Tab');
-      await page.keyboard.press('Shift+Tab');
-      await page.keyboard.press('Shift+Tab');
+      await expect(page.locator('#replyHeading')).toBeFocused();
+      await page.keyboard.press('Tab');
       await expect(page.locator('#choices button').first()).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#yourReply')).toBeFocused();
+      await page.keyboard.press('Tab');
       await page.keyboard.press('Enter');
       await expect(page.locator('#completionTitle')).toBeFocused();
       await page.keyboard.press('Tab');
@@ -143,6 +145,7 @@ for (const width of [320, 390]) {
         await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
         await page.locator('#send').click();
         await page.locator('#choices button').first().click();
+        await page.locator('#send').click();
         await expect(page.locator('#outcome')).toContainText(consequence);
         await expect(page.locator('#unresolved')).not.toBeEmpty();
         await expect(page.locator('#realWorldPractice')).toContainText(action);
@@ -193,6 +196,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#coachOptions')).toBeEmpty();
       await expect(page.locator('#coachMore')).toHaveCount(0);
       await page.locator('#choices button').first().click();
+      await page.locator('#send').click();
       await page.locator('#reflectionReview > summary').click();
       await expect(page.locator('#reflectionBasis')).not.toContainText('my family');
       await expect(page.locator('#reflectionBasis')).toContainText('private goal wording was cleared');
@@ -206,6 +210,7 @@ for (const width of [320, 390]) {
       await page.locator('.coach-option button').first().click();
       await page.locator('#send').click();
       await page.locator('#choices button').first().click();
+      await page.locator('#send').click();
       await expect(page.locator('#completionTitle')).toBeFocused();
       await expect(page.locator('#outcome')).toBeVisible();
       await expect(page.locator('#outcome')).toContainText('assignment is not accepted');
@@ -250,7 +255,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
       await expect(page.locator('#recordConsent')).not.toBeChecked();
       await expect(page.locator('#speechConsent')).not.toBeChecked();
-      await expect(page.locator('#practiceScoreToggle')).not.toBeChecked();
+      await expect(page.getByRole('checkbox', { name: /score|grade/i })).toHaveCount(0);
       expect(requests.every(r => r.method === 'GET' && new URL(r.url).origin === 'http://127.0.0.1:8765')).toBe(true);
       expect(await page.evaluate(() => [document.cookie, localStorage.length, sessionStorage.length])).toEqual(['', 0, 0]);
     });

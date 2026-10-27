@@ -66,7 +66,7 @@ test('private expression requires opt-in and never sends, scores, stores, or upl
   page.on('request', request => requests.push({ url: request.url(), method: request.method() }));
   await page.goto('/simulator/01/');
   await expect(page.locator('#expressStudio')).not.toHaveAttribute('open', '');
-  await expect(page.locator('#practiceScoreToggle')).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /score|grade/i })).toHaveCount(0);
   await page.locator('#openPractice').click();
   await expect(page.locator('#recordConsent')).not.toBeChecked();
   await expect(page.locator('#recordStart')).toBeDisabled();
@@ -107,26 +107,28 @@ test('rehearsal transfers only the chosen draft; sending remains a separate acti
   await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
 });
 
-test('roleplay is unscored by default; scoring remains an explicit choice across replay', async ({ page }) => {
+test('roleplay has no numerical grades; qualitative detail is optional and resets on replay', async ({ page }) => {
   await page.goto('/simulator/01/');
   if (await page.locator('#expressStudio').evaluate(n => n.open)) await page.locator('#returnToReply').click();
   await page.locator('#choices button').nth(0).click();
+  await page.locator('#send').click();
   await replies(page);
   await page.locator('#choices button').nth(1).click();
+  await page.locator('#send').click();
   await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');
   await expect(page.locator('#scoreArea')).toBeHidden();
-  await expect(page.locator('#score')).toHaveText('');
-  await expect(page.locator('#scoreDetails')).toHaveText('');
+  await expect(page.locator('#score')).toHaveCount(0);
+  await expect(page.locator('#scoreArea')).toBeHidden();
   await expect(page.locator('#exploreNote')).toBeVisible();
   await feedback(page);
-  await page.locator('#practiceScoreToggle').check();
   await expect(page.locator('#scoreArea')).toBeVisible();
-  await expect(page.locator('#score')).toHaveText('94/100');
-  await page.locator('#practiceScoreToggle').uncheck();
-  await expect(page.locator('#score')).toHaveText('');
-  await expect(page.locator('#scoreDetails')).toHaveText('');
+  await expect(page.locator('#score')).toHaveCount(0);
+  await expect(page.locator('#feedbackConstructive')).not.toBeEmpty();
+  await page.locator('#reflectionReview > summary').click();
+  await expect(page.locator('#score')).toHaveCount(0);
+  await expect(page.locator('#scoreArea')).toBeHidden();
   await page.locator('#replay').click();
-  await expect(page.locator('#practiceScoreToggle')).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /score|grade/i })).toHaveCount(0);
   await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
   await expect(page.locator('#yourReply')).toHaveValue('');
 });
@@ -135,8 +137,10 @@ test('moving a draft after completion starts a fresh, unsubmitted roleplay', asy
   await openPractice(page);
   if (await page.locator('#expressStudio').evaluate(n => n.open)) await page.locator('#returnToReply').click();
   await page.locator('#choices button').nth(0).click();
+  await page.locator('#send').click();
   await replies(page);
   await page.locator('#choices button').nth(1).click();
+  await page.locator('#send').click();
   await reveal(page, 'rehearsalPanel');
   await page.locator('#practiceWords').fill('I want to reset this conversation.');
   await reveal(page, 'rehearsalPanel');
@@ -144,7 +148,7 @@ test('moving a draft after completion starts a fresh, unsubmitted roleplay', asy
   await expect(page.locator('#sceneProgress')).toHaveText('SCENE 1 OF 2');
   await expect(page.locator('#yourReply')).toHaveValue('I want to reset this conversation.');
   await expect(page.locator('#history .bubble')).toHaveCount(1);
-  await expect(page.locator('#practiceScoreToggle')).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /score|grade/i })).toHaveCount(0);
 });
 
 test('actual recording can be played and deleted; it releases tracks and revokes its URL', async ({ page, context }) => {
@@ -365,6 +369,6 @@ test('optional practice is keyboard accessible and fits a narrow mobile viewport
   await page.locator('#recordConsent').focus();
   await page.keyboard.press('Space');
   await expect(page.locator('#recordStart')).toBeEnabled();
-  await expect(page.locator('#practiceScoreToggle')).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /score|grade/i })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

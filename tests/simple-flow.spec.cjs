@@ -51,6 +51,7 @@ for (const width of [320, 390]) {
       await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
       await expect(page.locator('#choices button:visible')).toHaveCount(1);
       await page.locator('#choices button').first().click();
+      await page.locator('#send').click();
       await expect(page.locator('#completionTitle')).toBeFocused();
       await expect(page.locator('#outcome')).toBeVisible();
       await expect(page.locator('#realWorldPractice')).toBeVisible();

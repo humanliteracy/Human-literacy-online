@@ -104,118 +104,158 @@
     ['i need more time because the scope changed', { path: 'scope', goal: 'I want revised expectations that respect the scope change and my capacity.', hearing: 'A hypothetical manager may hear a request to revisit scope and time, rather than a promise to meet the original deadline.', tentative: 'You might be communicating a need for realistic expectations. You decide what facts and limits matter to you.' }],
   ]);
 
-  function createCoach({ moveDraft, onChange, onAdvance }) {
+  function createCoach({ moveDraft, onChange, onAdvance, isComplete = () => false }) {
     const $ = id => document.getElementById(id);
-    let confirmed = null;
+    let confirmed = null, reviewedLiteral = null, lastPath = '';
+    const drafts = new Map(), goalDrafts = new Map();
+    const defaultGoals = {
+      boundary: 'I want to decline this request and keep my boundary.',
+      resign: 'I want to resign rather than accept these expectations.',
+      scope: 'I want to clarify realistic scope, time, or support before committing.',
+      help: 'I want support without sharing more personal information than I choose.',
+      pause: 'I want to pause this conversation, not resign.',
+      recovery: 'I want to discuss my part and realistic next steps.', custom: '',
+    };
     function resizeOptions() {
-      if ($('coachChoices').classList.contains('hidden')) return;
+      if (!$('coachChoices').checkVisibility()) return;
       for (const input of $('coachOptions').querySelectorAll('textarea')) {
         if (input.closest('details:not([open])')) continue;
         input.style.height = 'auto';
         input.style.height = Math.max(94, input.scrollHeight + 4) + 'px';
       }
     }
+    function updateTransferNotice() {
+      $('coachWordsNotice').textContent = isComplete()
+        ? 'Using wording starts a new conversation and replaces the completed transcript. Private drafts stay available.'
+        : 'Use this wording fills your draft. You still choose Say this.';
+      for (const button of $('coachOptions').querySelectorAll('button')) {
+        const label = button.dataset.optionLabel;
+        button.textContent = isComplete() ? 'Use in new conversation' : 'Use this wording';
+        button.setAttribute('aria-label', button.textContent + ': ' + label + ' (move to simulator)');
+      }
+    }
     window.addEventListener('resize', resizeOptions);
-    $('expressStudio').addEventListener('toggle', resizeOptions);
-    $('coachReview').addEventListener('toggle', () => {
-      if (!$('coachReview').open) resizeOptions();
-    });
+    $('expressStudio').addEventListener('toggle', () => { resizeOptions(); updateTransferNotice(); });
+    $('coachReview').addEventListener('toggle', () => { if (!$('coachReview').open) resizeOptions(); });
     for (const [value, path] of Object.entries(paths)) {
       const option = document.createElement('option');
       option.value = value; option.textContent = path.label; $('coachPath').append(option);
     }
+    function saveOptions() {
+      if (confirmed) drafts.set(confirmed.key, [...$('coachOptions').querySelectorAll('textarea')].map(n => n.value));
+    }
     function clearChoices() {
-      onChange();
-      confirmed = null;
+      saveOptions(); onChange(); confirmed = null;
       $('coachChoices').classList.add('hidden');
-      $('coachChosenGoal').textContent = '';
-      $('coachOptions').replaceChildren();
+      $('coachChosenGoal').textContent = ''; $('coachOptions').replaceChildren();
+      for (const id of ['coachPath', 'coachGoal']) $(id).removeAttribute('aria-invalid');
+    }
+    function showExpression() {
+      $('expressionQuestion').classList.remove('hidden');
+      $('coachUnderstanding').classList.add('hidden'); $('coachChoices').classList.add('hidden');
+      $('expressWords').focus();
+    }
+    function clearReading() {
+      reviewedLiteral = null; lastPath = '';
+      $('coachReview').open = true; $('readingDetails').open = false;
+      for (const id of ['coachLiteral', 'coachHearing', 'coachTentative']) $(id).textContent = '';
+      $('coachGoal').value = ''; $('coachPath').value = ''; $('coachStatus').textContent = '';
+      $('expressWords').removeAttribute('aria-invalid');
     }
     function reset() {
-      clearChoices();
-      $('coachUnderstanding').classList.add('hidden');
-      $('coachReview').open = true;
-      $('readingDetails').open = false;
-      $('expressionQuestion').classList.remove('hidden');
-      for (const id of ['coachLiteral', 'coachHearing', 'coachTentative']) $(id).textContent = '';
-      $('coachGoal').value = ''; $('coachPath').value = '';
-      $('coachStatus').textContent = '';
+      clearChoices(); drafts.clear(); goalDrafts.clear(); clearReading();
+      $('coachWordsNotice').textContent = '';
+      $('expressionQuestion').classList.remove('hidden'); $('coachUnderstanding').classList.add('hidden');
     }
-    $('coachEditExpression').addEventListener('click', () => { reset(); $('expressWords').focus(); });
-    $('expressWords').addEventListener('input', reset);
+    $('coachEditExpression').addEventListener('click', showExpression);
+    $('expressWords').addEventListener('input', () => {
+      if (lastPath) goalDrafts.set(lastPath, $('coachGoal').value);
+      clearChoices(); clearReading();
+      $('expressionQuestion').classList.remove('hidden'); $('coachUnderstanding').classList.add('hidden');
+    });
     $('coachGoal').addEventListener('input', clearChoices);
-    $('coachPath').addEventListener('change', clearChoices);
+    $('coachPath').addEventListener('change', () => {
+      if (lastPath) goalDrafts.set(lastPath, $('coachGoal').value);
+      clearChoices(); lastPath = $('coachPath').value;
+      $('coachGoal').value = goalDrafts.has(lastPath) ? goalDrafts.get(lastPath) : defaultGoals[lastPath] || '';
+      $('coachStatus').textContent = 'Check or edit the goal for your selected path.';
+    });
     $('coachUnderstand').addEventListener('click', () => {
-      reset();
       const literal = $('expressWords').value;
       if (!literal.trim()) {
-        $('coachStatus').textContent = 'Enter the words you want to explore in Express. A local recording is not transcribed or interpreted by this coach.';
-        $('expressWords').focus(); return;
+        $('coachStatus').textContent = 'Local recordings are not transcribed. Type words to explore, or return to your reply.';
+        $('expressWords').setAttribute('aria-invalid', 'true'); $('expressWords').focus(); return;
       }
       onAdvance();
-      // Ignore only a final period and letter case when matching the displayed examples.
-      const normalized = literal.trim().toLowerCase();
-      const example = examples.get(normalized.endsWith('.') ? normalized.slice(0, -1) : normalized);
-      $('coachLiteral').textContent = literal;
-      $('coachHearing').textContent = example?.hearing || 'I do not have a scripted reading for these words. I cannot tell what a manager would hear. Please clarify your communication goal yourself.';
-      $('coachTentative').textContent = example?.tentative || 'No intention or feeling is inferred. Choose a path and describe what you want to communicate, or keep your own wording.';
-      $('coachPath').value = example?.path || '';
-      $('coachGoal').value = example?.goal || '';
-      $('coachStatus').textContent = example ? 'Check this suggested goal.' : 'Please clarify your goal; no scripted reading matches.';
-      $('expressionQuestion').classList.add('hidden');
-      $('coachUnderstanding').classList.remove('hidden');
-      $('coachUnderstandingTitle').focus();
+      if (literal !== reviewedLiteral) {
+        clearChoices();
+        const normalized = literal.trim().toLowerCase();
+        const example = examples.get(normalized.endsWith('.') ? normalized.slice(0, -1) : normalized);
+        reviewedLiteral = literal;
+        $('coachLiteral').textContent = literal;
+        $('coachHearing').textContent = example?.hearing || 'I do not have a scripted reading for these words. I cannot tell what a manager would hear. Please clarify your communication goal yourself.';
+        $('coachTentative').textContent = example?.tentative || 'No intention or feeling is inferred. Choose a path and describe what you want to communicate, or keep your own wording.';
+        $('coachPath').value = example?.path || ''; lastPath = $('coachPath').value;
+        $('coachGoal').value = example?.goal || '';
+        $('coachStatus').textContent = example ? 'Check this suggested goal.' : 'Please clarify your goal; no scripted reading matches.';
+      }
+      $('expressWords').removeAttribute('aria-invalid');
+      $('expressionQuestion').classList.add('hidden'); $('coachUnderstanding').classList.remove('hidden');
+      $('coachReview').open = true; $('coachUnderstandingTitle').focus();
     });
     $('coachReject').addEventListener('click', () => {
-      clearChoices(); $('coachGoal').value = ''; $('coachPath').value = '';
+      clearChoices(); $('coachGoal').value = ''; $('coachPath').value = ''; lastPath = '';
       $('coachHearing').textContent = 'Possible reading rejected. This prototype cannot establish what you intended.';
       $('coachTentative').textContent = 'You can choose a different path and describe your own goal, or skip coaching.';
       $('coachStatus').textContent = 'Interpretation rejected. Your original expression is unchanged.';
       $('coachPath').focus();
     });
     $('coachConfirm').addEventListener('click', () => {
-      clearChoices();
       const path = $('coachPath').value, goal = $('coachGoal').value.trim();
       if (!path || !goal) {
         $('coachStatus').textContent = 'Choose your communication path and write or confirm your own goal first.';
-        $(path ? 'coachGoal' : 'coachPath').focus(); return;
+        const input = $(path ? 'coachGoal' : 'coachPath'); input.setAttribute('aria-invalid', 'true'); input.focus(); return;
       }
-      confirmed = { path, goal };
-      $('coachChosenGoal').textContent = 'Your chosen goal: ' + goal;
-      const more = document.createElement('details'); more.id = 'coachMore'; more.className = 'coach-more';
-      const summary = document.createElement('summary');
-      const additional = document.createElement('div'); additional.id = 'coachMoreOptions';
-      more.append(summary, additional);
-      more.addEventListener('toggle', resizeOptions);
-      const options = path === 'custom' ? [
-        ['State your own goal', 'What I want you to understand is: ' + goal],
-        ['Invite clarification', 'My goal is: ' + goal + ' Can we check what that means before deciding next steps?'],
-        ['Keep decisions open', 'I want to clarify this first: ' + goal + ' I am not making a new commitment in this conversation.'],
-      ] : paths[path].options;
-      summary.textContent = 'More responses (' + (options.length - 1) + ')';
-      options.forEach(([label, words], index) => {
-        const article = document.createElement('article'); article.className = 'coach-option';
-        const fieldId = 'coachWording' + index;
-        const heading = document.createElement('label'); heading.className = 'write-label'; heading.htmlFor = fieldId; heading.textContent = label;
-        const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = words.slice(0, 600);
-        input.addEventListener('input', resizeOptions);
-        const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.textContent = 'Use this wording';
-        button.setAttribute('aria-label', 'Use this wording: ' + label + ' (move to simulator)');
-        button.addEventListener('click', () => {
-          if (!input.value.trim()) { input.focus(); $('coachStatus').textContent = 'Enter wording you want to try, or choose another option.'; return; }
-          $('practiceWords').value = input.value;
-          moveDraft(input.value.trim(), { ...confirmed });
-          $('coachStatus').textContent = 'Your chosen wording moved to the reply. Nothing was sent; you still choose whether to submit it.';
+      const key = JSON.stringify([reviewedLiteral, path, goal]);
+      if (!confirmed || confirmed.key !== key) {
+        clearChoices(); confirmed = { path, goal, key }; goalDrafts.set(path, goal);
+        const more = document.createElement('details'); more.id = 'coachMore'; more.className = 'coach-more';
+        const summary = document.createElement('summary'); summary.textContent = 'More responses (2)';
+        const additional = document.createElement('div'); more.append(summary, additional);
+        more.addEventListener('toggle', resizeOptions);
+        const complete = (prefix, suffix = '') => prefix.length + goal.length + suffix.length <= 600 ? prefix + goal + suffix : goal;
+        const options = path === 'custom' ? [
+          ['State your own goal', goal],
+          ['Invite clarification', complete('My goal is: ', ' Can we clarify it before deciding next steps?')],
+          ['Keep decisions open', complete('Before I make a commitment: ')],
+        ] : paths[path].options;
+        const saved = drafts.get(key);
+        options.forEach(([label, words], index) => {
+          const article = document.createElement('article'); article.className = 'coach-option';
+          const fieldId = 'coachWording' + index;
+          const heading = document.createElement('label'); heading.className = 'write-label'; heading.htmlFor = fieldId; heading.textContent = label;
+          const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = saved?.[index] ?? words;
+          input.addEventListener('input', resizeOptions);
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.dataset.optionLabel = label;
+          button.addEventListener('click', () => {
+            if (!input.value.trim()) { input.focus(); $('coachStatus').textContent = 'Enter wording you want to try, or choose another option.'; return; }
+            $('practiceWords').value = input.value; saveOptions();
+            moveDraft(input.value.trim(), { path: confirmed.path, goal: confirmed.goal });
+            $('coachStatus').textContent = 'Draft moved. Nothing was sent.';
+          });
+          article.append(heading, input, button); (index === 0 ? $('coachOptions') : additional).append(article);
         });
-        article.append(heading, input, button);
-        (index === 0 ? $('coachOptions') : additional).append(article);
-      });
-      if (options.length > 1) $('coachOptions').append(more);
-      $('coachReview').open = false;
-      $('coachStatus').textContent = 'Goal confirmed.';
-      $('coachChoices').classList.remove('hidden'); resizeOptions(); $('coachChoicesTitle').focus();
+        $('coachOptions').append(more);
+      }
+      $('coachChosenGoal').textContent = 'Your chosen goal: ' + goal;
+      $('coachReview').open = false; $('coachStatus').textContent = 'Goal confirmed.';
+      $('coachChoices').classList.remove('hidden'); updateTransferNotice(); resizeOptions(); $('coachChoicesTitle').focus();
     });
-    return { reset, focus: () => { (confirmed && !$('coachReview').open ? $('coachChoicesTitle') : $('coachUnderstanding').classList.contains('hidden') ? $('expressWords') : $('coachUnderstandingTitle')).focus(); }, getContext: () => confirmed ? { ...confirmed } : null };
+    return { reset, focus: () => {
+      const target = !$('expressionQuestion').classList.contains('hidden') ? $('expressWords')
+        : $('coachReview').open ? $('coachUnderstandingTitle') : $('coachChoicesTitle');
+      target.focus();
+    }, getContext: () => confirmed ? { path: confirmed.path, goal: confirmed.goal } : null };
   }
   window.HumanLiteracyCoach = { paths, createCoach };
 })();
