@@ -34,7 +34,7 @@ const cases = [
   ['ambiguous wording', 'Maybe something else.', 'unknown', /not sure how that relates/i, /not established a shared meaning/i],
   ['previously unseen ordinary wording', 'My neighbor borrowed my umbrella.', 'unknown', /not sure how that relates/i, /not established a shared meaning/i],
   ['pause is explicitly not resignation', 'I am not resigning. I need a pause.', 'pause', /not treat a break as resignation/i, /pause without resigning/i],
-  ['negated resignation statement', 'I do not mean I quit.', 'clarify', /not resigning/i, /no unchosen commitment/i],
+  ['negated resignation statement', 'I do not mean I quit.', 'clarify', /not resigning/i, /not acceptance of the assignment/i],
   ['quoted resignation', 'When I said "I quit", I was quoting the example.', 'uncertain', /uncertain or quoted words/i, /decision about leaving remains open/i],
   ['conditional resignation', 'If this keeps happening, I might quit.', 'uncertain', /not assume a resignation/i, /decision about leaving remains open/i],
   ['quitting something unrelated', 'I quit smoking.', 'unknown', /not sure how that relates/i, /not established a shared meaning/i],
