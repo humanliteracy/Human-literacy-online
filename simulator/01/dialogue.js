@@ -225,7 +225,7 @@
       : current.goalPath || first.goalPath;
     const selected = goalPath ? 'Your selected goal remains ' + goalLabels[goalPath] + '. ' : '';
     const unsafe = first.kind === 'threat' || current.kind === 'threat';
-    const kind = unsafe ? 'threat' : current.flags.goalMismatch ? 'conflict' : current.kind;
+    const kind = unsafe ? 'threat' : current.kind;
     const [skill, communicated, constructive, difficulty, why, alternative, action, example] = teaching[kind] || teaching.unknown;
     let outcome;
     let unresolved;
@@ -233,7 +233,7 @@
     if (kind === 'threat') {
       outcome = 'The exchange pauses because of a threat. A work agreement or recovery plan has not been established.';
       unresolved = 'Safety and whether a conversation can continue remain unresolved. This script cannot assess real-world risk.';
-    } else if (current.flags.goalMismatch || kind === 'conflict') {
+    } else if (kind === 'conflict') {
       outcome = selected + 'The words point in different directions; no new decision or agreement should be assumed.';
       unresolved = 'Which goal, decision and conditions you want to communicate still need clarification.';
     } else if (['unknown', 'unrelated', 'uncertain', 'hostile', 'anger', 'blame', 'disengage'].includes(kind)) {
@@ -249,7 +249,10 @@
       }[kind]);
       unresolved = kind === 'uncertain' ? 'Whether you are resigning, considering options or asking for a pause still needs clarification.' : 'What you want understood, what the other person understands and any practical next step remain open.';
     } else {
-      const path = (goalPath !== 'custom' && goalPath) || (['resign', 'refusal', 'pause'].includes(first.kind) && ['plan', 'clarify', 'own', 'repair', 'recovery'].includes(kind) ? first.reflectionPath : reflectionPaths[kind]);
+      const statedDecision = ['resign','refusal','pause'].includes(kind) && !current.flags.personalBoundary ? reflectionPaths[kind] : null;
+      const earlierDecision = ['resign','refusal','pause'].includes(first.kind) && ['plan','clarify','own','repair','recovery'].includes(kind) ? first.reflectionPath : null;
+      const compatibleGoal = !current.flags.goalMismatch && goalPath !== 'custom' ? goalPath : null;
+      const path = current.flags.notResigning && kind !== 'pause' ? 'custom' : statedDecision || earlierDecision || compatibleGoal || reflectionPaths[kind];
       contextualPath = path;
       const outcomes = {
         resign: 'You state a decision to leave the job. The work assignment is not accepted; notice, final pay and any handover remain open.',
@@ -277,6 +280,7 @@
       help: teaching.support[6], pause: teaching.pause[6], recovery: teaching.repair[6], custom: teaching.unknown[6],
     };
     if (current.flags.personalBoundary && !unsafe) outcome = 'You state a personal refusal or limit. ' + selected + 'No new work commitment should be assumed.';
+    if (current.flags.notResigning && kind !== 'pause' && !unsafe) outcome = 'You say you are not resigning. That is not acceptance of the assignment; your next decision remains open.';
     const explanationAndSolution = kind === 'own' && current.flags.explainFacts && current.flags.fairSolution;
     return {
       outcome,

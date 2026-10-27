@@ -136,3 +136,13 @@ for(const [first,expected] of [['I am resigning.',/chose to leave/],['I will not
  await send(page,first);await send(page,cases[0][1]);await expect(page.locator('#bossWords')).toContainText(expected);
  await expect(page.locator('#outcome')).not.toContainText('propose a concrete next step');
 });
+
+for(const [path,goal,first,last,outcome] of [
+ ['recovery','I want to discuss my part and realistic next steps.','I made a mistake.','I will not provide another update.',/refusal or limit/],
+ ['resign','I want to resign rather than accept these expectations.','I need a pause. I am not resigning.','I need a pause. I am not resigning.',/pause without resigning/],
+])test(`a submitted decision controls feedback even when the private goal differs: ${path}`,async({page})=>{
+ await draft(page,first,goal,path);await page.locator('.coach-option button').first().click();await send(page,first);await send(page,last);
+ await expect(page.locator('#outcome')).toContainText(outcome);await expect(page.locator('#madeClear')).not.toContainText('conflicting signals');
+ await expect(page.locator('#reflectionBasis')).toContainText(goal);await expect(page.locator('#reflectionBasis')).toContainText('differ from this private goal');
+ await expect(page.locator('#bossWords')).not.toContainText(/selected goal|script|your goal is/i);
+});

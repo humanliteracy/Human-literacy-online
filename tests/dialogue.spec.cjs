@@ -129,8 +129,9 @@ test('goal context never turns edited nonsense or a contradiction into complianc
   await page.locator('#send').click();
   await expect(page.locator('#bossWords')).toContainText('pause');
   await expect(page.locator('#bossWords')).not.toContainText('selected goal');
-  await expect(page.locator('#outcome')).toContainText('selected goal remains resignation');
-  await expect(page.locator('#outcome')).toContainText('no new decision or agreement');
+  await expect(page.locator('#outcome')).toContainText('pause without resigning');
+  await expect(page.locator('#reflectionBasis')).toContainText('differ from this private goal');
+  await expect(page.locator('#madeClear')).not.toContainText('conflicting signals');
 });
 
 test('a threat is not repaired automatically by a later project-plan phrase', async ({ page }) => {

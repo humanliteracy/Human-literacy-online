@@ -400,6 +400,7 @@ function finish(){
   for(const [id,key] of Object.entries({feedbackConstructive:'constructive',feedbackDifficulty:'difficulty',feedbackWhy:'why',feedbackSkill:'skill',feedbackAlternative:'alternative',feedbackImprovement:'improvement',feedbackExample:'example'}))$(id).textContent=lastFeedback[key];
   $('feedbackEvidence').textContent=[firstAnalysis,lastAnalysis].map((analysis,index)=>'Reply '+(index+1)+': '+(analysis.evidence.length?analysis.evidence.map(item=>'“'+item.text+'”').join('; '):'No reliable scripted match.')).join(' ');
   $('reflectionBasis').textContent=conversationGoal?(conversationGoal.goal?'You chose this practice goal: '+conversationGoal.goal:'You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.'):lastFeedback.basis;
+  if(lastAnalysis.flags.goalMismatch)$('reflectionBasis').textContent+=' Your submitted words differ from this private goal. You can keep the words or revisit the goal.';
   $('expressStudio').open=false;$('reflectionReview').open=false;$('feedbackEvidencePanel').open=false;$('completionTitle').focus({preventScroll:true});
   $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
