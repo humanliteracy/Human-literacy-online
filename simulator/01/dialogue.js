@@ -250,9 +250,9 @@
       unresolved = kind === 'uncertain' ? 'Whether you are resigning, considering options or asking for a pause still needs clarification.' : 'What you want understood, what the other person understands and any practical next step remain open.';
     } else {
       const statedDecision = ['resign','refusal','pause'].includes(kind) && !current.flags.personalBoundary ? reflectionPaths[kind] : null;
-      const earlierDecision = ['resign','refusal','pause'].includes(first.kind) && ['plan','clarify','own','repair','recovery'].includes(kind) ? first.reflectionPath : null;
-      const compatibleGoal = !current.flags.goalMismatch && goalPath !== 'custom' ? goalPath : null;
-      const path = current.flags.notResigning && !['pause','conflict','uncertain'].includes(kind) ? 'custom' : statedDecision || earlierDecision || compatibleGoal || reflectionPaths[kind];
+      const earlierDecision = ['resign','refusal','pause','scope','support'].includes(first.kind) && ['plan','clarify','own','repair','recovery'].includes(kind) ? first.reflectionPath : null;
+      // A private drafting goal is not evidence that the learner said it.
+      const path = current.flags.notResigning && !['pause','conflict','uncertain'].includes(kind) ? 'custom' : statedDecision || earlierDecision || reflectionPaths[kind];
       contextualPath = path;
       const outcomes = {
         resign: 'You state a decision to leave the job. The work assignment is not accepted; notice, final pay and any handover remain open.',

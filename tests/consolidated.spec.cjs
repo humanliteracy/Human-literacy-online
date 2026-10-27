@@ -147,3 +147,11 @@ for(const [path,goal,first,last,outcome] of [
  await expect(page.locator('#reflectionBasis')).toContainText(goal);await expect(page.locator('#reflectionBasis')).toContainText('differ from this private goal');
  await expect(page.locator('#bossWords')).not.toContainText(/selected goal|script|your goal is/i);
 });
+
+test('a private resignation goal alone never becomes a stated resignation in feedback',async({page})=>{
+ const goal='I want to resign rather than accept these expectations.';
+ await draft(page,'What do you need from me?',goal,'resign');await page.locator('.coach-option button').first().click();
+ await send(page,'What do you need from me?');await send(page,'Can you clarify the deadline?');
+ await expect(page.locator('#outcome')).toContainText('clarify');await expect(page.locator('#outcome')).not.toContainText('decision to leave the job');
+ await expect(page.locator('#reflectionBasis')).toContainText(goal);await expect(page.locator('#madeClear')).toContainText('asked for information');
+});
