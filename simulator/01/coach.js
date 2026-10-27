@@ -122,6 +122,10 @@
 
   function wordingFor({path, goal, literal}) {
     const reading = readGoal(goal), original = window.HumanLiteracyDialogue.analyze(literal);
+    // Reuse an actual stated action, rather than substituting a missed warning
+    // or a generic admission merely because accountability is the private goal.
+    const ownedClause = original.kind === 'own' ? literal.split(/[.!?;]|\bbut\b/i).find(clause => window.HumanLiteracyDialogue.analyze(clause).kind === 'own') : '';
+    const ownOpening = ownedClause ? ownedClause.trim().replace(/[,\s]+$/, '') + '. ' : '';
     const chosen = path === 'custom' ? reading.reflectionPath : path;
     const option = (label, words, difference) => [label, words, difference];
     const privacy = reading.flags.personalBoundary === 'privacy' || /^(?:i (?:want|would like) to|my goal is to) (?:keep my personal (?:details|information) private|(?:ask for|get) (?:help|support) without (?:sharing|disclosing) (?:my |more )?personal (?:details|information))\b/i.test(goal);
@@ -135,12 +139,19 @@
       option('Ask for a pause', 'I need to pause this conversation. We can return to the work issue without shouting.', 'Separates a pause from a decision about the assignment.'),
       option('Keep the limit brief', 'I will not be shouted at. I am not continuing this discussion.', 'States the limit without a work commitment.'),
     ]};
+    if (['custom','recovery','help'].includes(path) && reading.flags.explainFacts && (reading.flags.explainRisks || reading.flags.explainSupport || reading.flags.explainPart)) {
+      const topic = reading.flags.explainRisks && reading.flags.explainSupport ? 'the risks and what support is needed' : reading.flags.explainRisks ? 'the risks' : reading.flags.explainSupport ? 'what support is needed' : 'my part';
+      return {tailored:true,options:[
+        option('Make room for the explanation', ownOpening + "I'd like to explain " + topic + ' before we decide on next steps.', 'Names the topic you chose without inventing the explanation or a work promise.'),
+        option('Ask to be heard', 'Can I explain ' + topic + ', then discuss the options with you?', 'Invites discussion before a decision; it does not claim an agreement.'),
+        option('Keep it brief', 'I want to explain ' + topic + '.', 'Keeps the request specific and leaves the explanation in your own words.'),
+      ]};
+    }
     if (['custom','recovery'].includes(path) && (reading.flags.explainFacts || reading.flags.fairSolution)) {
-      const owns = reading.kind === 'own' || original.kind === 'own';
-      const opening = owns ? 'I made a mistake. ' : '';
+      const opening = ownOpening;
       const fair = reading.flags.fairSolution ? 'a fair next step' : 'what happens next';
       return {tailored:true, options:[
-        option('Explain before deciding', opening + "I'd like to explain what happened before we decide on " + fair + '.', owns ? 'Names a mistake without accepting all blame or promising a fix.' : 'Asks to be heard before a decision, without adding an admission.'),
+        option('Explain before deciding', opening + "I'd like to explain what happened before we decide on " + fair + '.', opening ? 'Retains the action you stated without accepting all blame or promising a fix.' : 'Asks to be heard before a decision, without adding an admission.'),
         option('Invite a discussion', 'Can I explain my perspective, then discuss ' + fair + ' with you?', 'Invites both perspectives without assuming you already agree.'),
         option('Keep it brief', opening + 'Can we discuss what happened and ' + fair + '?', 'Keeps the request concise and leaves the decision open.'),
       ]};
@@ -166,7 +177,7 @@
       option('Check understanding', 'Can you clarify the question before I make a commitment?', 'Makes understanding a separate step from agreeing.'),
     ]};
     if (chosen === 'recovery') return {tailored:true,options:[
-      option('Start with what is known', original.kind === 'own' ? "I made a mistake. I'd like to explain my part before we agree on next steps." : 'Can we review the remaining work before I promise a new delivery time?', 'Uses only the accountability you stated; it does not invent a missed warning or a delivery promise.'),
+      option('Start with what is known', ownOpening ? ownOpening + "I'd like to explain my part before we agree on next steps." : 'Can we review the remaining work before I promise a new delivery time?', 'Uses only the accountability you stated; it does not invent a missed warning or a delivery promise.'),
       option('Check the facts together', 'Can we review the facts, priorities and support before agreeing on a realistic next step?', 'Invites a review without assuming fault or agreement.'),
       option('Keep promises realistic', 'Can you clarify what remains before I make a new commitment?', 'Separates checking the work from promising a result.'),
     ]};
@@ -290,7 +301,7 @@
         reviewedLiteral = literal;
         $('coachLiteral').textContent = literal;
         const reading = window.HumanLiteracyDialogue.analyze(literal);
-        const recognized = reading.matched && ['own','refusal','resign','scope','support','pause','clarify','repair','recovery','plan','uncertain'].includes(reading.kind);
+        const recognized = reading.matched && ['own','refusal','resign','scope','support','pause','clarify','repair','recovery','plan','uncertain','explain'].includes(reading.kind);
         const proposed = recognized ? reading.reflectionPath : '';
         $('coachHearing').textContent = example?.hearing || (recognized ? 'These words may relate to ' + window.HumanLiteracyDialogue.goalLabels[proposed] + '. A listener may still need more detail.' : 'I do not have a scripted reading for these words. Please choose what you want to communicate.');
         $('coachTentative').textContent = example?.tentative || 'This is a limited wording match, not a reading of your feelings or whole intention. You can change or reject the proposed goal.';
@@ -300,6 +311,7 @@
         if (reading.flags.personalBoundary === 'privacy') $('coachGoal').value = 'I want to keep my personal information private.';
         if (reading.flags.personalBoundary === 'treatment') $('coachGoal').value = 'I want to set a limit on being shouted at.';
         if (reading.flags.explainFacts && reading.flags.fairSolution) $('coachGoal').value = 'I want to explain what happened and find a fair solution.';
+        else if (reading.flags.explainFacts) $('coachGoal').value = 'I want to explain ' + (reading.flags.explainRisks && reading.flags.explainSupport ? 'the risks and what support is needed' : reading.flags.explainRisks ? 'the risks' : reading.flags.explainSupport ? 'what support is needed' : reading.flags.explainPart ? 'my part' : 'what happened') + '.';
         $('coachStatus').textContent = example || recognized ? 'Check this proposed goal; change it if needed.' : 'Please clarify your goal.';
       }
       $('expressWords').removeAttribute('aria-invalid');

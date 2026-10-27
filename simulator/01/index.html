@@ -140,21 +140,21 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
       <details id="reflectionReview" class="reflection-review">
         <summary>Why this happened and what to try</summary>
         <div id="scoreArea">
-          <p id="scoreDetails" class="small">No numerical rubric or grade is applied: this script matches limited wording, not communication ability. For unrecognized wording, no assessment is claimed.</p>
           <dl class="feedback-dimensions">
             <dt>What your response communicated</dt><dd id="madeClear"></dd>
             <dt>What was constructive</dt><dd id="feedbackConstructive"></dd>
             <dt>What might create difficulty</dt><dd id="feedbackDifficulty"></dd>
-            <dt>Another possible interpretation</dt><dd id="feedbackAlternative"></dd>
+            <dt>Why Jordan might respond this way</dt><dd id="feedbackWhy"></dd>
             <dt>One way to improve the next response</dt><dd id="feedbackImprovement"></dd>
           </dl>
         </div>
         <h3>What remains open</h3>
         <p id="unresolved"></p>
         <details id="feedbackEvidencePanel" class="optional-panel"><summary>Wording and practice detail</summary>
+          <p id="scoreDetails" class="small">No numerical rubric or grade is applied: this script matches limited wording, not communication ability. For unrecognized wording, no assessment is claimed.</p>
           <dl class="feedback-dimensions">
             <dt>Normalized wording this script matched</dt><dd id="feedbackEvidence"></dd>
-            <dt>Why Jordan might respond this way</dt><dd id="feedbackWhy"></dd>
+            <dt>Another possible interpretation</dt><dd id="feedbackAlternative"></dd>
             <dt>Skill to practise</dt><dd id="feedbackSkill"></dd>
             <dt>Example to compare</dt><dd id="feedbackExample"></dd>
           </dl>
@@ -349,6 +349,11 @@ function optionsForTurn(){
   if(turn===1&&firstAnalysis?.kind==='threat')choices=[
     {kind:'pause',text:'I need to stop this exchange. I will step away without threatening anyone.'},
     {kind:'clarify',text:'I want to express my concern without threatening harm.'}
+  ];
+  if(turn===1&&firstAnalysis?.flags.explainFacts&&['own','clarify','recovery','explain','support'].includes(firstAnalysis.kind)&&!(path&&['resign','boundary','pause'].includes(path)))choices=[
+    {kind:'clarify',text:'Can you clarify which part of the timeline you would like me to explain first?'},
+    {kind:'clarify',text:'Can we discuss the risks and support before deciding on next steps?'},
+    {kind:'pause',text:'I need a moment to put the explanation into words. Can we pause?'}
   ];
   const more=document.createElement('details');more.className='optional-panel';more.id='replyMore';
   const summary=document.createElement('summary');summary.textContent='More responses ('+(choices.length-1)+')';more.append(summary);
