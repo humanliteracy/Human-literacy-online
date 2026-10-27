@@ -81,7 +81,7 @@ test('moving a draft during turn two retains the conversation instead of silentl
  await send(page,'Can you clarify the deadline?');await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');
  await page.locator('#openPractice').click();await reveal(page,'rehearsalPanel');await page.locator('#practiceWords').fill('I need support with this situation.');
  await page.locator('#practiceTransfer').click();await expect(page.locator('#sceneProgress')).toHaveText('SCENE 2 OF 2');await expect(page.locator('#history .mine')).toHaveCount(1);
- await page.locator('#send').click();await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');await expect(page.locator('#history .mine')).toHaveCount(item[0]===56?1:2);
+ await page.locator('#send').click();await expect(page.locator('#sceneProgress')).toHaveText('SIMULATION COMPLETE');await expect(page.locator('#history .mine')).toHaveCount(2);
 });
 
 test('private cleanup removes cached goals and alternatives as well as visible private fields',async({page})=>{
