@@ -34,3 +34,12 @@ test('leaving clears saved navigation and cannot resurrect submitted text',async
  await expect(page.locator('#conversationNavigation')).toBeHidden();await expect(page.locator('#yourReply')).toHaveValue('');
  await expect(page.locator('#history')).not.toContainText('I am resigning.');
 });
+
+test('retrying and sending a new reply clears the previous navigation status',async({page})=>{
+ await send(page,'I am resigning.');await send(page,'Can you clarify the notice process?');
+ await page.locator('#conversationBack').click();await page.locator('#conversationForward').click();
+ await expect(page.locator('#navigationStatus')).toContainText('Saved progress restored');
+ await page.locator('#replay').click();await expect(page.locator('#conversationNavigation')).toBeHidden();
+ await send(page,'I need a break.');await expect(page.locator('#navigationStatus')).toContainText('Reply sent.');
+ await expect(page.locator('#navigationStatus')).not.toContainText('restored');
+});

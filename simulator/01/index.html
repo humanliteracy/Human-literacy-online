@@ -386,6 +386,7 @@ function submit(){
   if(turn===0){firstAnalysis=analysis;turn=1;showTurn();$('replyHeading').focus({preventScroll:true});}
   else{lastAnalysis=analysis;finish();}
   furthestTurn=turn;saveProgress();showNavigation();
+  $('navigationStatus').textContent='Reply sent. Back reviews earlier replies; Say this on an earlier reply replaces later replies.';
 }
 function finish(){
   turn=2;lastFeedback=dialogue.feedback(firstAnalysis,lastAnalysis,{goal:conversationGoal});
@@ -405,6 +406,7 @@ function reset(){
   $('bossWords').textContent=opening;delete $('bossWords').dataset.dialogueKind;
   message('Jordan · manager',opening);showTurn();$('reflectionReview').open=false;
   for(const id of ['outcome','realWorldPractice','reflectionBasis','madeClear','unresolved','feedbackEvidence','feedbackCommunicated','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample'])$(id).textContent='';
+  $('navigationStatus').textContent='Review earlier replies without starting over. Forward restores saved progress; Say this replaces later replies.';
   saveProgress();showNavigation();window.scrollTo(0,0);
 }
 $('send').addEventListener('click',submit);
