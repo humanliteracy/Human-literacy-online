@@ -136,15 +136,22 @@ async function exercise(page, base, width) {
       assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),digest);
     }
     pass('Review packet downloads byte-for-byte; every captured runtime asset matches the pinned revision');
-    await page.getByRole('link',{name:'View the review packet',exact:true}).click();
-    await page.getByRole('heading',{name:'Communication Coach review',exact:true}).waitFor();
-    assert.equal(await page.locator('#__review_identity').getAttribute('data-source-sha'),sourceSha);
-    const image=page.locator('details[open] img').first();await image.scrollIntoViewIfNeeded();await image.evaluate(n=>n.decode());
+    // The report keeps its UI theme preference. Isolate that browser context so
+    // the simulator's strict zero-storage assertions remain independent.
+    const reportContext=await browser.newContext();const reportPage=await reportContext.newPage();
+    reportPage.on('pageerror',e=>errors.push(e.message));
+    reportPage.on('request',r=>{const url=new URL(r.url());if(url.origin!==server.base_url&&!['data:','blob:'].includes(url.protocol))external.push(r.url());});
+    await reportPage.goto(server.review_url);
+    await reportPage.getByRole('link',{name:'View the review packet',exact:true}).click();
+    await reportPage.getByRole('heading',{name:'Communication Coach review',exact:true}).waitFor();
+    assert.equal(await reportPage.locator('#__review_identity').getAttribute('data-source-sha'),sourceSha);
+    const image=reportPage.locator('details[open] img').first();await image.scrollIntoViewIfNeeded();await image.evaluate(n=>n.decode());
     assert.equal(await image.evaluate(n=>n.naturalWidth),390);
-    await page.locator('a[href="report/index.html"]').click();
-    await page.waitForFunction(()=>document.body.innerText.includes('190'));
-    assert.match(await page.locator('body').innerText(),/Passed/);
-    assert.match(await page.locator('body').innerText(),/navigation/);
+    await reportPage.locator('a[href="report/index.html"]').click();
+    await reportPage.waitForFunction(()=>/Passed\s*190/.test(document.body.innerText));
+    assert.match(await reportPage.locator('body').innerText(),/navigation/);
+    assert.deepEqual(await reportPage.evaluate(()=>Object.fromEntries(Object.entries(localStorage))),{theme:'system'});
+    await reportContext.close();
     pass('Packet gallery and interactive 190-test report open directly inside the authenticated preview');
     for (const width of [1120,320,390]) {
       await exercise(page, server.base_url, width);
