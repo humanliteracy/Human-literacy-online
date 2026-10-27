@@ -10,6 +10,7 @@ import hmac
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import io
+import json
 import mimetypes
 import re
 import secrets
@@ -42,6 +43,27 @@ def run(revision, expected_checksum):
                     ('lessons/', 'simulator/', 'support/', 'media/', 'docs/screenshots/')):
                 files['/' + path] = source.read(name)
     assert all('/lessons/%02d/index.html' % n in files for n in range(1, 11))
+    # Serve the synthetic review packet through this same authenticated loopback
+    # session. Managed Chrome can block file:// pages after a ZIP is extracted.
+    if '/review/evidence.zip' in files:
+        try:
+            with zipfile.ZipFile(io.BytesIO(files['/review/evidence.zip'])) as packet:
+                manifest_bytes = packet.read('packet-integrity.json')
+                manifest = json.loads(manifest_bytes)
+                if not isinstance(manifest, dict) or 'index.html' not in manifest:
+                    raise ValueError('Missing packet index')
+                for path, digest in manifest.items():
+                    if (not isinstance(path, str) or path.startswith('/') or
+                            '\\' in path or '..' in path.split('/') or
+                            not isinstance(digest, str) or not re.fullmatch(r'[a-f0-9]{64}', digest)):
+                        raise ValueError('Invalid packet manifest')
+                    data = packet.read(path)
+                    if hashlib.sha256(data).hexdigest() != digest:
+                        raise ValueError('Packet payload mismatch')
+                    files['/__evidence/' + path] = data
+                files['/__evidence/packet-integrity.json'] = manifest_bytes
+        except (ValueError, KeyError, zipfile.BadZipFile, TypeError):
+            raise SystemExit('Review packet integrity check failed. Nothing was opened.')
     hashes = {path: hashlib.sha256(data).digest() for path, data in files.items()}
     del archive
     token = secrets.token_urlsafe(32)
@@ -61,7 +83,8 @@ def run(revision, expected_checksum):
                '<li>Retry with one unexpected or hostile response. Check that Jordan asks for clarification or responds appropriately without a fake grade.</li>'
                '<li>Try one optional feature: Help me draft, or local recording and playback. Typing is always available.</li></ol>'
                '<p>Use synthetic examples. Browser dictation has separate external-service consent and may be unreliable; leave it off for private words. This is a scripted prototype, not AI.</p>'
-               '<p><a href="/review/evidence.zip" download="human-literacy-review.zip">Download the review packet</a> '
+               '<p><a href="/__evidence/">View the review packet</a> · '
+               '<a href="/review/evidence.zip" download="human-literacy-review.zip">Download a ZIP copy</a> '
                '(test report, screenshots, silent synthetic walkthrough, limitations and acceptance checklist).</p>'
                '<p>Automated results do not replace your acceptance of this exact version. No screen-reader software, physical microphone or live speech provider is claimed as tested.</p>'
                '<p>Keep this launch link private. Ctrl+C in Terminal stops the server and expires the session. '

@@ -86,6 +86,7 @@ async function exercise(page, base, width) {
   const browser = await chromium.launch({ executablePath:process.env.BROWSER_EXECUTABLE_PATH||'/usr/bin/chromium', headless: true });
   try {
     assert.equal((await request(server.base_url, '/')).status, 401);
+    assert.equal((await request(server.base_url, '/__evidence/')).status, 401);
     assert.equal((await request(server.base_url, '/__open/wrong')).status, 401);
     assert.equal((await request(server.base_url, '/', { Host: 'evil.example' })).status, 403);
     assert.equal((await request(server.base_url, '/', { Origin: 'https://evil.example' })).status, 403);
@@ -96,7 +97,7 @@ async function exercise(page, base, width) {
     const page = await context.newPage();
     const errors = [], external = [];
     page.on('pageerror', e => errors.push(e.message));
-    page.on('request', r => { if (new URL(r.url()).origin !== server.base_url) external.push(r.url()); });
+    page.on('request', r => { const url=new URL(r.url()); if (url.origin !== server.base_url && !['data:','blob:'].includes(url.protocol)) external.push(r.url()); });
     await page.goto(server.review_url);
     await page.getByRole('heading', { name: 'Unreleased Life Simulator' }).waitFor();
     const cookie = (await context.cookies()).find(c => c.name.startsWith('local_review_'));
@@ -135,6 +136,16 @@ async function exercise(page, base, width) {
       assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),digest);
     }
     pass('Review packet downloads byte-for-byte; every captured runtime asset matches the pinned revision');
+    await page.getByRole('link',{name:'View the review packet',exact:true}).click();
+    await page.getByRole('heading',{name:'Communication Coach review',exact:true}).waitFor();
+    assert.equal(await page.locator('#__review_identity').getAttribute('data-source-sha'),sourceSha);
+    const image=page.locator('details[open] img').first();await image.scrollIntoViewIfNeeded();await image.evaluate(n=>n.decode());
+    assert.equal(await image.evaluate(n=>n.naturalWidth),390);
+    await page.locator('a[href="report/index.html"]').click();
+    await page.waitForFunction(()=>document.body.innerText.includes('190'));
+    assert.match(await page.locator('body').innerText(),/Passed/);
+    assert.match(await page.locator('body').innerText(),/navigation/);
+    pass('Packet gallery and interactive 190-test report open directly inside the authenticated preview');
     for (const width of [1120,320,390]) {
       await exercise(page, server.base_url, width);
       pass(`${width}px Coach: CSS, alternatives, keyboard/focus, explicit submission, reflection, unscored default`);
