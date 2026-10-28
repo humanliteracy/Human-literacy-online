@@ -2,7 +2,7 @@
 
 This reuses the approved Issue #4 loopback approach and the founder's already-tested Chromebook Linux/Python route. No Codex widget, GitHub login, npm, cloud host or paid dependency is needed to open it.
 
-The founder handoff provides a short copy/paste Terminal block for one **full immutable candidate SHA**, its archive SHA-256 and this wrapper's SHA-256. It anonymously fetches `review/local_preview.py` from that exact public revision, verifies it, then calls `run(revision, archive_sha256)`. The wrapper verifies a fresh public archive download before opening any listener. Each launch needs internet for roughly 30 MB. It writes no extracted site files or learner responses to disk.
+The founder handoff provides a short copy/paste Terminal block for one **full immutable candidate SHA**, its archive SHA-256 and this wrapper's SHA-256. It anonymously fetches `review/local_preview.py` from that exact public revision, verifies it, then calls `run(revision, archive_sha256)`. The wrapper verifies a fresh public archive download before opening any listener. Each launch needs internet for roughly 40 MB. It writes no extracted site files or learner responses to disk.
 
 For maintainers with the wrapper already present:
 

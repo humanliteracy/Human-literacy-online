@@ -102,6 +102,28 @@ async function exercise(page, base, width) {
   assert.equal(await page.locator('#inputPanel').isVisible(),false);
   assert.equal(await page.locator('#history .mine').count(),1);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await page.goto(base+'/simulator/01/');
+  const resignation='I am resigning effective immediately. I will not negotiate continued employment. I will not perform any further project work.';
+  await page.locator('#openPractice').click();await page.locator('#expressWords').fill(resignation);await page.locator('#coachUnderstand').click();
+  assert.equal(await page.locator('#coachGoal').inputValue(),resignation);
+  await page.locator('#coachConfirm').click();
+  assert.equal(await page.locator('.coach-option:visible').count(),1);
+  for(const input of await page.locator('.coach-option textarea').all())assert.ok((await input.inputValue()).includes(resignation));
+  await page.screenshot({path:path.join(output,`resignation-wording-${width}.png`),fullPage:true});
+  await page.locator('.coach-option button').first().click();
+  assert.equal(await page.locator('#yourReply').inputValue(),resignation);
+  assert.equal(await page.locator('#history .mine').count(),0);
+  await page.locator('#send').click();
+  assert.match(await page.locator('#bossWords').innerText(),/resigning effective immediately/);
+  assert.match(await page.locator('#bossWords').innerText(),/not ask you to negotiate staying/);
+  assert.match(await page.locator('#bossWords').innerText(),/not perform further project work/);
+  assert.doesNotMatch(await page.locator('#bossWords').innerText(),/refusal or limit/);
+  await page.locator('#finishHere').click();
+  assert.match(await page.locator('#outcome').innerText(),/effective immediately.*ruled out negotiating.*declined further project work/);
+  assert.match(await page.locator('#unresolved').innerText(),/contractual, administrative or legal obligations/);
+  assert.equal(await page.locator('#score').count(),0);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await page.screenshot({path:path.join(output,`resignation-takeaway-${width}.png`),fullPage:true});
 }
 
 (async () => {
@@ -189,7 +211,7 @@ async function exercise(page, base, width) {
     pass('Packet gallery and '+testCount+'-case verified report open inside the authenticated preview');
     for (const width of [1120,320,390]) {
       await exercise(page, server.base_url, width);
-      pass(`${width}px: Coach, keyboard/focus, stop closure, offboarding, unsent drafts, navigation and unscored default`);
+      pass(`${width}px: Coach, keyboard/focus, stop closure, resignation conditions, offboarding, unsent drafts, navigation and unscored default`);
     }
     const second = await start(path.resolve(launcher));
     try {

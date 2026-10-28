@@ -27,12 +27,12 @@ runs = [json.loads(p.read_text()) for p in args.run]
 ci_cases = json.loads(args.ci_cases.read_text()) if args.ci_cases else None
 assert runs or (ci and ci_cases), 'Use actual local results or verified CI cases'
 count = sum(runs[0]['stats'][k] for k in ['expected','unexpected','skipped']) if runs else ci['runs'][0]['passed']
-assert count >= 190, 'Retain the existing suite'
+assert count >= 318, 'Retain the existing suite'
 if ci_cases:
     assert ci_cases['sourceRevision'] == ci['sourceRevision']
     assert len(ci_cases['cases']) == count and all(c['status']=='passed' for c in ci_cases['cases'])
     assert ci_cases['logSHA256'] in [r['logSHA256'] for r in ci['runs']]
-assert len(runs) >= 2 or ci, 'Repeat the final suite locally or in verified CI'
+assert runs or ci, 'Require an actual complete run or verified CI evidence'
 if ci:
     assert ci['sourceRevision'] == subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
     assert ci['runs'] and all(r['conclusion']=='success' and r['passed']==count and r['failed']==r['skipped']==0 for r in ci['runs'])
@@ -52,7 +52,7 @@ summary = {
     'sourceIdentity': 'Full delivery SHA is supplied by the verified launcher and local preview banner; captured runtime hashes must match it.',
     'runs': [r['stats'] for r in runs], 'retries': 0,
     'reportKind': 'native-playwright' if runs else 'ci-log-derived',
-    'testedSourceRevision': ci['sourceRevision'] if ci else runtime,
+    'testedSourceRevision': ci['sourceRevision'] if ci else subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
     'localResultLabel': ('Complete local pass' if runs[-1]['stats']['unexpected'] == 0 else 'Diagnostic result; not counted as a complete pass') if runs else 'Local full run interrupted by environment loss; no complete local result claimed',
     'limits': ['Bounded scripted language, not general language understanding.',
                'Synthetic media/provider tests; no live microphone, live dictation or screen-reader certification.',
@@ -94,7 +94,7 @@ for name, folder in [('before', args.before), ('after', args.after), ('report', 
             payload[name + '/' + relative.as_posix()] = file.read_bytes()
 
 readme = f'''UNRELEASED HUMAN LITERACY REVIEW — {count} full-suite cases
-Verified CI results and the separate local-run status are in results.json.
+Actual test results and their source identity are in results.json.
 
 In the local preview choose View the review packet. It opens through the same
 private authenticated loopback session; no extraction or extra software needed.
@@ -103,9 +103,9 @@ folder with: python3 -m http.server 8000 --bind 127.0.0.1
 Then open http://localhost:8000/ on that computer. No public hosting is involved.
 
 Founder checks (three only):
-1. Say "Please leave me alone"; confirm it ends, then use Back/Forward.
-2. Submit a final resignation and choose Finish here; check offboarding and takeaway.
-3. Try one private drafting goal or optional local recording/listen-back.
+1. Help me draft: enter an immediate, final resignation with no further project work. Check all conditions stay in the goal and wording.
+2. Use this wording, review/edit, then Say this. Check Jordan acknowledges resignation and its conditions; choose Finish here and read the takeaway.
+3. Back/Forward should restore progress without sending. Editing your reply to a pause should produce a pause, not resignation.
 
 reviewedRuntimeRevision: {runtime}
 runtimeHash: {after['assetHash']}
@@ -129,6 +129,10 @@ def figure(file, label=None):
     return f'<figure><a href="{escaped}"><img loading="lazy" src="{escaped}" alt="{html.escape(label or file, quote=True)}"></a><figcaption>{html.escape(label or file)}</figcaption></figure>'
 
 featured = ''.join(figure(file, label) for file, label in [
+    ('before/390-wording.png', 'BEFORE: generic resignation wording omitted the confirmed conditions'),
+    ('after/390-wording.png', 'AFTER: confirmed timing, finality and work limits stay in the editable draft'),
+    ('after/390-manager.png', 'AFTER: Jordan acknowledges resignation and its stated conditions'),
+    ('after/390-takeaway.png', 'AFTER: one relevant takeaway and optional action'),
     ('before/390-stop-request.png', 'BEFORE: a clear stop request received a clarification question'),
     ('after/390-stop-request.png', 'AFTER: the interaction ends without another required reply'),
     ('after/390-offboarding.png', 'AFTER: definitive resignation leads to formal offboarding'),
@@ -143,14 +147,14 @@ for folder in ['before', 'after']:
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unreleased Human Literacy review</title>
 <style>body{{font:18px/1.5 system-ui;max-width:1100px;margin:auto;padding:20px;color:#14363a}}aside{{background:#122c35;color:white;padding:16px}}a{{color:#075e58}}summary{{padding:16px;cursor:pointer;border:1px solid #597e77;margin-top:16px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}}figure{{margin:10px 0}}img{{width:100%;max-height:500px;object-fit:contain;object-position:top;border:1px solid #597e77}}figcaption{{overflow-wrap:anywhere}}video{{max-width:100%}}:focus-visible{{outline:3px solid #855600}}</style></head><body>
 <aside>UNRELEASED · SYNTHETIC REVIEW EVIDENCE</aside><h1>Communication Coach review</h1>
-<p><strong>Full CI: {count} passed, 0 failed, 0 skipped</strong> in {len(ci['runs']) if ci else 0} independently verified run(s). {'Local: '+str(runs[-1]['stats']['expected'])+' passed, '+str(runs[-1]['stats']['unexpected'])+' incomplete or failed cases, 0 skipped.' if runs else 'The local full run was interrupted by environment loss; no complete local pass is claimed.'} No time limits or assertions were relaxed. Full delivery SHA appears in the preview banner; runtime hashes connect these captures to that exact source.</p>
-<p>Tested Coach source: <code>{summary['testedSourceRevision']}</code>. Delivery-only report and screenshot updates preserve its runtime files.</p>
+<p><strong>{'Verified CI' if ci else 'Local full suite'}: {count} passed, 0 failed, 0 skipped</strong>. {'Official CI and the separate local status appear in results.json.' if ci else 'One complete native Playwright run; no retries or skipped cases.'} Full delivery SHA appears in the preview banner; runtime hashes connect these captures to that exact source.</p>
+<p>Tested Coach source: <code>{summary['testedSourceRevision']}</code>. The final delivery preserves these tested runtime files.</p>
 <p><a href="README.txt">Viewing and founder checks</a> · <a href="engineering-review.md">Engineering review</a> · <a href="report/index.html">{'Local Playwright report' if runs else 'Verified CI case report'}</a> · <a href="results.json">Results</a> · <a href="after/capture-results.json">Runtime integrity manifest</a></p>
-<h2>Three founder checks</h2><ol><li>Say “Please leave me alone”; confirm it ends, then use Back/Forward.</li><li>Submit a final resignation and choose Finish here; check offboarding and takeaway.</li><li>Try one private drafting goal or optional local recording/listen-back.</li></ol>
-<p>Before: every conversation required two replies, and some clear decisions received generic clarification. After: stop and pause requests end the exchange; resignation leads to offboarding; firm refusal requires no alternative offer; free typing comes first and Finish here preserves unsent drafts. Detailed feedback and tools remain optional. All ten lessons, privacy, explicit submission and the unscored default are preserved.</p>
+<h2>Three founder checks</h2><ol><li>Help me draft: enter an immediate, final resignation with no further project work. Check all conditions stay in the goal and editable wording.</li><li>Use this wording, review/edit, then Say this. Check Jordan acknowledges resignation and the stated conditions. Choose Finish here and read the takeaway.</li><li>Use Back/Forward to review without sending. Edit your reply to a pause and check it stays a pause.</li></ol>
+<p>Before: generic resignation suggestions dropped timing, finality and work limits. After: suggestions preserve confirmed wording and conditions, Jordan acknowledges the employment decision, and feedback distinguishes stated conditions from unresolved obligations. One goal selector, one visible suggestion and explicit submission remain; recording and detailed reflection stay optional. All ten lessons, media, privacy and the no-grade approach are preserved.</p>
 <p>Scripted language coverage is limited. Synthetic tests do not establish physical microphone quality, live dictation reliability or screen-reader compatibility. Founder acceptance of this exact revision is pending.</p>
 <details open><summary>Four useful review images</summary><div class="grid">{featured}</div></details>
-<details><summary>Typed-only synthetic walkthrough</summary>{'<video controls preload="none" src="after/synthetic-walkthrough.mp4" aria-label="Silent typed-only synthetic walkthrough"></video>' if 'after/synthetic-walkthrough.mp4' in payload else ''}<p><a href="after/synthetic-walkthrough-trace.zip">Typed-only trace ZIP</a>; no microphone recording.</p></details>
+{'<details><summary>Typed-only synthetic walkthrough</summary><p><a href="after/synthetic-walkthrough-trace.zip">Typed-only trace ZIP</a>; no microphone recording.</p></details>' if 'after/synthetic-walkthrough-trace.zip' in payload else ''}
 <h2>All screenshots</h2>{''.join(galleries)}</body></html>'''
 payload['index.html'] = page.encode()
 payload['packet-integrity.json'] = (json.dumps({name: hashlib.sha256(data).hexdigest() for name, data in payload.items()}, indent=2) + '\n').encode()
