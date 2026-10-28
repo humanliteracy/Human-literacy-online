@@ -31,6 +31,7 @@ for(const width of [1120,320,390])test(`immediate final resignation retains its 
  await expect(page.locator('#coachWording1')).toBeFocused();await page.keyboard.press('Tab');await page.keyboard.press('Enter');
  await expect(page.locator('#yourReply')).toBeFocused();await expect(page.locator('#yourReply')).toHaveValue(new RegExp('effective immediately'));
  await expect(page.locator('#history .mine')).toHaveCount(0);
+ await expect(page.locator('#replyGoal')).toContainText(immediate);
  await page.locator('#send').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#bossWords')).toHaveAttribute('data-dialogue-kind','resign');
  await expect(page.locator('#bossWords')).toContainText('resigning effective immediately');
@@ -137,7 +138,7 @@ test('a basic resignation does not acquire timing, reasons, finality or further-
  await page.locator('.coach-option button').first().click();await page.locator('#send').click();await page.locator('#finishHere').click();
  await expect(page.locator('#madeClear')).toHaveText('You stated a decision to leave the job.');
 });
-for(const goal of ['I might quit, but I have not decided.','I need a break. I am not resigning.'])test(`the selected resignation path cannot override a changed goal: ${goal}`,async({page})=>{
+for(const goal of ['I might quit, but I have not decided.','I need a break. I am not resigning.','I need a break.','Please leave me alone.'])test(`the selected resignation path cannot override a changed goal: ${goal}`,async({page})=>{
  await draft(page);await page.locator('#coachGoal').fill(goal);await confirm(page);
  for(const input of await page.locator('.coach-option textarea').all())expect(await input.inputValue()).toContain(goal);
  await page.locator('.coach-option button').first().click();await page.locator('#send').click();

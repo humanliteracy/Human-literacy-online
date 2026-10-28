@@ -20,7 +20,7 @@
     .replace(/\bi'm\b/g, 'i am').replace(/\bi'll\b/g, 'i will').replace(/\bi've\b/g, 'i have').replace(/\bi'd\b/g, 'i would')
     .replace(/\byou're\b/g, 'you are').replace(/\bcan't\b/g, 'cannot').replace(/\bwon't\b/g, 'will not')
     .replace(/\bdon't\b/g, 'do not').replace(/\bisn't\b/g, 'is not').replace(/\s+/g, ' ').trim();
-  const clauseEnd = '(?=$|[.!?;,]|\\s+(?:because|and|but|so|please|effective|immediately|today|tomorrow|on|with immediate effect|as of)\\b)';
+  const clauseEnd = '(?=$|[.!?;,]|\\s+(?:because|and|but|so|please|rather than|effective|immediately|today|tomorrow|on|with immediate effect|as of)\\b)';
   const positiveResign = new RegExp("\\bi (?:quit(?: (?:this|the|my) job)?|resign(?: from (?:this|the|my) job)?|(?:am|'m) resigning(?: from (?:this|the|my) job)?|(?:am|'m) leaving (?:this|the|my) job|have decided to (?:resign|leave (?:this|the|my) job)|confirm my resignation|am confirming my decision to resign)" + '\\s*' + clauseEnd, 'g');
   const negativeResign = /\bi (?:(?:am|'m) not resigning|(?:do not|don't|will not|won't) (?:want to )?(?:resign|quit)|(?:am|'m) not (?:saying|confirming) (?:that )?i (?:resign|quit)|(?:do not|don't|never) (?:say|mean) (?:that )?i (?:resign|quit))\b|\bnot (?:a|my) resignation\b/g;
   const formalResign = /\bi (?:hereby resign|resign effective (?:immediately|today)|am (?:submitting|tendering|handing in) my resignation|have decided to quit (?:this|the|my) job|am leaving (?:this|the) company)\b/;

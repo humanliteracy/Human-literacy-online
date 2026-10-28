@@ -211,12 +211,13 @@
       // prefix conversion. Unfamiliar conditions remain editable learner wording;
       // their presence does not imply the script understood them.
       const spoken = goal.trim().replace(/^(?:i (?:want|would like|need) to|my goal is to) (?:resign|quit|leave (?:this|the|my) (?:job|company))\b/i, 'I am resigning');
-      if (reading.flags.notResigning || reading.kind === 'uncertain' && spoken === goal.trim()) return {tailored:true,options:[
-        option('Keep my decision open', goal, 'Your goal does not confirm resignation. Keep it, or change the selected path.'),
-        option('Ask for information', goal + ' Please explain the applicable process before I decide anything else.', 'Preserves your wording without making resignation a settled decision.'),
+      const converted = spoken !== goal.trim();
+      if (reading.flags.notResigning || !converted && ['uncertain','pause','stop','refusal','scope','support','clarify'].includes(reading.kind)) return {tailored:true,options:[
+        option('Keep my actual goal', goal, 'Your written goal takes priority over the resignation selector. Keep it, or change the selected path.'),
+        option('Ask for information', goal + ' Please explain the applicable process before I decide anything else.', 'Preserves your goal without turning it into resignation.'),
         option('Ask for written information', goal + ' Please send the relevant information in writing.', 'Adds an optional information request, without a work promise.'),
       ]};
-      const stated = window.HumanLiteracyDialogue.analyze(spoken).kind === 'resign';
+      const stated = window.HumanLiteracyDialogue.analyze(spoken).kind === 'resign' || converted;
       const words = stated ? spoken.replace(/\bI quit\b/g, 'I am resigning') : 'I am resigning from this job.';
       const sentence = /[.!?]$/.test(words) ? words : words + '.';
       return {tailored:stated,options:[

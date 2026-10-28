@@ -317,7 +317,7 @@ div.append(label,words);node.append(div);
 function showReplyGoal(){
   const goal=pendingCoachContext||conversationGoal;
   $('replyGoalPanel').classList.toggle('hidden',!goal);
-  $('replyGoal').textContent=goal?'Selected goal: '+coachPaths[goal.path].label+'. Editing your words keeps this goal.':'';
+  $('replyGoal').textContent=goal?'Private drafting goal ('+coachPaths[goal.path].label+'): '+(goal.goal||'Goal wording cleared.'):'';
 }
 function keepPriorDraft(replacement){
   const current=$('yourReply').value;
