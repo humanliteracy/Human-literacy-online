@@ -20,9 +20,9 @@
       label: 'Leave or resign from the job', kind: 'resign',
       outcome: 'Possible outcome: you confirm a decision to leave the job and ask about the practical next steps. The work assignment is not accepted.',
       options: [
-        ['State the decision directly', 'The expectations are unreasonable for me. I am resigning from this job. I want to clarify the practical next steps.'],
-        ['Explain without accepting the assignment', 'I have decided to leave this job because these expectations do not work for me. I am willing to discuss a handover, not to accept this assignment.'],
-        ['Keep it brief', 'I am resigning. Please explain the process and who I should speak with about notice and any handover.'],
+        ['State the decision directly', 'I am resigning from this job. Please explain the practical next steps.'],
+        ['Ask about the process', 'I am resigning from this job. Who should I contact about formal offboarding?'],
+        ['Keep it brief', 'I am resigning from this job.'],
       ],
       followups: ['I am confirming my decision to resign. Let us clarify notice and any handover.', 'I want to leave this job. I need information about the process before agreeing to practical details.'],
       manager: ['You have said you want to resign. I will not treat that as agreement to finish this assignment. What practical details would you like to clarify?', 'We have clarified that you are choosing to leave. Notice, pay, and any handover still depend on your circumstances and applicable arrangements.'],
@@ -205,11 +205,26 @@
       option('Ask about priorities', 'Can you clarify the priority and what can change about the scope or deadline?', 'Makes the tradeoff a question rather than a promise.'),
       option('Clarify the deadline', 'Can you clarify the deadline and what needs to be delivered?', 'Asks one practical question without claiming the work changed.'),
     ]};
-    if (chosen === 'resign' && !/^the expectations are unreasonable\. i quit\.?$/i.test(literal.trim())) return {tailored:true,options:[
-      option('State the decision', 'I am resigning from this job. Please explain the practical next steps.', 'States resignation without inventing a reason.'),
-      option('Ask about the process', 'I have decided to leave this job. Can we clarify notice and any handover?', 'Asks about practical details without accepting the assignment.'),
-      option('Keep it brief', 'I am resigning. Who should I speak with about the process?', 'Keeps the decision explicit without sharing extra details.'),
-    ]};
+    if (chosen === 'resign') {
+      // Do not compress a consequential decision into generic resignation copy.
+      // Preserve the confirmed goal verbatim except this bounded private-to-spoken
+      // prefix conversion. Unfamiliar conditions remain editable learner wording;
+      // their presence does not imply the script understood them.
+      const spoken = goal.trim().replace(/^(?:i (?:want|would like|need) to|my goal is to) (?:resign|quit|leave (?:this|the|my) (?:job|company))\b/i, 'I am resigning');
+      if (reading.flags.notResigning || reading.kind === 'uncertain') return {tailored:true,options:[
+        option('Keep my decision open', goal, 'Your goal does not confirm resignation. Keep it, or change the selected path.'),
+        option('Ask for information', goal + ' Please explain the applicable process before I decide anything else.', 'Preserves your wording without making resignation a settled decision.'),
+        option('Ask for written information', goal + ' Please send the relevant information in writing.', 'Adds an optional information request, without a work promise.'),
+      ]};
+      const stated = window.HumanLiteracyDialogue.analyze(spoken).kind === 'resign';
+      const words = stated ? spoken.replace(/\bI quit\b/g, 'I am resigning') : 'I am resigning from this job.';
+      const sentence = /[.!?]$/.test(words) ? words : words + '.';
+      return {tailored:stated,options:[
+        option('Keep my decision and conditions', sentence, stated ? 'Keeps your confirmed wording and conditions; edit anything before using it.' : 'A basic resignation example. Add your timing and conditions before using it.'),
+        option('Also ask about the process', sentence + ' Who should I contact about formal offboarding?', 'Adds only an optional process question; it offers no work or negotiation.'),
+        option('Also ask for written information', sentence + ' Please send the applicable offboarding information in writing.', 'Requests information without agreeing to a handover or further project work.'),
+      ]};
+    }
     if (paths[chosen]?.options.length) return {tailored:path === 'custom',options:paths[chosen].options};
     return {tailored:false,options:[
       option('Ask to explain', "Can you clarify what you need me to respond to? I'd like to explain my point before deciding.", 'A neutral opener; it does not claim to express your specific goal.'),
@@ -326,12 +341,15 @@
         $('coachTentative').textContent = example?.tentative || 'This is a limited wording match, not a reading of your feelings or whole intention. You can change or reject the proposed goal.';
         $('coachPath').value = example?.path || proposed; lastPath = $('coachPath').value;
         $('coachGoal').value = example?.goal || (reading.kind === 'uncertain' ? 'I might quit, but I have not decided.' : defaultGoals[proposed] || '');
+        if (reading.kind === 'resign') $('coachGoal').value = literal.trim();
         if (reading.kind === 'clarify') $('coachGoal').value = 'I want to clarify what is expected.';
         if (reading.kind === 'stop') $('coachGoal').value = 'I want to end this conversation.';
-        if (reading.flags.personalBoundary === 'privacy') $('coachGoal').value = 'I want to keep my personal information private.';
-        if (reading.flags.personalBoundary === 'treatment') $('coachGoal').value = 'I want to set a limit on being shouted at.';
-        if (reading.flags.explainFacts && reading.flags.fairSolution) $('coachGoal').value = 'I want to explain what happened and find a fair solution.';
-        else if (reading.flags.explainFacts) $('coachGoal').value = 'I want to explain ' + (reading.flags.explainRisks && reading.flags.explainSupport ? 'the risks and what support is needed' : reading.flags.explainRisks ? 'the risks' : reading.flags.explainSupport ? 'what support is needed' : reading.flags.explainPart ? 'my part' : 'what happened') + '.';
+        if (reading.kind !== 'resign') {
+          if (reading.flags.personalBoundary === 'privacy') $('coachGoal').value = 'I want to keep my personal information private.';
+          if (reading.flags.personalBoundary === 'treatment') $('coachGoal').value = 'I want to set a limit on being shouted at.';
+          if (reading.flags.explainFacts && reading.flags.fairSolution) $('coachGoal').value = 'I want to explain what happened and find a fair solution.';
+          else if (reading.flags.explainFacts) $('coachGoal').value = 'I want to explain ' + (reading.flags.explainRisks && reading.flags.explainSupport ? 'the risks and what support is needed' : reading.flags.explainRisks ? 'the risks' : reading.flags.explainSupport ? 'what support is needed' : reading.flags.explainPart ? 'my part' : 'what happened') + '.';
+        }
         $('coachStatus').textContent = example || recognized ? 'Check this proposed goal; change it if needed.' : 'Please clarify your goal.';
       }
       $('expressWords').removeAttribute('aria-invalid');
@@ -369,7 +387,7 @@
           const fieldId = 'coachWording' + index;
           const heading = document.createElement('label'); heading.className = 'write-label'; heading.htmlFor = fieldId; heading.textContent = label;
           const explanation = document.createElement('p'); explanation.id = fieldId+'Difference'; explanation.className='micro'; explanation.textContent=difference || differences[path][index];
-          const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 600; input.autocomplete = 'off'; input.value = saved?.[index] ?? words; input.setAttribute('aria-describedby',explanation.id);
+          const input = document.createElement('textarea'); input.id = fieldId; input.maxLength = 2400; input.autocomplete = 'off'; input.value = saved?.[index] ?? words; input.setAttribute('aria-describedby',explanation.id);
           input.addEventListener('input', resizeOptions);
           const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.dataset.optionLabel = label;
           button.addEventListener('click', () => {

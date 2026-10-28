@@ -71,7 +71,7 @@ test('resignation is a legitimate path, keeps that decision, and receives releva
   await expect(page.locator('#choices')).toContainText('decision to resign');
   await page.locator('#choices button').first().click();
   await page.locator('#send').click();
-  await expect(page.locator('#reflectionBasis')).toContainText('resign');
+  await expect(page.locator('#reflectionBasis')).toContainText('The expectations are unreasonable. I quit');
   await expect(page.locator('#madeClear')).toContainText('decision to leave the job');
   await expect(page.locator('#unresolved')).toContainText('final pay');
   await expect(page.locator('#realWorldPractice')).toContainText('resignation statement');
