@@ -120,6 +120,8 @@ async function exercise(page, base, width) {
   assert.doesNotMatch(await page.locator('#bossWords').innerText(),/refusal or limit/);
   await page.locator('#finishHere').click();
   assert.match(await page.locator('#outcome').innerText(),/effective immediately.*ruled out negotiating.*declined further project work/);
+  await page.locator('#reflectionReview>summary').focus();await page.keyboard.press('Enter');
+  assert.equal(await page.locator('#unresolved').isVisible(),true);
   assert.match(await page.locator('#unresolved').innerText(),/contractual, administrative or legal obligations/);
   assert.equal(await page.locator('#score').count(),0);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
