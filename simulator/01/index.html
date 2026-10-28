@@ -8,8 +8,8 @@
 <title>Life Simulator 01 — The Missed Deadline | Human Literacy</title>
 <style>
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#14363a;background:#eaf8f5;font-size:17px}
-*{box-sizing:border-box}body{margin:0}button,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}
-a{color:#087b74}a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid #e4ae57;outline-offset:3px}
+*{box-sizing:border-box}body{margin:0}button,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}
+a{color:#087b74}a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible,select:focus-visible,[tabindex='-1']:focus-visible{outline:3px solid #855600;outline-offset:3px;box-shadow:0 0 0 3px #fff}
 .container{max-width:930px;margin:auto;padding:20px 18px 72px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
 .brand{font-weight:850;letter-spacing:.13em;color:#087a72;font-size:.86rem;text-decoration:none}
@@ -34,28 +34,54 @@ h3{font-size:1.08rem;margin:0 0 10px}p{line-height:1.6;margin:0 0 14px}
 .bodyshape:before{content:"";position:absolute;left:79px;top:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:72px solid #eff3ef}
 .scene-label{position:absolute;bottom:15px;right:16px;z-index:2;background:#132e36db;color:#dff5ee;border:1px solid #ffffff55;border-radius:9px;padding:8px 12px;font-size:.74rem;font-weight:750}
 .dialogue{padding:26px 28px 30px}
-.speaker{font-size:.78rem;font-weight:900;letter-spacing:.14em;color:#99e0d4;text-transform:uppercase;margin-bottom:12px}
+.speaker{font-size:.78rem;font-weight:900;letter-spacing:.14em;color:#aaeadf;text-transform:uppercase;margin-bottom:12px}
 .boss-words{font-size:clamp(1.25rem,3.5vw,1.7rem);line-height:1.5;font-weight:680;margin:0;max-width:740px}
 .content{background:#fff;border:1px solid #c5e2da;border-radius:24px;padding:25px;margin-top:20px;box-shadow:0 8px 32px #174c4b0a}
 .micro{font-size:.86rem;color:#4e666b}.response-title{margin:0 0 10px}
-.choices{display:grid;gap:10px;margin:16px 0}
-.choice{border:2px solid #c5e3dc;background:#f9fefd;border-radius:16px;text-align:left;padding:16px 19px;color:#153f40;font-weight:620;line-height:1.45}
+.choices{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:16px 0}.choices>*{min-width:0}
+.choice{border:2px solid #597e77;background:#f9fefd;border-radius:16px;text-align:left;padding:16px 19px;color:#153f40;font-weight:620;line-height:1.45}
 .choice:hover{border-color:#128b7e;background:#e7f7f2}
+#replyMore .choice{display:block;width:100%;margin-top:10px}
 .write-label{font-weight:780;display:block;margin:18px 0 9px}
-textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;padding:14px 15px;min-height:94px;resize:vertical;color:#17383d;background:white}
+textarea{display:block;width:100%;border:2px solid #597e77;border-radius:14px;padding:14px 15px;min-height:94px;resize:vertical;color:#17383d;background:white}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.actions>button,.actions>a{flex:0 1 auto;min-height:44px;max-width:100%}
 .primary,.secondary{padding:14px 19px;border-radius:13px;border:2px solid #087d75;font-weight:800}
 .primary{background:#087d75;color:white}.primary:hover{background:#056159}
-.secondary{background:#fff;color:#087d75}.secondary:hover{background:#e8f5f1}
+.secondary{background:#fff;color:#087d75}.secondary:hover{background:#e8f5f1;color:#056159}
 .message{padding:11px 14px;background:#edf7f3;border-radius:11px;font-size:.9rem;color:#2e5353;margin-top:13px}
 .hidden{display:none!important}
+.content,.dialogue,.intro,.optional-panel,.coach-panel,.choice,dd{min-width:0;overflow-wrap:anywhere}
+.feedback-dimensions{margin:12px 0}.feedback-dimensions dt{font-weight:800;margin-top:16px}.feedback-dimensions dd{margin:6px 0 16px;line-height:1.6}
+[aria-invalid="true"]{border-color:#9d3b24}
+#coachWordsNotice:empty,#replyStatus:empty,#coachStatus:empty{display:none}
 .mode-control{border:1px solid #c1e2da;background:#f6fcfa;padding:14px 18px;border-radius:15px;max-width:760px;margin:0 0 24px}
 .mode-control label{display:flex;gap:12px;align-items:flex-start;font-weight:750;cursor:pointer;line-height:1.45}
 .mode-control input{width:21px;height:21px;accent-color:#087d75;margin-top:2px;flex-shrink:0}
 .mode-control p{margin:8px 0 0 33px;font-size:.88rem;color:#42666a}
-.voice-lab summary{cursor:pointer;font-weight:800;font-size:1.05rem;color:#087d75;padding:4px}
-.voice-lab:not([open]){padding:18px 25px}
-.voice-lab[open] summary{margin-bottom:18px}
+.optional-panel>summary,.mode-control>summary,.expression-practice>summary,.speech-input>summary,.coach-review>summary,.coach-more>summary,.reflection-review>summary{cursor:pointer;font-weight:800;font-size:1rem;color:#087d75;padding:10px 0;min-height:44px}
+.expression-practice[open]>summary{margin-bottom:16px}
+.practice-step{border-top:1px solid #c5e2da;padding-top:20px;margin-top:24px}
+.recording-consent{display:flex;gap:12px;align-items:flex-start;line-height:1.5;margin:18px 0}
+.recording-consent input{width:21px;height:21px;accent-color:#087d75;flex-shrink:0}
+#recordPrivacy{margin-top:12px}
+.coach-panel{border:2px solid #b9dad2;border-radius:18px;padding:20px;margin-top:24px;background:#f6fcfa}
+.coach-panel h3{margin-top:10px}.coach-panel select{width:100%;padding:12px;border:2px solid #597e77;border-radius:12px;background:white;color:#17383d}
+#coachFlow:has(#coachUnderstanding.hidden):has(#coachChoices.hidden){display:none}
+#coachFlow:has(#coachReview[open]) #coachChoices{display:none}
+#expressionQuestion .primary,#coachConfirm{margin-top:12px}
+#coachEditExpression{margin-top:12px}
+.optional-panel{margin-top:12px}.character-view>summary{cursor:pointer;padding:12px 24px;color:#daeee8;min-height:44px}.scenario-context>summary{padding:10px 0}.mode-control{margin-top:20px}
+.coach-panel .kicker{font-size:.72rem;letter-spacing:.1em}
+.coach-status{margin:12px 0}.coach-review{margin-top:12px}.coach-review[open]>summary{margin-bottom:8px}
+.coach-more{margin-top:8px}.coach-more[open]>summary{margin-bottom:4px}
+.coach-literal{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0;padding:14px;border-left:4px solid #087d75;background:white}
+.coach-option{padding:16px;background:white;border:1px solid #b9dad2;border-radius:14px;margin-top:16px}
+.coach-option .write-label{margin:0 0 8px}.coach-option>button{margin-top:10px;min-height:44px;max-width:100%}
+.speech-input{margin-top:20px}.speech-input>summary{font-size:.95rem}
+.mode-note{display:inline-block;padding:5px 10px;margin:0 0 16px;border-radius:8px;background:#eff9f5;color:#075e58;font-size:.86rem;font-weight:750}
+.reflection-review{border-top:1px solid #c5e2da;margin-top:18px;padding-top:6px}
+.reflection-copy h3{margin:18px 0 8px}.reflection-copy p:last-child{margin-bottom:0}
 .transcript{display:grid;gap:10px;margin:16px 0}
 .bubble{border-radius:14px;padding:13px 15px;line-height:1.5;overflow-wrap:anywhere}
 .bubble .who{font-weight:850;display:block;font-size:.8rem;margin-bottom:5px}
@@ -67,15 +93,10 @@ textarea{display:block;width:100%;border:2px solid #c5e3dc;border-radius:14px;pa
 .tip{border-left:4px solid #0a8a80;padding:13px 16px;background:#eff9f5;border-radius:12px;margin:16px 0}
 .outcome{font-weight:750;color:#174e4e;font-size:1.07rem}
 .small{font-size:.83rem;color:#516f70;line-height:1.5}
-.voice-meter{height:15px;border-radius:99px;background:#d7e9e5;overflow:hidden;margin:8px 0 12px}
-.voice-meter-fill{height:100%;width:0;background:linear-gradient(90deg,#3eaea2,#0c8077);transition:width .1s}
-.voice-demo{background:#edf7f4;border-left:4px solid #087d75;border-radius:12px;padding:15px;margin:14px 0;line-height:1.55}
 .voice-status{font-weight:700;color:#156963;margin:13px 0}
-.voice-lab textarea{min-height:68px}
-.voice-lab .small{margin-top:12px}
 footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
 @media(min-width:800px){.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}}
-@media(max-width:580px){.container{padding:17px 12px 40px}.scene-top,.dialogue{padding:16px}.office{min-height:230px}.head{width:89px;height:100px}.bodyshape{width:168px;height:145px}.content{padding:19px 16px}.actions button{flex:1}}
+@media(max-width:580px){.container{padding:17px 12px 40px}.scene-top,.dialogue{padding:16px}.office{min-height:230px}.head{width:89px;height:100px}.bodyshape{width:168px;height:145px}.content{padding:19px 16px}.coach-panel{padding:16px 12px}.coach-option{padding:12px}.primary,.secondary{padding:12px 16px}.coach-literal{padding:10px 12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -85,83 +106,152 @@ footer{font-size:.85rem;color:#526e70;line-height:1.6;margin-top:26px}
   <div class="intro">
     <div class="kicker">Life Simulator · Prototype 01</div>
     <h1>The Missed Deadline</h1>
-    <p class="sub">Make choices. Try your own words. See how a respectful manager might respond. Replay, experiment, and take one useful skill into real life.</p>
-    <div class="chips"><span class="chip">Interactive role-play</span><span class="chip">Optional microphone</span><span class="chip">No account</span><span class="chip">Replay anytime</span></div>
-    <div class="mode-control">
-      <label for="practiceScoreToggle"><input id="practiceScoreToggle" type="checkbox"> Show optional communication score</label>
-      <p>Explore freely by default. Say what you feel to this fictional character, see a possible response, and replay without being graded. Turn on scoring if you want numerical practice feedback.</p>
-    </div>
+    <p class="sub">Practise a scripted workplace conversation. Type your reply or use optional wording. You control your decisions; there is no score.</p>
+
   </div>
 
   <main>
+    <details id="scenarioContext" class="optional-panel scenario-context" open><summary>Jordan’s question</summary>
     <section class="scene" aria-label="Workplace conversation">
       <div class="scene-top"><span>WORKPLACE · PRIVATE OFFICE</span><span id="sceneProgress">SCENE 1 OF 2</span></div>
-      <div class="office" aria-hidden="true"><div class="person"><div class="head"></div><div class="bodyshape"></div></div><div class="scene-label">Illustrated character · video planned</div></div>
+      <details id="characterView" class="character-view"><summary>View illustration</summary><div class="office" aria-hidden="true"><div class="person"><div class="head"></div><div class="bodyshape"></div></div><div class="scene-label">Illustrated character · video planned</div></div></details>
       <div class="dialogue" aria-live="polite" aria-atomic="true"><div class="speaker">Jordan · Your manager</div><p class="boss-words" id="bossWords">The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?</p></div>
-    </section>
+    </section></details>
 
     <section class="content" id="inputPanel" aria-labelledby="replyHeading">
-      <h2 id="replyHeading" class="response-title">How do you respond?</h2>
-      <p class="micro">There is no penalty for experimenting. Choose a response or write your own. The manager will react to your approach.</p>
-      <div class="choices" id="choices"></div>
-      <label class="write-label" for="yourReply">Or use your own words</label>
-      <textarea id="yourReply" maxlength="600" placeholder="Type what you would say…"></textarea>
-      <div class="actions"><button id="speak" type="button" class="secondary">🎤 Speak instead</button><button id="send" type="button" class="primary">Say this →</button></div>
-      <div id="voiceNote" class="message" aria-live="polite">Speech input is optional and only available in supported browsers. Browser speech services may process voice data; typing is the privacy-friendly option.</div>
+      <h2 id="replyHeading" class="response-title" tabindex="-1">How do you respond?</h2>
+      <p id="replyInstruction" class="micro">Write what you want to say. Only Say this sends it to Jordan.</p>
+      <p id="replyStatus" class="micro" role="status"></p>
+      <label class="write-label" for="yourReply">Your reply</label>
+      <textarea id="yourReply" aria-describedby="replyStatus" maxlength="2400" autocomplete="off" placeholder="Type what you would say…"></textarea>
+      <div class="actions"><button id="send" type="button" class="primary">Say this →</button><button id="openPractice" type="button" class="secondary" aria-controls="expressStudio" aria-label="Help me draft a response">Help me draft</button><button id="restoreReplyDraft" class="secondary hidden" type="button">Restore prior draft</button><button id="finishHere" class="secondary hidden" type="button">Finish here</button></div>
+      <div class="choices" id="choices" aria-label="Optional suggested wording"></div>
+      <div id="replyGoalPanel" class="hidden"><p id="replyGoal" class="micro"></p><button id="clearReplyGoal" class="secondary" type="button">Clear goal</button></div>
     </section>
 
     <section id="endPanel" class="content hidden" aria-live="polite">
       <div class="kicker">Practice complete</div>
-      <h2>What happened—and what could happen next?</h2>
+      <h2 id="completionTitle" tabindex="-1">Your takeaway</h2>
       <p id="outcome" class="outcome"></p>
-      <div id="scoreArea" class="hidden">
-        <div class="scorehead"><strong>Communication practice feedback</strong><span id="score" class="score">0/100</span></div>
-        <div class="track" aria-label="Skill practice score"><div id="scoreFill" class="fill"></div></div>
-        <p id="scoreDetails" class="small" aria-live="polite"></p>
-        <p class="small">This is a coaching illustration, not a measure of your worth or a prediction of real workplace outcomes. The goal is to learn through exploration, not obedience.</p>
-      </div>
-      <div id="exploreNote" class="tip"><strong>Exploration mode: no grade</strong><p style="margin:8px 0 0">You can express a first reaction without directing it at a real person. Explore the possible consequences, then decide whether you want to practice another approach. There is no right way to feel.</p></div>
-      <div class="tip"><strong id="takeawayHeading">What you practiced</strong><p id="takeaway" style="margin:7px 0 0"></p></div>
-      <h3>Bring it into real life</h3>
-      <p>Next time a task may be late, try this three-part update: <strong>what happened, what is still needed, and when you can realistically deliver.</strong> If circumstances are unfair, explain the facts and ask for a reasonable adjustment.</p>
-      <div class="actions"><button id="replay" class="primary" type="button">↻ Try a different approach</button><a class="secondary" style="text-decoration:none" href="../../">Back to all lessons</a></div>
+      <p id="exploreNote" class="mode-note">Exploration mode · no grade</p>
+      <section class="reflection-copy" aria-label="Reflection and optional practice">
+        <h3>One optional next step</h3><p id="realWorldPractice"></p>
+      </section>
+      <details id="reflectionReview" class="reflection-review">
+        <summary>Why this happened and what to try</summary>
+        <div id="scoreArea">
+          <dl class="feedback-dimensions">
+            <dt>What your response communicated</dt><dd id="madeClear"></dd>
+            <dt>What was constructive</dt><dd id="feedbackConstructive"></dd>
+            <dt>What might create difficulty</dt><dd id="feedbackDifficulty"></dd>
+            <dt>Why Jordan might respond this way</dt><dd id="feedbackWhy"></dd>
+            <dt>One way to improve the next response</dt><dd id="feedbackImprovement"></dd>
+          </dl>
+        </div>
+        <h3>What remains open</h3>
+        <p id="unresolved"></p>
+        <details id="feedbackEvidencePanel" class="optional-panel"><summary>Wording and practice detail</summary>
+          <p id="scoreDetails" class="small">No numerical rubric or grade is applied: this script matches limited wording, not communication ability. For unrecognized wording, no assessment is claimed.</p>
+          <dl class="feedback-dimensions">
+            <dt>Normalized wording this script matched</dt><dd id="feedbackEvidence"></dd>
+            <dt>Another possible interpretation</dt><dd id="feedbackAlternative"></dd>
+            <dt>Skill to practise</dt><dd id="feedbackSkill"></dd>
+            <dt>Example to compare</dt><dd id="feedbackExample"></dd>
+          </dl>
+          <p id="reflectionBasis" class="micro"></p>
+        </details>
+      </details>
+      <p class="micro">Try again starts a new conversation. Private drafts stay until you clear them or leave the page.</p>
+      <div class="actions"><button id="replay" class="primary" type="button">Try again</button><a class="secondary" style="text-decoration:none" href="../../#choose">Back to all lessons</a></div>
     </section>
 
-    <section class="content" aria-labelledby="historyHeading">
-      <h2 id="historyHeading">Conversation so far</h2>
-      <div class="transcript" id="history"><p class="micro">Your conversation will appear here. Nothing is saved to an account.</p></div>
-    </section>
+    <nav id="conversationNavigation" class="content hidden" aria-label="Conversation progress"><div class="actions"><button id="conversationBack" class="secondary" type="button">← Back</button><button id="conversationForward" class="secondary" type="button">Forward →</button></div><p id="navigationStatus" class="micro" role="status">Review earlier replies without starting over. Forward restores saved progress; Say this replaces later replies.</p></nav>
 
-    <section class="content" aria-labelledby="expressTitle" id="expressStudio">
-      <div class="kicker">OPTIONAL · UNFILTERED PRACTICE</div>
-      <h2 id="expressTitle">Express it. Hear it. Choose what comes next.</h2>
-      <p>Sometimes you need a place to say what you really think without directing it at another person. Practice privately, listen back if you wish, and decide whether to try a different response. <strong>Your expression is not graded.</strong></p>
-      <div class="voice-demo"><strong>Start here:</strong> Imagine Jordan is listening. Say what you really feel. You can express frustration, set a boundary, resign, or simply explain the situation. This is a fictional practice space, not therapy.</div>
-      <h3>1 · Record and listen back</h3>
-      <p class="micro">Microphone permission is requested only when you press Record. You can listen back, replay, and delete the recording. The site does not upload this audio.</p>
+    <details class="content expression-practice" id="expressStudio">
+      <summary>Private drafting</summary>
+      <div class="kicker">Optional · Scripted coach</div>
+      <section id="expressionQuestion" class="coach-panel" aria-labelledby="expressTitle">
+        <h2 id="expressTitle">What do you feel like saying?</h2>
+        <label class="write-label" for="expressWords">Your first reaction</label>
+        <textarea id="expressWords" aria-describedby="coachStatus" maxlength="2000" autocomplete="off" placeholder="Write freely. Nothing is sent to Jordan."></textarea>
+        <button id="coachUnderstand" class="primary" type="button" aria-label="Next: choose what I want to communicate">Next</button>
+      </section>
+      <section class="coach-panel" id="coachFlow" aria-label="Choose your goal and wording">
+        <div id="coachUnderstanding" class="hidden">
+          <details id="coachReview" class="coach-review" open>
+            <summary>Change goal</summary>
+            <h3 id="coachUnderstandingTitle" tabindex="-1">What do you want to communicate?</h3>
+            <select id="coachPath" aria-labelledby="coachUnderstandingTitle" aria-describedby="coachStatus"><option value="">Choose your own path…</option></select>
+            <label class="write-label" for="coachGoal">My goal (private)</label>
+            <textarea id="coachGoal" aria-describedby="coachStatus" maxlength="2000" autocomplete="off" placeholder="What do you want to achieve? Include timing and conditions. Nothing is sent."></textarea>
+            <button id="coachConfirm" class="primary" type="button" aria-label="Use my goal and show options">Use my goal</button>
+            <details id="readingDetails" class="optional-panel">
+              <summary>Why this suggestion?</summary>
+              <p id="coachChosenGoal" class="micro"></p>
+              <strong>Your words, exactly as entered</strong><blockquote id="coachLiteral" class="coach-literal"></blockquote>
+              <p id="coachHearing"></p><p id="coachTentative"></p>
+              <button id="coachReject" class="secondary" type="button" aria-label="Reject this interpretation">Reject this</button>
+            </details>
+          </details>
+        </div>
+        <section id="coachChoices" class="hidden" aria-labelledby="coachChoicesTitle">
+          <h3 id="coachChoicesTitle" tabindex="-1">What would you like to say?</h3>
+          <p id="coachWordsNotice" class="micro"></p>
+          <div id="coachOptions"></div>
+        </section>
+        <button id="coachEditExpression" class="secondary" type="button">Edit first reaction</button>
+      </section>
+      <p id="coachStatus" class="micro coach-status" role="status"></p>
+      <details id="practiceTools" class="optional-panel"><summary>Tools and privacy</summary>
+      <details id="recordingPanel" class="optional-panel">
+        <summary>Record and listen back</summary>
+      <p id="recordPrivacy" class="micro">Or record yourself. Audio stays in this page's memory; it is not uploaded or transcribed. Recording starts only after you choose consent below and press Record. Stop anytime. Each take is limited to 90 seconds.</p>
+      <label class="recording-consent" for="recordConsent"><input id="recordConsent" type="checkbox" autocomplete="off" aria-describedby="recordPrivacy">I choose to use my microphone for this private practice. I can withdraw consent and delete the audio at any time.</label>
       <div class="actions">
-        <button id="recordStart" class="primary" type="button">🎤 Record my response</button>
-        <button id="recordStop" class="secondary" type="button" disabled>■ Stop recording</button>
+        <button id="recordStart" class="primary" type="button" aria-label="Record my response" disabled>Record</button>
+        <button id="recordStop" class="secondary" type="button" disabled>Stop recording</button>
         <button id="recordDelete" class="secondary" type="button" disabled>Delete recording</button>
       </div>
-      <p id="recordStatus" class="voice-status" role="status" aria-live="polite">Not recording. Nothing saved.</p>
-      <audio id="recordPlayer" controls class="hidden" aria-label="Listen back to your practice recording" style="width:100%;margin:8px 0 18px"></audio>
-      <h3>2 · Decide what matters</h3>
-      <p class="micro">These questions are optional. No one else needs to see your answers.</p>
+      <p id="recordStatus" class="voice-status" role="status" aria-live="polite">Microphone off. Writing works without microphone consent.</p>
+
+        <p class="micro">Choose Play to listen. Playback never starts automatically.</p>
+        <audio id="recordPlayer" controls class="hidden" aria-label="Listen back to your practice recording" style="width:100%;margin:8px 0 18px"></audio>
+      </details>
+      <details class="speech-input" id="speechPanel">
+        <summary>Optional browser speech-to-text</summary>
+        <p id="speechPrivacy" class="small"><strong>This is different from local recording.</strong> Your browser may send live speech to its speech-recognition provider. We cannot control that provider's processing or retention. This does not upload a saved recording. You can decline and type instead; local recording and coaching work without it. Browser dictation may stop after a pause or return no words. Typing stops dictation to protect your edits. Each explicit dictation session is limited to 60 seconds; you can start another phrase or type.</p>
+        <label class="recording-consent" for="speechConsent"><input id="speechConsent" type="checkbox" autocomplete="off" aria-describedby="speechPrivacy">I choose browser speech-to-text and understand that my speech may be processed by an external browser service.</label>
+        <div class="actions"><button id="speechStart" class="secondary" type="button" disabled>Dictate expression</button><button id="speechStop" class="secondary" type="button" disabled>Stop dictation</button></div>
+        <p id="speechStatus" class="micro" role="status">Speech-to-text off. Nothing is sent just by opening this option.</p>
+      </details>
+      <details id="rehearsalPanel" class="optional-panel">
+        <summary>Rehearse in your own words</summary>
       <label class="write-label" for="rehearsedWords">What I want the manager to understand</label>
-      <textarea id="rehearsedWords" maxlength="600" placeholder="For example: I'm overwhelmed; the deadline changed; I need help or a clearer expectation…"></textarea>
+      <textarea id="rehearsedWords" maxlength="600" autocomplete="off" placeholder="What matters to you? What would you like to keep or change?"></textarea>
       <label class="write-label" for="practiceWords">What I might actually say next</label>
-      <textarea id="practiceWords" maxlength="600" placeholder="Use honest words and clear boundaries. You don't have to agree with the manager."></textarea>
+      <textarea id="practiceWords" maxlength="2400" autocomplete="off" placeholder="Draft a response you want to try. It will not be sent until you choose Say this in the simulator."></textarea>
       <div class="actions">
-        <button id="practiceTransfer" class="primary" type="button">Use this response in the simulator ↑</button>
-        <button id="practiceClear" class="secondary" type="button">Clear written reflections</button>
+        <button id="practiceTransfer" class="primary" type="button" aria-label="Move draft to simulator">Move draft</button>
       </div>
-      <p id="practiceStatus" class="message" role="status" aria-live="polite">When you're ready, you can bring your practiced words into the simulation. We never send or score them automatically.</p>
-      <p class="small"><strong>Privacy:</strong> Recording uses the browser's MediaRecorder, stays in temporary page memory, and is cleared by Delete or when you leave this page. No site server receives it. The separate “Speak instead” transcription option may use your browser's external speech-recognition service, so it is not guaranteed to remain entirely on your device.</p>
-    </section>
+      <p id="practiceStatus" class="message" role="status" aria-live="polite">Moving a draft only fills your reply. Review it there and choose Say this yourself. If a roleplay is complete, moving a draft starts a new conversation.</p>
+      </details>
+
+      <details class="optional-panel"><summary>Privacy and how this works</summary><p class="small"><strong>Privacy:</strong> Local recording and scripted coaching use no outside service or account. Optional browser speech-to-text has a separate consent choice and may send live speech to your browser's provider. Delete, withdrawing microphone consent, closing this practice, or leaving the page discards local audio and releases its microphone. Writing is cleared by Clear private or leaving the page. Starting a new take replaces the previous local audio. Closing Tools also deletes local audio. Leaving or refreshing clears this page’s writing and conversation; nothing is saved. Your browser still controls microphone permission.</p></details>
+      </details>
+      <div class="actions"><button id="returnToReply" class="secondary" type="button">Back to reply</button><button id="practiceClear" class="secondary" type="button" aria-label="Clear private drafts and local audio">Clear private</button></div>
+    </details>
+    <details class="content optional-panel" id="conversationHistory">
+      <summary id="historyHeading">Conversation so far</summary>
+      <div class="transcript" id="history"><p class="micro">Your conversation will appear here. Nothing is saved to an account.</p></div>
+    </details>
+
+
   </main>
-  <footer><strong>Human Literacy — Practice without judgment.</strong> This prototype uses authored dialogue and simple rule-based interpretation, not an AI-powered live video character. Outcomes vary in real workplaces. No account or site analytics are used by this page. Microphone access, if enabled, is handled by the browser's speech service.</footer>
+  <footer><details class="optional-panel"><summary>About this scripted prototype</summary><strong>Human Literacy — Practice without judgment.</strong> This prototype uses authored dialogue and simple rules, not an AI-powered live video character. The coach uses curated examples and learner-chosen goals; it cannot know your feelings or intentions. Outcomes vary in real workplaces. No account or site analytics are used by this page. Local recording stays in page memory. Optional browser dictation has a separate external-service consent choice.</details></footer>
 </div>
+<script src="coach.js"></script>
+<script src="dialogue.js"></script>
+<script src="speech.js"></script>
 <script>
 (function(){
 'use strict';
@@ -177,55 +267,43 @@ const SECOND=[
 {kind:'boundary',text:'I can meet the priority, but we need to adjust the scope or deadline.'},
 {kind:'dismiss',text:"Whatever. I don't care what happens."}
 ];
-const REACTIONS={
-own:"I appreciate you owning the delay. I needed to know earlier, but we can still solve this. What will you do next?",
-hostile:"I hear you're frustrated. We can take a moment, but I need us to speak respectfully and address the missed deadline. Can we try again?",
-boundary:"That's relevant. If the scope changed, let's document what changed and agree on revised priorities. What would you propose?",
-blame:"I can look into the handoffs, but I need specific facts rather than assigning blame. What can you do to help us move forward?",
-resign:"It sounds like you may be saying you want to leave the job. I won't assume that from a heated moment. Are you resigning, or do you want to pause and talk through the situation?",
-exit:"I hear that you want to leave this conversation. Do you mean you're resigning from the job, or that you need a break right now? I won't assume either one.",
-unclear:"I want to understand your explanation before drawing conclusions. Can you give me a clear status, what caused the delay, and what you propose next?"
-};
-const FINAL={
-repair:"Thank you for resetting. We can address the work and any concerns separately. Send me the facts and the new plan.",
-plan:"That gives us a useful next step. Please include the risks and anything you need from me so we can update the client accurately.",
-boundary:"Let's review the priorities and discuss a feasible adjustment. I can't promise the client will approve it, but we should examine the facts.",
-dismiss:"This conversation isn't productive right now. We will pause and follow up about the missed deadline and expectations.",
-resign:"I hear that you're choosing to leave. Let's clarify whether you're formally resigning, and, if so, discuss the appropriate next steps. You can also take time to confirm your decision.",
-exit:"We can pause this meeting. Please let me know whether you intend to return to discuss the deadline or are considering leaving the job. We should clarify that before deciding next steps.",
-unclear:"Please follow up with a specific plan and the information still needed. We can continue once we have that."
-};
-const takeaways={
-hostile:"An angry response can interrupt problem-solving and create an additional issue. Repair is possible, but consequences depend on context.",
-blame:"Specific evidence, shared responsibilities, and an actionable plan work better than blanket blame.",
-own:"Early accountability creates room for repair. You can admit a mistake without surrendering your boundaries.",
-boundary:"A respectful boundary can be a strong response. Clear facts and realistic options matter more than simply agreeing.",
-resign:"Leaving a job can be a legitimate decision. The learning opportunity is to state it clearly, understand the implications, and avoid acting solely from a heated moment.",
-exit:"Walking away to cool down can help avoid escalation. Clearly communicating whether you need a break or are actually resigning reduces confusion.",
-unclear:"The more specific you can be about facts, responsibilities, and next steps, the more productive the conversation becomes."
-};
 const $=id=>document.getElementById(id);
-let turn=0,first='unclear',firstWords='',lastKind='unclear',lastWords='',log=[];
-function classify(t,which){
-const v=t.toLowerCase().trim();
-if(!v)return 'unclear';
-// Resignation has a different consequence from simply rejecting the conversation.
-// Evaluate it first so intense wording like "shove it" does not hide the intent.
-if(/\b(i quit|i'm quitting|i am quitting|i resign|i'm resigning|i am resigning|take this job and shove it|shove (this|the|your|my) job|i'm leaving (this|the|my) job|i am leaving (this|the|my) job|i don't work here anymore|i'm done with (this|the|my) job)\b/.test(v))return 'resign';
-// An angry walkout is not necessarily a resignation; ask for clarification.
-if(/\b(i'm out of here|i am out of here|i'm done here|i am done here|i'm walking out|i am walking out)\b/.test(v))return 'exit';
-if(/\b(fuck|shut up|screw you|idiot|asshole|kiss my ass|get lost|go away|leave me alone|don't care|whatever)\b/.test(v))return which===0?'hostile':'dismiss';
-if(which===1){
- if(/\b(sorry|apolog|reset|start over)\b/.test(v))return 'repair';
- if(/\b(scope|unrealistic|adjust|priority|need more time|deadline)\b/.test(v))return 'boundary';
- if(/\b(plan|update|finish|send|deliver|timeline|status|by tomorrow|by today)\b/.test(v))return 'plan';
- return 'unclear';
+const dialogue=window.HumanLiteracyDialogue;
+let turn=0,completed=false,log=[],firstAnalysis=null,lastAnalysis=null,lastFeedback=null;
+let progress=[],furthestTurn=0;
+let coaching=null,dictation=null,pendingCoachContext=null,conversationGoal=null,selectedAuthored=null,replyBackup=null;
+const coachPaths=window.HumanLiteracyCoach.paths;
+const pathKinds={boundary:'refusal',resign:'resign',scope:'scope',help:'support',pause:'pause',recovery:'recovery',custom:'clarify'};
+// Conversation history stays in this page's memory only. Navigation never sends.
+function saveProgress(){
+  progress[turn]=structuredClone({turn,completed,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup,
+    draft:$('yourReply').value,status:$('replyStatus').textContent,boss:$('bossWords').textContent,kind:$('bossWords').dataset.dialogueKind||''});
 }
-if(/\b(not my fault|their fault|everybody else's|someone else messed|blame)\b/.test(v))return 'blame';
-if(/\b(scope|unrealistic|change|capacity|not safe|boundary|need more time)\b/.test(v))return 'boundary';
-if(/\b(my mistake|should have|underestimated|apolog|sorry|i forgot|my fault|take responsibility)\b/.test(v))return 'own';
-return 'unclear';
+function showNavigation(){
+  $('conversationNavigation').classList.toggle('hidden',furthestTurn===0||$('expressStudio').open);
+  $('conversationBack').disabled=turn===0;
+  $('conversationForward').disabled=turn>=furthestTurn;
 }
+function navigateTo(destination){
+  if(destination<0||destination>furthestTurn||!progress[destination])return;
+  dictation?.cancel('Dictation stopped while reviewing conversation progress.');
+  discardRecording('Conversation navigation. Audio deleted. Microphone off.');
+  saveProgress();
+  const saved=structuredClone(progress[destination]);
+  ({turn,completed,log,firstAnalysis,lastAnalysis,lastFeedback,conversationGoal,pendingCoachContext,selectedAuthored,replyBackup}=saved);
+  const pending=pendingCoachContext,authored=selectedAuthored,backup=replyBackup;
+  showHistory();$('bossWords').textContent=saved.boss;$('bossWords').dataset.dialogueKind=saved.kind;
+  if(completed)finish();
+  else{
+    showTurn();pendingCoachContext=pending;selectedAuthored=authored;replyBackup=backup;
+    $('yourReply').value=saved.draft;$('replyStatus').textContent=saved.status;
+    $('restoreReplyDraft').classList.toggle('hidden',!backup);showReplyGoal();$('replyHeading').focus({preventScroll:true});
+  }
+  showNavigation();
+  $('navigationStatus').textContent='Saved progress restored. Nothing was sent. Forward keeps the existing conversation; Say this replaces later replies.';
+}
+$('conversationBack').addEventListener('click',()=>navigateTo(turn-1));
+$('conversationForward').addEventListener('click',()=>navigateTo(turn+1));
 function message(who,words){log.push({who:who,words:words});showHistory()}
 function showHistory(){
 const node=$('history');node.replaceChildren();
@@ -236,173 +314,303 @@ const words=document.createElement('span');words.textContent=entry.words;
 div.append(label,words);node.append(div);
 });
 }
-function choose(kind,words){$('yourReply').value=words;const b=$('send');b.dataset.kind=kind;b.focus()}
-function optionsForTurn(){
-const container=$('choices');container.replaceChildren();
-const choices=turn===0?FIRST:SECOND;
-choices.forEach(o=>{
- const b=document.createElement('button');b.className='choice';b.type='button';b.textContent='“'+o.text+'”';
- b.addEventListener('click',()=>{choose(o.kind,o.text);submit()});container.append(b);
+function showReplyGoal(){
+  const goal=pendingCoachContext||conversationGoal;
+  $('replyGoalPanel').classList.toggle('hidden',!goal);
+  $('replyGoal').textContent=goal?'Private drafting goal ('+coachPaths[goal.path].label+'): '+(goal.goal||'Goal wording cleared.'):'';
+}
+function keepPriorDraft(replacement){
+  const current=$('yourReply').value;
+  if(current.trim()&&current!==replacement){
+    replyBackup={text:current,context:pendingCoachContext?{...pendingCoachContext}:null,authored:selectedAuthored};
+    $('restoreReplyDraft').classList.remove('hidden');
+  }
+}
+$('clearReplyGoal').addEventListener('click',()=>{
+  pendingCoachContext=null;conversationGoal=null;showReplyGoal();$('replyStatus').textContent='Goal cleared for this reply. Earlier conversation stays in history.';$('yourReply').focus();
 });
+$('restoreReplyDraft').addEventListener('click',()=>{
+  if(!replyBackup)return;
+  $('yourReply').value=replyBackup.text;pendingCoachContext=replyBackup.context;selectedAuthored=replyBackup.authored;
+  replyBackup=null;$('restoreReplyDraft').classList.add('hidden');showReplyGoal();$('yourReply').focus();$('replyStatus').textContent='Prior draft restored. Nothing was sent.';
+});
+function choose(option){
+  keepPriorDraft(option.text);
+  selectedAuthored={kind:option.kind,text:option.text};
+  $('yourReply').value=option.text;$('yourReply').removeAttribute('aria-invalid');
+  $('replyStatus').textContent='Suggestion added to your draft. Edit it, then choose Say this.';
+  showReplyGoal();$('yourReply').focus();
+}
+function optionsForTurn(){
+  const container=$('choices');container.replaceChildren();
+  const caption=document.createElement('p');caption.className='micro';caption.textContent='Optional wording for your draft';container.append(caption);
+  const path=(firstAnalysis?.flags.goalMismatch||conversationGoal?.path==='custom')?firstAnalysis.reflectionPath:conversationGoal?.path||(firstAnalysis?.matched?firstAnalysis.reflectionPath:null);
+  let choices=turn===0?FIRST:SECOND;
+  if(turn===1&&path&&coachPaths[path])choices=coachPaths[path].followups.map(text=>({kind:pathKinds[path],text}));
+  if(turn===1&&firstAnalysis?.kind==='resign')choices=[
+    {kind:'resign',text:'I am confirming my decision to resign. '+firstAnalysis.text},
+    {kind:'clarify',text:'Please send the applicable offboarding information in writing.'}
+  ];
+  if(turn===1&&firstAnalysis?.kind==='refusal'&&!firstAnalysis.flags.conditionalRefusal)choices=[
+    {kind:'refusal',text:'My answer to this request is no. I am not offering other work.'},
+    {kind:'clarify',text:'Can you clarify the practical process without assuming my agreement?'}
+  ];
+  if(turn===1&&firstAnalysis?.kind==='refusal'&&firstAnalysis.flags.temporaryRefusal){
+    const timing=firstAnalysis.text.match(/\b(today|right now|for now)\b/i)?.[0]||'for now';
+    choices=[{kind:'refusal',text:'I will not accept this assignment '+timing+'. I am not making a commitment about later work.'},{kind:'clarify',text:'Can you clarify the practical process without assuming my agreement?'}];
+  }
+  if(turn===1&&firstAnalysis?.kind==='threat')choices=[
+    {kind:'pause',text:'I need to stop this exchange. I will step away without threatening anyone.'},
+    {kind:'clarify',text:'I want to express my concern without threatening harm.'}
+  ];
+  if(turn===1&&firstAnalysis?.flags.explainFacts&&['own','clarify','recovery','explain','support'].includes(firstAnalysis.kind)&&!(path&&['resign','boundary','pause'].includes(path)))choices=[
+    {kind:'clarify',text:'Can you clarify which part of the timeline you would like me to explain first?'},
+    {kind:'clarify',text:'Can we discuss the risks and support before deciding on next steps?'},
+    {kind:'pause',text:'I need a moment to put the explanation into words. Can we pause?'}
+  ];
+  const more=document.createElement('details');more.className='optional-panel';more.id='replyMore';
+  const summary=document.createElement('summary');summary.textContent='More responses ('+(choices.length-1)+')';more.append(summary);
+  choices.forEach((option,index)=>{
+    const button=document.createElement('button');button.className='choice';button.type='button';button.textContent='“'+option.text+'”';
+    button.addEventListener('click',()=>choose(option));(index===0?container:more).append(button);
+  });
+  if(choices.length>1)container.append(more);
 }
 function showTurn(){
+$('expressStudio').open=false;$('scenarioContext').open=true;
 $('inputPanel').classList.remove('hidden');$('endPanel').classList.add('hidden');
 $('sceneProgress').textContent='SCENE '+(turn+1)+' OF 2';
-$('replyHeading').textContent=turn===0?'How do you respond?':'What do you do now?';
-$('yourReply').value='';delete $('send').dataset.kind;optionsForTurn();
+$('replyHeading').textContent=turn===0?'How do you respond?':'Anything else? (optional)';
+$('replyInstruction').textContent=turn===0?'Write what you want to say. Only Say this sends it to Jordan.':'Add a reply, or choose Finish here. Unsent writing stays a draft.';
+$('finishHere').classList.toggle('hidden',turn===0);
+$('yourReply').value='';$('yourReply').removeAttribute('aria-invalid');$('replyStatus').textContent='';selectedAuthored=null;replyBackup=null;$('restoreReplyDraft').classList.add('hidden');optionsForTurn();showReplyGoal();
+pendingCoachContext=null;
 }
 function replyFromManager(text){$('bossWords').textContent=text;message('Jordan · manager',text)}
 function submit(){
-const text=$('yourReply').value.trim();if(!text){$('yourReply').focus();return}
-const supplied=$('send').dataset.kind;const type=supplied&&((turn===0?FIRST:SECOND).some(o=>o.kind===supplied&&o.text===text))?supplied:classify(text,turn);
-message('You',text);
-if(turn===0){
-first=type;firstWords=text;turn=1;
-replyFromManager(REACTIONS[type]||REACTIONS.unclear);
-showTurn();
-}else{
-lastKind=type;lastWords=text;
-replyFromManager(first==='resign'&&type==='plan'
-  ?"Thank you for clarifying the practical steps. If you're choosing to resign, let's confirm that decision and arrange a clear handover, rather than treat this as an ordinary project update."
-  :FINAL[type]||FINAL.unclear);
-finish();
-}
-}
-// Separate the intent to resign or take a break from the way it was expressed.
-// This is illustrative rule-based feedback, not validated assessment.
-function interpersonalPenalty(words){
-const s=words.toLowerCase();
-if(/\b(get lost|kiss my ass|fuck off|screw you|shut up|i'm sick of you|i am sick of you|you're (?:an? )?(?:idiot|moron|stupid|useless)|you are (?:an? )?(?:idiot|moron|stupid|useless))\b/.test(s))return 20;
-if(/\b(take (?:this|your|the) job and shove it|shove it|go to hell)\b/.test(s))return 12;
-return 0;
+  if(completed)return;
+  const text=$('yourReply').value.trim();
+  if(!text){$('replyStatus').textContent='Write a reply or choose a suggestion before selecting Say this.';$('yourReply').setAttribute('aria-invalid','true');$('yourReply').focus();return}
+  saveProgress();progress.length=turn+1;
+  if(pendingCoachContext)conversationGoal={path:pendingCoachContext.path,goal:pendingCoachContext.goal};
+  pendingCoachContext=null;
+  let trusted=selectedAuthored?.text===text?selectedAuthored:[...FIRST,...SECOND].find(option=>option.text===text);
+  // Only immutable authored wording can supply provenance. Custom/edited goals
+  // and free text never acquire an authored tag merely by sharing a keyword.
+  if(!trusted&&conversationGoal&&conversationGoal.path!=='custom'){
+    const path=coachPaths[conversationGoal.path];
+    const exact=[...path.options.map(option=>option[1]),...path.followups].find(words=>words===text);
+    if(exact)trusted={kind:pathKinds[conversationGoal.path],text:exact};
+  }
+  const analysis=dialogue.analyze(text,{turn,goal:conversationGoal,previous:firstAnalysis,authoredKind:trusted?.kind,authoredText:trusted?.text});
+  message('You',text);
+  $('bossWords').dataset.dialogueKind=analysis.kind;
+  replyFromManager(dialogue.manager(analysis,{turn,previous:firstAnalysis,goal:conversationGoal}));
+  if(turn===0)firstAnalysis=analysis;
+  else lastAnalysis=analysis;
+  turn+=1;
+  if(analysis.flags.closeConversation||turn>=2){lastAnalysis=analysis;finish();}
+  else{showTurn();$('replyHeading').focus({preventScroll:true});}
+  furthestTurn=turn;saveProgress();showNavigation();
+  $('navigationStatus').textContent='Reply sent. Back reviews earlier replies; Say this on an earlier reply replaces later replies.';
 }
 function finish(){
-turn=2;
-$('sceneProgress').textContent='SIMULATION COMPLETE';
-$('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
-const firstScore={own:44,boundary:42,blame:17,hostile:6,resign:27,exit:20,unclear:24};
-const secondScore={repair:48,plan:50,boundary:46,dismiss:4,resign:30,exit:12,unclear:26};
-const firstPoints=firstScore[first]??24,secondPoints=secondScore[lastKind]??26;
-const tonePenalty=Math.min(35,interpersonalPenalty(firstWords)+interpersonalPenalty(lastWords));
-const score=Math.max(0,Math.min(100,firstPoints+secondPoints-tonePenalty));
-$('score').textContent=score+'/100';$('scoreFill').style.width=score+'%';
-$('scoreDetails').textContent='Step 1: '+firstPoints+' points + Step 2: '+secondPoints+' points'+(tonePenalty?' − '+tonePenalty+' for personally disrespectful language':'')+' = '+score+'/100. These are approximate teaching rules, not a validated rating of communication ability.';
-applyFeedbackMode();
-const outcome=(lastKind==='resign'||first==='resign'&&lastKind==='plan')?'Possible outcome: you decide to leave the job, and the manager asks you to confirm the decision and discuss next steps.':(lastKind==='exit'||first==='exit'&&lastKind!=='repair'&&lastKind!=='plan')?'Possible outcome: the meeting pauses, and the manager asks whether you need a break or intend to resign.':lastKind==='dismiss'?'Possible outcome: the manager pauses the meeting and may follow up formally.':(first==='hostile'&&lastKind==='repair')?'Possible outcome: you begin repairing trust after an angry opening.':lastKind==='boundary'?'Possible outcome: you negotiate scope and expectations.':lastKind==='plan'?'Possible outcome: the team gets a clearer recovery plan.':'Possible outcome: there is an opportunity to clarify and improve the next steps.';
-$('outcome').textContent=outcome;
-$('takeaway').textContent=(takeaways[first]||takeaways.unclear)+' '+(lastKind==='exit'?'If you need to leave an escalating conversation, communicate whether it is a break or a decision to resign.':lastKind==='resign'?'You can choose to leave a workplace; communicate that decision clearly and consider the practical next steps.':lastKind==='dismiss'?'Continuing to disengage can make resolution harder.':'Your follow-up response can change the direction of the conversation.');
-$('endPanel').scrollIntoView({behavior:'auto',block:'start'});
+  completed=true;
+  dictation?.cancel('Conversation ended. Browser dictation off.');
+  discardRecording('Conversation ended. Audio deleted. Microphone off.');
+  lastFeedback=dialogue.feedback(firstAnalysis,lastAnalysis,{goal:conversationGoal});
+  $('sceneProgress').textContent='SIMULATION COMPLETE';
+  $('inputPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');
+  $('outcome').textContent=lastFeedback.outcome;$('madeClear').textContent=lastFeedback.communicated;
+  $('unresolved').textContent=lastFeedback.unresolved;$('realWorldPractice').textContent=lastFeedback.action;
+  for(const [id,key] of Object.entries({feedbackConstructive:'constructive',feedbackDifficulty:'difficulty',feedbackWhy:'why',feedbackSkill:'skill',feedbackAlternative:'alternative',feedbackImprovement:'improvement',feedbackExample:'example'}))$(id).textContent=lastFeedback[key];
+  $('feedbackEvidence').textContent=(log.filter(entry=>entry.who==='You').length===1?[firstAnalysis]:[firstAnalysis,lastAnalysis]).map((analysis,index)=>'Reply '+(index+1)+': '+(analysis.evidence.length?analysis.evidence.map(item=>'“'+item.text+'”').join('; '):'No reliable scripted match.')).join(' ');
+  $('reflectionBasis').textContent=conversationGoal?(conversationGoal.goal?'You chose this practice goal: '+conversationGoal.goal:'You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.'):lastFeedback.basis;
+  if((lastAnalysis||firstAnalysis).flags.goalMismatch)$('reflectionBasis').textContent+=' Your submitted words differ from this private goal. You can keep the words or revisit the goal.';
+  $('expressStudio').open=false;$('reflectionReview').open=false;$('feedbackEvidencePanel').open=false;$('completionTitle').focus({preventScroll:true});
+  $('endPanel').scrollIntoView({behavior:'auto',block:'start'});
 }
-function applyFeedbackMode(){
-const show=$('practiceScoreToggle').checked;
-$('scoreArea').classList.toggle('hidden',!show);
-$('exploreNote').classList.toggle('hidden',show);
-}
-$('practiceScoreToggle').addEventListener('change',applyFeedbackMode);
 function reset(){
-turn=0;first='unclear';firstWords='';lastKind='unclear';lastWords='';log=[];
-const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
-$('bossWords').textContent=opening;message('Jordan · manager',opening);showTurn();window.scrollTo(0,0);
+  progress=[];furthestTurn=0;turn=0;completed=false;log=[];firstAnalysis=null;lastAnalysis=null;lastFeedback=null;pendingCoachContext=null;conversationGoal=null;selectedAuthored=null;replyBackup=null;
+  const opening="The project was due yesterday at five. I haven't received it, and the client needs an update. What happened?";
+  $('bossWords').textContent=opening;delete $('bossWords').dataset.dialogueKind;
+  message('Jordan · manager',opening);showTurn();$('reflectionReview').open=false;
+  for(const id of ['outcome','realWorldPractice','reflectionBasis','madeClear','unresolved','feedbackEvidence','feedbackConstructive','feedbackDifficulty','feedbackWhy','feedbackSkill','feedbackAlternative','feedbackImprovement','feedbackExample'])$(id).textContent='';
+  $('navigationStatus').textContent='Review earlier replies without starting over. Forward restores saved progress; Say this replaces later replies.';
+  saveProgress();showNavigation();window.scrollTo(0,0);
 }
 $('send').addEventListener('click',submit);
-$('yourReply').addEventListener('input',()=>{delete $('send').dataset.kind});
-$('replay').addEventListener('click',reset);
-const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SpeechRec){$('speak').disabled=true;$('speak').textContent='🎤 Voice unavailable';}
-else{
-$('speak').addEventListener('click',()=>{
- const recognition=new SpeechRec();recognition.lang='en-US';recognition.interimResults=false;recognition.maxAlternatives=1;
- $('voiceNote').textContent='Listening… speak your response. Your browser may use an external speech-recognition service.';
- recognition.onresult=e=>{$('yourReply').value=e.results[0][0].transcript;delete $('send').dataset.kind;$('voiceNote').textContent='Transcription ready. Check it, then press “Say this”.';};
- recognition.onerror=e=>{$('voiceNote').textContent='Voice input was not available ('+e.error+'). You can type your response instead.';};
- recognition.onend=()=>{if($('voiceNote').textContent.startsWith('Listening'))$('voiceNote').textContent='Listening stopped. Type your reply if nothing was captured.';};
- try{recognition.start()}catch(_){$('voiceNote').textContent='Unable to start voice recognition. Please type your response.';}
+$('finishHere').addEventListener('click',()=>{
+  if(completed||turn===0)return;
+  saveProgress();turn+=1;
+  replyFromManager('We will leave this conversation here. No further reply or new work agreement is assumed.');
+  finish();furthestTurn=turn;saveProgress();showNavigation();
+  $('navigationStatus').textContent='Conversation ended. Nothing from your unfinished draft was sent. Back restores it.';
 });
+$('yourReply').addEventListener('input',()=>{
+  selectedAuthored=null;$('yourReply').removeAttribute('aria-invalid');$('replyStatus').textContent='';
+});
+$('replay').addEventListener('click',()=>{reset();$('replyHeading').focus({preventScroll:true})});
+/* Consent-based local recording. Tokens invalidate late permission and recorder events. */
+const privateRecorder={recording:null,stream:null,url:null,state:'idle',requestId:0,limitId:null};
+const recordingSupported=Boolean(navigator.mediaDevices?.getUserMedia&&window.MediaRecorder);
+function recordingControls(){
+  $('recordStart').disabled=!recordingSupported||!$('recordConsent').checked||privateRecorder.state!=='idle';
+  $('recordStop').disabled=privateRecorder.state!=='recording';
+  $('recordDelete').disabled=privateRecorder.state==='idle'&&!privateRecorder.url;
 }
-
-/* Unscored, in-browser audio rehearsal; no API request and no persistent storage. */
-const privateRecorder={recording:null,stream:null,parts:[],url:null,pending:false,requestId:0,limitId:null};
 function clearRecordedAudio(){
-  if(privateRecorder.url){URL.revokeObjectURL(privateRecorder.url);privateRecorder.url=null}
   const player=$('recordPlayer');player.pause();player.removeAttribute('src');player.load();player.classList.add('hidden');
-  $('recordDelete').disabled=true;
+  if(privateRecorder.url){URL.revokeObjectURL(privateRecorder.url);privateRecorder.url=null}
 }
 function stopMediaTracks(){
   if(privateRecorder.stream){privateRecorder.stream.getTracks().forEach(track=>track.stop());privateRecorder.stream=null}
 }
-function stopRecord(){
+function clearRecordingTimer(){
   if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
-  $('recordStart').disabled=true;$('recordStop').disabled=true;
-  const rec=privateRecorder.recording;
-  if(rec&&rec.state==='recording'){rec.stop();$('recordStatus').textContent='Finalizing recording…';}
-  else stopMediaTracks();
+}
+function discardRecording(message='Recording deleted. Microphone off.'){
+  privateRecorder.requestId++;
+  clearRecordingTimer();
+  const recorder=privateRecorder.recording;
+  privateRecorder.recording=null;
+  if(recorder){
+    recorder.ondataavailable=null;recorder.onstop=null;recorder.onerror=null;
+    if(recorder.state!=='inactive')recorder.stop();
+  }
+  stopMediaTracks();clearRecordedAudio();
+  privateRecorder.state='idle';recordingControls();
+  $('recordStatus').textContent=message;
+}
+function stopRecord(){
+  if(privateRecorder.state!=='recording')return;
+  privateRecorder.state='finalizing';clearRecordingTimer();recordingControls();
+  $('recordStatus').textContent='Finalizing recording. Microphone off…';
+  privateRecorder.recording.stop();stopMediaTracks();
 }
 async function startRecord(){
-  if(privateRecorder.pending||(privateRecorder.recording&&privateRecorder.recording.state==='recording'))return;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){
-    $('recordStatus').textContent='Recording is not supported here. You can still speak to the manager or type a response.';return;
-  }
-  privateRecorder.pending=true;privateRecorder.requestId++;const request=privateRecorder.requestId;
-  $('recordStart').disabled=true;clearRecordedAudio();
-  $('recordStatus').textContent='Waiting for microphone permission…';
+  if(!recordingSupported||!$('recordConsent').checked||$('recordStart').closest('details:not([open])')||privateRecorder.state!=='idle')return;
+  dictation?.cancel('Browser dictation stopped before local recording.');
+  const request=++privateRecorder.requestId;
+  privateRecorder.state='pending';clearRecordedAudio();recordingControls();
+  $('recordStatus').textContent='Waiting for microphone permission. Delete or withdraw consent to cancel.';
   let stream;
   try{
     stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
     if(request!==privateRecorder.requestId){stream.getTracks().forEach(track=>track.stop());return}
-    privateRecorder.stream=stream;privateRecorder.parts=[];
-    const recorder=new window.MediaRecorder(stream);privateRecorder.recording=recorder;
-    recorder.ondataavailable=event=>{if(event.data&&event.data.size>0)privateRecorder.parts.push(event.data)};
-    recorder.onstop=()=>{
-      stopMediaTracks();
-      if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
-      privateRecorder.recording=null;
-      const chunks=privateRecorder.parts;privateRecorder.parts=[];
-      $('recordStart').disabled=false;$('recordStop').disabled=true;
-      if(!chunks.length){$('recordStatus').textContent='No audio was captured. You can try again.';return}
-      const blob=new Blob(chunks,{type:recorder.mimeType||chunks[0].type||'audio/webm'});
-      privateRecorder.url=URL.createObjectURL(blob);
-      const player=$('recordPlayer');player.src=privateRecorder.url;player.classList.remove('hidden');player.load();
-      $('recordDelete').disabled=false;
-      $('recordStatus').textContent='Recorded locally. Press Play to listen back, or Delete to erase this take.';
+    privateRecorder.stream=stream;
+    const recorder=new window.MediaRecorder(stream),parts=[];
+    privateRecorder.recording=recorder;
+    recorder.ondataavailable=event=>{
+      if(request===privateRecorder.requestId&&event.data?.size>0)parts.push(event.data);
     };
-    recorder.onerror=()=>{stopMediaTracks();$('recordStart').disabled=false;$('recordStop').disabled=true;$('recordStatus').textContent='Recording was interrupted. Please try again.'};
-    recorder.start();privateRecorder.pending=false;
-    $('recordStop').disabled=false;$('recordStatus').textContent='Recording… Speak naturally. Stop to listen back. Maximum 90 seconds.';
-    privateRecorder.limitId=setTimeout(()=>{if(privateRecorder.recording&&privateRecorder.recording.state==='recording')stopRecord()},90000);
-  }catch(_){if(stream&&!privateRecorder.stream)stream.getTracks().forEach(track=>track.stop());stopMediaTracks();privateRecorder.pending=false;$('recordStart').disabled=false;$('recordStop').disabled=true;$('recordStatus').textContent='Microphone permission was declined or unavailable. The written simulator still works.'}
-}
-function discardRecording(){
-  privateRecorder.requestId++;privateRecorder.pending=false;
-  if(privateRecorder.limitId!==null){clearTimeout(privateRecorder.limitId);privateRecorder.limitId=null}
-  const recorder=privateRecorder.recording;
-  if(recorder&&recorder.state==='recording'){
-    recorder.ondataavailable=null;recorder.onstop=null;recorder.stop();
+    recorder.onstop=()=>{
+      if(request!==privateRecorder.requestId)return;
+      stopMediaTracks();clearRecordingTimer();privateRecorder.recording=null;privateRecorder.state='idle';
+      if(parts.length){
+        const blob=new Blob(parts,{type:recorder.mimeType||parts[0].type||'audio/webm'});
+        privateRecorder.url=URL.createObjectURL(blob);
+        const player=$('recordPlayer');player.src=privateRecorder.url;player.classList.remove('hidden');player.load();
+        $('recordStatus').textContent='Ready to listen back. Choose Play, or delete this take. Microphone off.';
+      }else $('recordStatus').textContent='No audio was captured. You can try again or use writing.';
+      recordingControls();
+    };
+    recorder.onerror=()=>{
+      if(request===privateRecorder.requestId)discardRecording('Recording was interrupted. Microphone off. Try again or use writing.');
+    };
+    recorder.start();privateRecorder.state='recording';recordingControls();
+    $('recordStatus').textContent='Recording… Stop whenever you choose. Maximum 90 seconds.';
+    privateRecorder.limitId=setTimeout(stopRecord,90000);
+  }catch(_){
+    if(request!==privateRecorder.requestId)return;
+    discardRecording('Microphone permission was declined or recording is unavailable. Writing and rehearsal still work.');
   }
-  privateRecorder.recording=null;privateRecorder.parts=[];
-  stopMediaTracks();clearRecordedAudio();
-  $('recordStart').disabled=false;$('recordStop').disabled=true;
-  $('recordStatus').textContent='Recording deleted. Nothing saved.';
 }
+$('openPractice').addEventListener('click',()=>{
+  $('expressStudio').open=true;syncWorkspace();coaching.focus();
+});
+$('recordConsent').checked=false;
+$('recordConsent').addEventListener('change',()=>{
+  if(!$('recordConsent').checked)discardRecording('Consent withdrawn. Audio deleted. Microphone off.');
+  else{recordingControls();$('recordStatus').textContent=recordingSupported?'Ready when you are. Press Record to request microphone access.':'Recording is not supported here. Writing and rehearsal still work.';}
+});
 $('recordStart').addEventListener('click',startRecord);
 $('recordStop').addEventListener('click',stopRecord);
-$('recordDelete').addEventListener('click',discardRecording);
-$('practiceClear').addEventListener('click',()=>{
-  $('rehearsedWords').value='';$('practiceWords').value='';
-  $('practiceStatus').textContent='Written reflections cleared. Your audio recording is controlled separately.';
+$('recordDelete').addEventListener('click',()=>discardRecording());
+function syncWorkspace(){
+  showNavigation();
+  const active=$('expressStudio').open;
+  $('scenarioContext').open=!active;
+  $('inputPanel').classList.toggle('hidden',active||completed);
+  if(active)$('endPanel').classList.add('hidden');
+  else if(completed)$('endPanel').classList.remove('hidden');
+}
+$('returnToReply').addEventListener('click',()=>{$('expressStudio').open=false;syncWorkspace();(completed?$('completionTitle'):$('yourReply')).focus()});
+$('expressStudio').addEventListener('toggle',()=>{
+  syncWorkspace();
+  if(!$('expressStudio').open){
+    $('recordConsent').checked=false;
+    discardRecording('Practice closed. Audio deleted. Microphone off.');
+    dictation?.reset();
+  }
 });
+$('recordingPanel').addEventListener('toggle',()=>{if(!$('recordingPanel').open){$('recordConsent').checked=false;discardRecording('Recording option closed. Audio deleted. Microphone off.')}});
+$('practiceTools').addEventListener('toggle',()=>{
+  if(!$('practiceTools').open){
+    $('recordConsent').checked=false;discardRecording('Tools closed. Audio deleted. Microphone off.');
+    dictation?.reset();
+  }
+});
+function clearPrivatePractice(){
+  $('recordConsent').checked=false;discardRecording();
+  for(const id of ['expressWords','rehearsedWords','practiceWords'])$(id).value='';
+  coaching?.reset();dictation?.reset();pendingCoachContext=null;if(replyBackup)replyBackup.context=null;
+  if(conversationGoal){
+    conversationGoal={path:conversationGoal.path,goal:''};
+    $('reflectionBasis').textContent='You chose this practice path: '+coachPaths[conversationGoal.path].label+'. Your private goal wording was cleared.';
+  }
+  for(const saved of progress){
+    if(saved.conversationGoal)saved.conversationGoal.goal='';
+    saved.pendingCoachContext=null;if(saved.replyBackup)saved.replyBackup.context=null;
+  }
+  showReplyGoal();
+  $('practiceStatus').textContent='Private writing and audio cleared. Your simulator reply and transcript are controlled separately.';
+}
+$('practiceClear').addEventListener('click',clearPrivatePractice);
+function moveDraft(words,context=null){
+  if(completed)reset();
+  keepPriorDraft(words);
+  $('yourReply').value=words;$('yourReply').removeAttribute('aria-invalid');selectedAuthored=null;
+  pendingCoachContext=context?{...context,words}:null;
+  $('practiceStatus').textContent='Draft moved. Nothing sent. Review your reply, then choose Say this if you want the manager to respond.';
+  $('expressStudio').open=false;syncWorkspace();showReplyGoal();$('replyStatus').textContent='Draft ready. Edit it or choose Say this.';
+  $('inputPanel').scrollIntoView({behavior:'auto',block:'start'});$('yourReply').focus();
+}
 $('practiceTransfer').addEventListener('click',()=>{
   const words=$('practiceWords').value.trim();
-  if(!words){$('practiceWords').focus();$('practiceStatus').textContent='Write what you want to practice in the second box first.';return}
-  if($('inputPanel').classList.contains('hidden'))reset();
-  $('yourReply').value=words;delete $('send').dataset.kind;
-  $('practiceStatus').textContent='Your practiced wording is ready in the simulator. Review it there, then choose Say this when you want the manager to respond.';
-  $('inputPanel').scrollIntoView({behavior:'auto',block:'start'});$('yourReply').focus();
+  if(!words){$('rehearsalPanel').open=true;$('practiceWords').focus();$('practiceStatus').textContent='Write a rehearsal draft first, or skip this step and return to the simulator.';return}
+  moveDraft(words,coaching?.getContext());
 });
-window.addEventListener('pagehide',discardRecording);
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&privateRecorder.recording&&privateRecorder.recording.state==='recording')stopRecord()});
+window.addEventListener('pagehide',()=>{clearPrivatePractice();reset();});
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)return;
+  dictation?.cancel('Browser dictation stopped while the page was hidden.');
+  if(privateRecorder.state==='pending')discardRecording('Microphone request canceled while this page was hidden.');
+  else if(privateRecorder.state==='recording')stopRecord();
+});
+if(!recordingSupported)$('recordStatus').textContent='Recording is not supported here. Writing and rehearsal still work.';
+recordingControls();
+coaching=window.HumanLiteracyCoach.createCoach({moveDraft,isComplete:()=>completed,onChange:()=>{},onAdvance:()=>{
+  dictation?.cancel('Dictation stopped. Review your goal.');
+  if(privateRecorder.state==='pending')discardRecording('Microphone request canceled before reviewing your goal.');
+  else if(privateRecorder.state==='recording')stopRecord();
+}});
+dictation=window.createBrowserDictation({beforeStart:()=>{
+  $('recordPlayer').pause();
+  if(privateRecorder.state!=='idle')discardRecording('Local recording canceled before optional browser dictation.');
+}});
 
 reset();
-applyFeedbackMode();
 })();
 </script>
 </body>

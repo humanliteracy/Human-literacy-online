@@ -12,10 +12,10 @@ The existing `lessons/01/index.html` player uses that exact filename. Keep it un
 
 Approved **166-second** silent portrait MP4.
 
-To publish, upload the final reviewed file into this `media` folder with this **exact filename**:
+The approved file is **already tracked** in this folder and used by Lesson 2:
 
 `lesson02.mp4`
 
-The `lessons/02/index.html` page now contains the matching player under **See It**; **Understand It** is a separate page, followed by practice, knowledge check, and Live It. No extra HTML edits are required after the media upload.
+The `lessons/02/index.html` player already references `../../media/lesson02.mp4`. No upload, filename change or HTML edit is needed for PR #2.
 
-Avoid uploading an older review cut; use the final cut with the selected replacement of Scene 6. Check GitHub Actions → **pages build and deployment** for a successful website release.
+Preserve both approved video files byte-for-byte; do not replace them with an older review cut. Publication follows the [release checklist](../docs/release-checklist.md): an authorized merge to `main` starts Pages automatically. Verify its resulting deployment afterward; do not upload media or trigger a deployment during release preparation.
