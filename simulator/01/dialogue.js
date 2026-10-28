@@ -221,9 +221,10 @@
     if (analysis.kind === 'resign' || priorResignation && ['refusal','clarify','own','repair','recovery','explain','plan','stop'].includes(analysis.kind) && !analysis.flags.notResigning) {
       const details = resignationDetails(priorResignation ? options.previous : null, analysis);
       return (turn === 1 ? 'You have confirmed that you are resigning' : 'You have said you are resigning') + (details.timing ? ' ' + details.timing : '') + '. ' +
-        (details.final ? 'I will not ask you to negotiate staying. ' : 'Your decision is clear. ') +
+        (details.final ? 'I will not ask you to negotiate staying. ' : priorResignation && analysis.kind !== 'resign' ? 'You chose to leave the job. ' : 'Your decision is clear. ') +
         (details.noWork ? 'You have also said you will not perform further project work. ' : '') +
         'The next step is formal offboarding: confirming the applicable notice process, final pay, return of work equipment and any separately agreed handover. I will not treat ' + (turn === 1 ? 'this' : 'that') + ' as agreement to finish this assignment.' +
+        (analysis.flags.explainFacts ? ' Go ahead and explain ' + explanationSubject(analysis) + '; that does not change your earlier decision.' : '') +
         (analysis.flags.personalAttack ? ' Personal attacks make this exchange harder; we can address the decision without attacking the person.' : '') +
         (analysis.flags.closeConversation ? " I'll stop this conversation now; you do not need to reply again." : '');
     }
@@ -390,7 +391,7 @@
     const decision = resignation ? resignationStatement(resignationDetails(first, current)) : null;
     if (resignation) {
       outcome = decision.replace('You stated a decision', 'You state a decision') + (kind === 'stop' ? ' Your resignation stands; this conversation ends.' : ' The assignment is not accepted.');
-      unresolved = 'The applicable contractual, administrative or legal obligations, notice, final pay, equipment return and any separately agreed handover still need checking. Resignation does not establish that these obligations disappear; this prototype cannot determine them.';
+      unresolved = 'The applicable offboarding process, contractual, administrative or legal obligations, notice, final pay, equipment return and any separately agreed handover still need checking. Resignation does not establish that these obligations disappear; this prototype cannot determine them.';
     }
     return {
       outcome,

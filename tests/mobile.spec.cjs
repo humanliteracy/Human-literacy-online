@@ -83,7 +83,7 @@ for (const width of [320, 390]) {
       await page.keyboard.press('ControlOrMeta+A');
       await page.keyboard.type('I am resigning. I need to clarify notice.');
       await page.keyboard.press('Tab');
-      await expect(page.getByRole('button', { name: /Use this wording: Explain without accepting/ })).toBeFocused();
+      await expect(page.getByRole('button', { name: /Use this wording: Also ask about the process/ })).toBeFocused();
       await page.keyboard.press('Space');
       await expect(page.locator('#yourReply')).toBeFocused();
       await expect(page.locator('#yourReply')).toHaveValue('I am resigning. I need to clarify notice.');
@@ -239,7 +239,7 @@ for (const width of [320, 390]) {
       await readableActions(page);
       await page.locator('#reflectionReview > summary').click();
       await expect(page.locator('#madeClear')).toContainText('decision to leave the job');
-      await expect(page.locator('#reflectionBasis')).toContainText('I want to resign');
+      await expect(page.locator('#reflectionBasis')).toContainText('The expectations are unreasonable. I quit');
     });
 
     test('declining microphone access leaves alternatives and custom drafts usable without uploads', async ({ page }) => {
