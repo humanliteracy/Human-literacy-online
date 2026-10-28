@@ -1,0 +1,135 @@
+{
+  "version": "0.1",
+  "checked": "2026-10-28",
+  "scope": "TEAL prototype only; does not approve entries in the existing Human Literacy catalog",
+  "claims": [
+    {
+      "id": "F01",
+      "claim": "FAO estimates 645 million faced hunger in 2025.",
+      "measured_period": "2025",
+      "report_year": 2026,
+      "url": "https://www.fao.org/hunger/en/",
+      "limit": "Estimate of dietary-energy insufficiency, not the broader food-insecurity indicator or a live count."
+    },
+    {
+      "id": "F02",
+      "claim": "Recent global hunger decline is uneven; protection and food-system investment are relevant.",
+      "url": "https://www.fao.org/newsroom/detail/sofi-2026--hunger-not-inevitable--fao-says-as-global-hunger-report-shows-progress/",
+      "limit": "Policy discussion and report trends, not a causal estimate of TEAL impact."
+    },
+    {
+      "id": "F03",
+      "claim": "Cash assistance is used where markets can supply food but affordability is a barrier.",
+      "url": "https://www.wfp.org/cash-transfers",
+      "limit": "Not universally superior to food delivery; supply, price, safety and implementation matter."
+    },
+    {
+      "id": "H01",
+      "claim": "4.6 billion were not fully covered by essential health services in 2023; coverage improved since 2000.",
+      "report_year": 2025,
+      "measured_period": "2023",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/universal-health-coverage-(uhc)",
+      "limit": "Not fully covered is not no healthcare. Revised 2025 indicator framework; do not mix older report series unqualified."
+    },
+    {
+      "id": "H02",
+      "claim": "Strong primary care is an important route toward access.",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/primary-health-care",
+      "limit": "Requires workforce, medicines, funding and quality; no individualized recommendation or projected-lives-saved claim."
+    },
+    {
+      "id": "E01",
+      "claim": "UNESCO reports 273 million children and youth out of school in 2024; completion has improved since 2000.",
+      "report_year": 2026,
+      "measured_period": "2024",
+      "url": "https://www.unesco.org/reports/gem-report/en/2026",
+      "limit": "Undercounts some conflict-affected children; access/completion/learning are distinct. Do not present as 2026 headcount."
+    },
+    {
+      "id": "E02",
+      "claim": "Teaching support and instruction matched to current skill are evidence-supported approaches.",
+      "url": "https://www.worldbank.org/en/brief/2025/10/30/global-education-evidence-advisory-panel",
+      "limit": "Evidence synthesis largely low/middle-income contexts; local effects vary. No Human Literacy effectiveness claim."
+    },
+    {
+      "id": "HIST01",
+      "claim": "Humans have learned powered flight.",
+      "url": "https://www.nasa.gov/history/120-years-ago-the-first-powered-flight-at-kitty-hawk/",
+      "limit": "No disputed universal-first qualification added."
+    },
+    {
+      "id": "HIST02",
+      "claim": "Humans have walked on the Moon.",
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo11info.html",
+      "limit": "Apollo 11 historical record; no precise first-step timezone claim."
+    },
+    {
+      "id": "HIST03",
+      "claim": "Communications infrastructure connects people across oceans.",
+      "url": "https://www.itu.int/en/mediacentre/backgrounders/Pages/submarine-cable-resilience.aspx",
+      "limit": "Does not imply everyone is connected."
+    },
+    {
+      "id": "HIST04",
+      "claim": "Disease prevention through vaccination is established.",
+      "url": "https://www.who.int/news/item/24-04-2024-global-immunization-efforts-have-saved-at-least-154-million-lives-over-the-past-50-years",
+      "limit": "Letter uses qualitative prevention claim; no exact model-based lives-saved total."
+    }
+  ],
+  "resources": [
+    {
+      "checked": "2026-10-28",
+      "next_review_proposed": "2027-01-26",
+      "review_status": "Prototype candidate; founder release review pending",
+      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "external_intake_tested": false,
+      "id": "TEAL-R01",
+      "provider": "United Way 211",
+      "url": "https://211.org/",
+      "geography": "United States; local coverage varies",
+      "purpose": "Local food and other essential-service referrals",
+      "limit": "Landing page checked. No local search/call/intake submitted. Hours, eligibility, languages and available assistance require local confirmation."
+    },
+    {
+      "checked": "2026-10-28",
+      "next_review_proposed": "2027-01-26",
+      "review_status": "Prototype candidate; founder release review pending",
+      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "external_intake_tested": false,
+      "id": "TEAL-R02",
+      "provider": "HRSA Bureau of Primary Health Care",
+      "url": "https://bphc.hrsa.gov/about-health-center-program/what-health-center",
+      "geography": "United States",
+      "purpose": "Official health-center explanation and linked clinic locator",
+      "limit": "Income/family-size fee adjustment does not mean every service is free. Locator search, appointment availability, cost and eligibility not tested."
+    },
+    {
+      "checked": "2026-10-28",
+      "next_review_proposed": "2027-01-26",
+      "review_status": "Prototype candidate; founder release review pending",
+      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "external_intake_tested": false,
+      "id": "TEAL-R03",
+      "provider": "The Open University OpenLearn",
+      "url": "https://www.open.edu/openlearn/free-courses",
+      "geography": "Internet-accessible learning; primarily English",
+      "purpose": "Additional free learning beyond Human Literacy",
+      "limit": "Guests can read content; some activities/enrolment/progress features need account. No formal qualifications; individual course accessibility not evaluated.",
+      "verification_source": "https://www.open.edu/openlearn/about-openlearn/frequently-asked-questions-on-openlearn"
+    },
+    {
+      "checked": "2026-10-28",
+      "next_review_proposed": "2027-01-26",
+      "review_status": "Prototype candidate; founder release review pending",
+      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "external_intake_tested": false,
+      "id": "TEAL-R04",
+      "provider": "UNHCR HELP",
+      "url": "https://help.unhcr.org/",
+      "geography": "Country-specific information for refugees, asylum-seekers and stateless people",
+      "purpose": "Find relevant country/topic information",
+      "limit": "Not general assistance for everyone. Specific case eligibility, local service availability and language completeness not checked."
+    }
+  ],
+  "maintenance": "Recheck landing links before release and every 90 days, and on reported change. Verify actual local details before a real referral; pause broken/materially changed links. No automation created."
+}

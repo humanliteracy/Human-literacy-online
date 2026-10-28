@@ -1,0 +1,2 @@
+/* Review-only override. Native reduced-motion media rule is in teal/teal.css. */
+html{scroll-behavior:auto!important}*,*::before,*::after{animation:none!important;transition:none!important}
