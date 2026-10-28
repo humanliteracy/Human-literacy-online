@@ -5,7 +5,7 @@ test.afterEach(async({page})=>expect(page.navErrors).toEqual([]));
 for(const width of [320,390,1120])test(`Back and Forward restore replies, drafts, context and completion at ${width}px`,async({page})=>{
  await page.setViewportSize({width,height:844});
  await send(page,'I am resigning.');
- const suggestions=await page.locator('#choices').textContent();expect(suggestions).toMatch(/notice|pay|handover/i);
+ const suggestions=await page.locator('#choices').textContent();expect(suggestions).toMatch(/offboarding/i);expect(suggestions).toContain('I am resigning.');
  await page.locator('#yourReply').fill('My unfinished second reply.');
  await page.locator('#conversationBack').click();
  await expect(page.locator('#yourReply')).toHaveValue('I am resigning.');await expect(page.locator('#history .mine')).toHaveCount(0);
