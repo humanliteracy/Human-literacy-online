@@ -1,5 +1,5 @@
 {
-  "version": "0.1",
+  "version": "0.1-rc1",
   "checked": "2026-10-28",
   "scope": "TEAL prototype only; does not approve entries in the existing Human Literacy catalog",
   "claims": [
@@ -80,8 +80,8 @@
     {
       "checked": "2026-10-28",
       "next_review_proposed": "2027-01-26",
-      "review_status": "Prototype candidate; founder release review pending",
-      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "review_status": "Official public landing page rechecked for release candidate; local service delivery unverified; publication decision pending",
+      "maintenance_owner": "Shawn — TEAL founder (accountable editor)",
       "external_intake_tested": false,
       "id": "TEAL-R01",
       "provider": "United Way 211",
@@ -93,8 +93,8 @@
     {
       "checked": "2026-10-28",
       "next_review_proposed": "2027-01-26",
-      "review_status": "Prototype candidate; founder release review pending",
-      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "review_status": "Official public landing page rechecked for release candidate; local service delivery unverified; publication decision pending",
+      "maintenance_owner": "Shawn — TEAL founder (accountable editor)",
       "external_intake_tested": false,
       "id": "TEAL-R02",
       "provider": "HRSA Bureau of Primary Health Care",
@@ -106,8 +106,8 @@
     {
       "checked": "2026-10-28",
       "next_review_proposed": "2027-01-26",
-      "review_status": "Prototype candidate; founder release review pending",
-      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "review_status": "Official public landing page rechecked for release candidate; local service delivery unverified; publication decision pending",
+      "maintenance_owner": "Shawn — TEAL founder (accountable editor)",
       "external_intake_tested": false,
       "id": "TEAL-R03",
       "provider": "The Open University OpenLearn",
@@ -120,8 +120,8 @@
     {
       "checked": "2026-10-28",
       "next_review_proposed": "2027-01-26",
-      "review_status": "Prototype candidate; founder release review pending",
-      "maintenance_owner": "Unassigned; founder to name before ongoing public maintenance",
+      "review_status": "Official public landing page rechecked for release candidate; local service delivery unverified; publication decision pending",
+      "maintenance_owner": "Shawn — TEAL founder (accountable editor)",
       "external_intake_tested": false,
       "id": "TEAL-R04",
       "provider": "UNHCR HELP",
@@ -131,5 +131,12 @@
       "limit": "Not general assistance for everyone. Specific case eligibility, local service availability and language completeness not checked."
     }
   ],
-  "maintenance": "Recheck landing links before release and every 90 days, and on reported change. Verify actual local details before a real referral; pause broken/materially changed links. No automation created."
+  "maintenance": "Accountable editor: Shawn, TEAL founder. Recheck official landing pages before release, on problem reports and every 90 days while listed; next review 2027-01-26. Verify actual local details before a referral. Pause/remove broken or materially changed links until reverified; do not extend checked dates automatically. No monitoring automation or outreach enabled. Founder accepts ongoing ownership in the final publication decision.",
+  "ownership": {
+    "accountable_editor": "Shawn — TEAL founder",
+    "role": "Resource maintenance and factual corrections; final publisher approval",
+    "release_decision": "The founder accepts this accountable-owner role with the separate final publication decision; no prior approval of recurring labor is asserted.",
+    "assistance": "Assistants may recheck pages and propose fixes when requested. No autonomous monitoring, outreach, recurring task or paid service is enabled.",
+    "procedure": "See release-candidate.md: bounded resource and correction procedure."
+  }
 }

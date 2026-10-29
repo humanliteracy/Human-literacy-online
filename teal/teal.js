@@ -1,4 +1,4 @@
-/* TEAL v0.1. Progressive enhancement only. No network requests or persistence. */
+/* TEAL release candidate. Progressive enhancement only. No network requests or persistence. */
 (() => {
   'use strict';
   const status = document.getElementById('share-status');
@@ -9,10 +9,12 @@
   const invitation = document.getElementById('share-copy')?.textContent.trim();
   if (!status || !share || !copy || !manual || !textField || !invitation) return;
 
-  // Release approval must precede enabling URL sharing. Preview addresses never leave here.
-  const releaseApproved = false;
+  // Only the actual HTTPS public route shares the fixed canonical address.
+  // This prepares release behavior without asserting publication approval.
   const canonicalUrl = 'https://humanliteracy.github.io/Human-literacy-online/teal/';
-  const shareText = releaseApproved ? `${invitation}\n${canonicalUrl}` : invitation;
+  const atCanonicalLocation = location.origin === 'https://humanliteracy.github.io'
+    && ['/Human-literacy-online/teal/', '/Human-literacy-online/teal/index.html'].includes(location.pathname);
+  const shareText = atCanonicalLocation ? `${invitation}\n${canonicalUrl}` : invitation;
   textField.value = shareText;
   share.hidden = false;
   copy.hidden = false;
@@ -21,7 +23,8 @@
     manual.hidden = false;
     textField.focus();
     textField.select();
-    status.textContent = 'Automatic copying is unavailable. Select and copy the invitation below. This preview does not share a website address.';
+    status.textContent = 'Automatic copying is unavailable. Select and copy the invitation below.'
+      + (atCanonicalLocation ? '' : ' No preview address is included.');
   }
 
   async function copyInvitation() {
@@ -29,7 +32,7 @@
       if (!navigator.clipboard?.writeText) { manualCopy(); return; }
       await navigator.clipboard.writeText(shareText);
       manual.hidden = true;
-      status.textContent = releaseApproved ? 'Invitation and public address copied.' : 'Invitation copied. No preview address was included; public release is awaiting approval.';
+      status.textContent = atCanonicalLocation ? 'Invitation and public address copied.' : 'Invitation copied. No preview address was included.';
     } catch { manualCopy(); }
   }
 
@@ -38,9 +41,9 @@
     if (!navigator.share) { await copyInvitation(); return; }
     try {
       const data = { title: 'TEAL — A World Worth Building', text: invitation };
-      if (releaseApproved) data.url = canonicalUrl;
+      if (atCanonicalLocation) data.url = canonicalUrl;
       await navigator.share(data);
-      status.textContent = releaseApproved ? 'Sharing window closed.' : 'Sharing window closed. This preview shared text only, without a preview address.';
+      status.textContent = atCanonicalLocation ? 'Sharing window closed.' : 'Sharing window closed. This preview shared text only, without a preview address.';
     } catch (error) {
       if (error.name === 'AbortError') { status.textContent = 'Sharing cancelled. Nothing else was sent by this page.'; return; }
       manualCopy();
