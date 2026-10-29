@@ -15,7 +15,7 @@ const publicLocation = {origin:'https://humanliteracy.github.io',pathname:'/Huma
 const approved = '9bcdda0934c76a44477560865c161794c585be49';
 const gitRead = (ref,file) => cp.execFileSync('git',['show',ref+':'+file],{cwd:root,maxBuffer:30*1024*1024});
 const article = s => (s.match(/<article class="founding-letter"[^>]*>([\s\S]*?)<\/article>/)||[])[1];
-const entry = '<!-- TEAL entry: one additive release-candidate link. -->\n<p style="font-size:16px;margin:0"><a href="teal/" style="color:#087f77;display:inline-flex;align-items:center;min-height:44px">TEAL — A World Worth Building: read the founding invitation</a></p>\n';
+const entry = '<!-- TEAL entry: one additive release-candidate link. -->\n<p style="font-size:16px;margin:0"><a href="teal/" style="color:#056d66;display:inline-flex;align-items:center;min-height:44px">TEAL — A World Worth Building: read the founding invitation</a></p>\n';
 let passed = 0;
 function check(name, action) { action(); passed++; console.log('PASS',name); }
 async function asyncCheck(name, action) { await action(); passed++; console.log('PASS',name); }
@@ -38,6 +38,7 @@ function setup(navigator = {}, location = {origin:'http://terminal.local:4173',p
     console.log('  Preserved',files.length-1,'original files; one additive homepage link.');
   });
   check('Public page source is free of shipping draft/noindex labels',()=>{for(const source of [page,reading])assert.doesNotMatch(source,/noindex|Not published|Proposed letter|Proposed founding experience|class="review-strip"/);assert.doesNotMatch(script,/releaseApproved/);});
+  check('New homepage entry has at least 4.5:1 text contrast and a 44px target',()=>{const home=read('index.html');const link=home.match(/<a href="teal\/" style="([^"]+)"/)[1];const foreground=link.match(/color:(#[a-f0-9]{6})/i)[1];const background=home.match(/:root\{[^}]*background:(#[a-f0-9]{6})/i)[1];const lum=c=>{const v=[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return v[0]*.2126+v[1]*.7152+v[2]*.0722;};const [low,high]=[lum(foreground),lum(background)].sort((a,b)=>a-b);assert.ok((high+.05)/(low+.05)>=4.5);assert.match(link,/min-height:44px/);});
   check('Approved letter and artwork remain byte-for-byte unchanged',()=>{assert.equal(article(page),article(gitRead(approved,'teal/index.html').toString()));assert.equal(article(reading),article(gitRead(approved,'teal/letter.html').toString()));for(const file of fs.readdirSync(path.join(root,'teal/assets')))assert.deepEqual(fs.readFileSync(path.join(root,'teal/assets',file)),gitRead(approved,'teal/assets/'+file),file);});
   check('Approved humanitarian goal articles remain unchanged',()=>{const goals=s=>s.match(/<article class="goal-row"[\s\S]*?<\/article>/g);assert.deepEqual(goals(page),goals(gitRead(approved,'teal/index.html').toString()));});
   check('Both reading routes and social metadata use the fixed canonical destination',()=>{for(const source of [page,reading])assert.ok(source.includes('<link rel="canonical" href="'+canonical+'">'));assert.ok(page.includes('property="og:url" content="'+canonical+'"'));assert.ok(page.includes(canonical+'assets/teal-social.jpg'));assert.ok(page.includes('property="og:image:width" content="1200"'));assert.ok(page.includes('property="og:image:height" content="630"'));});
