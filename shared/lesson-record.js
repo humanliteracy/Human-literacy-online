@@ -5,7 +5,7 @@
   const match=location.pathname.match(/\/lessons\/(\d{2})\//);
   if(!app||!match||typeof window.render!=='function') return;
   const number=match[1], key='teal-learning-record-v03-'+number;
-  const defaults={recall:'',meaning:'',plan:'',self:'',others:'',everything:'',outcome:'',updated:''};
+  const defaults={recall:'',meaning:'',plan:'',self:'',others:'',everything:'',outcome:'',quizSummary:'',quizUpdated:'',updated:''};
   const clean=v=>String(v||'').trim().slice(0,2000);
   let data={...defaults},storageWorks=false;
   try {
@@ -83,12 +83,21 @@
     ];
   }
   function quizText(){
-    if(typeof quizItems==='undefined'||typeof quizAnswers==='undefined')return 'Not available';
+    if(typeof quizItems==='undefined'||typeof quizAnswers==='undefined')return data.quizSummary||'Not available';
+    if(quizAnswers.length===0)return data.quizSummary||'Not answered in this session';
     return quizItems.map((q,i)=>{
       const opts=typeof optionsFor==='function'?optionsFor(q):q.choices;
       const answer=quizAnswers[i];
       return (i+1)+'. '+(q.question||q.q||'Knowledge check')+'\n   My answer: '+(answer===undefined?'Unanswered':clean(opts[answer]?.text||'Unanswered'));
     }).join('\n');
+  }
+  function captureQuiz(){
+    if(typeof quizItems==='undefined'||typeof quizAnswers==='undefined')return;
+    const summary=quizText();
+    if(summary===data.quizSummary)return;
+    data.quizSummary=summary;
+    data.quizUpdated=new Date().toISOString();
+    save();
   }
   function report(){
     return [
@@ -96,7 +105,8 @@
       'Lesson '+number+' — '+(typeof lessonTitle==='string'?lessonTitle:document.title),
       'Exported: '+new Date().toLocaleString(),'Last edited: '+(data.updated?new Date(data.updated).toLocaleString():'Not saved'),
       '','04 · REMEMBER IT',
-      'Knowledge-check choices (not a moral score):',quizText(),
+      'Knowledge-check choices (not a moral score):',
+      data.quizUpdated?'Saved knowledge check: '+new Date(data.quizUpdated).toLocaleString():'Not saved yet',quizText(),
       '','My reflection:',data.recall||'Not provided',
       '','Where this may apply:',data.meaning||'Not provided',
       '','Reflection review:',...reflectionAnalysis().map(t=>'- '+t),
@@ -172,7 +182,7 @@
   const oldRender=window.render;
   window.render=function(...args){
     const v=oldRender.apply(this,args);
-    if(stage==='results')remember();
+    if(stage==='results'){captureQuiz();remember();}
     if(stage==='live')live();
     return v;
   };
