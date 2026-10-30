@@ -100,3 +100,20 @@ Functional scope:
 Checks completed in local Chromium on desktop and 390px mobile: list updates, pay-status toggles, positive currency math, expected vs uncertain income, 2-check cash guard, fictional-data guard, XSS-safe displayed labels, downloadable TXT report, and a test where final-window cash looks positive but a prior bill-date deficit is detected. No browser runtime errors in scripted scenarios. Screens are responsive; scrolling is allowed on small screens or at high zoom rather than clipping text.
 
 **Remaining before release:** direct browser acceptance of the GitHub-linked route, keyboard and screen-reader testing, 200% zoom review, 5 independent usability sessions, content/resource-date verification, and appropriate human review for financial safety. Not a financial-advice service, credit counseling, or proof of customer demand. Existing draft PR stays unmerged; no public deployment or fees.
+
+
+## 2026-10-30 — Family & Caregiving working pilot
+
+**Draft branch implementation:** one-place/family-handoff.html, linked from the Family & Caregiving area and related solution views. This is a first-party, free, browser-local coordination tool, not a medical or regulated caregiving service.
+
+Functions: household role labels, primary and backup helpers, dates and review schedule; assign up to 30 responsibilities; mark tasks done/reopen/remove; flag unresolved needs and unassigned tasks; record logistical questions and professional follow-up; preview, copy or download a text handoff; reset; fictional test scenario stays labeled after edits. Keyboard-operated tab navigation and escaped DOM text reduce friction and injection risks.
+
+**Privacy/safety:** no customer login, payments, backend, analytics, cookies, localStorage or form uploads. Data exists only in the open page; a downloaded text file is not encrypted. Avoid collecting diagnoses, medications, identifiers or other sensitive records. Tool provides no emergency response, clinical advice or legal authorization.
+
+**Evidence:** NIA Sharing Caregiving Responsibilities (https://www.nia.nih.gov/health/caregiving/sharing-caregiving-responsibilities) and NIA Caregiver Worksheets (https://www.nia.nih.gov/health/caregiving/caregiver-worksheets). VA caregiver resource navigation is linked; eligibility and availability require provider verification.
+
+**Testing:** The separately downloadable, more detailed founder HTML passed Chromium browser tests at 1440x900, 390x844, 320x700: sample labels, task state/counts, unassigned/concern flags, local text export, DOM injection escaping, keyboard tabs and no horizontal overflow. The in-repository compact variant has been written and source-checked, but has NOT passed equivalent independent browser acceptance or a full accessibility audit; it is not byte-identical to the downloadable version.
+
+**Open:** independent caregiver usability tests, consent/privacy review, screen reader and 200% zoom acceptance, content review, international emergency guidance and localization. Do not publish, merge, deploy, collect payments/analytics, or spend funds without founder authorization.
+
+**After this pilot:** complete a production-grade Job Pricing Calculator and usability validation of the free Money & Bills and Family & Caregiving journeys. Preserve the Human Literacy lessons, TEAL draft PR #5, and published main unchanged.
