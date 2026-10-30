@@ -29,3 +29,13 @@ Existing Human Literacy lessons, simulator and approved artwork remain untouched
 The development branch and draft PR are in a **public GitHub repository**; code is visible to people browsing GitHub even though the changed site is not deployed. No changes have been merged into `main`. Do not create public staging, deploy, publish, take payments, collect user information, or spend money without explicit founder approval.
 
 Do not use GitHub Pages as the production home for a primarily commercial storefront or SaaS. Future paid operations need separate commercial hosting and appropriate terms, refunds, support, tax, privacy and accessibility checks. To abandon the prototype, close this draft PR; the live site remains unchanged.
+
+## 2026-10-30 — tighter navigation, own-built resources, public accountability
+
+The branch prototype was revised to keep the 18-area home view compact; every area opens a focused one-page view and every solution has a dedicated one-page route. Each area and solution includes an original on-device action-plan tool, in addition to the six pre-existing interactive sample calculators/workflows.
+
+A public-accountability interface is accessible through **one-place/index.html?impact**. It allows drill-down from site to area to individual service and distinguishes visits, gross earnings, refunds, operating costs, giving, and profit after giving. **All figures say “Not measured” because no site analytics or financial bookkeeping integrations have been installed.** Counts, profit, donation claims and recipients must never be invented. Before launch, establish privacy-conscious traffic aggregates, accounting reconciliation, reporting periods, corrections policy, and appropriate disclosure of affiliate/paid relationships. No customer payments, donations, merchant account, user tracking, external APIs, or professional service fulfillment is activated.
+
+The separate downloadable founder ZIP contains a modular version with additional quality-assurance checks. The GitHub implementation is an independent compact single-file prototype; both convey the concept but are not byte-identical. The modular version was browser-tested; this latest GitHub revision was confirmed in the repository but still requires a separate browser acceptance test before any merge. Zoom, accessibility and manual provider reviews remain pending.
+
+**Safeguards:** no merge, deployment, purchase, booking, analytics enablement, or spending. Draft PR #5 remains independent. Public GitHub branch code is visible to repository visitors even though GitHub Pages still serves main. Long-term commercial hosting must move off GitHub Pages.
