@@ -174,8 +174,11 @@
       catch(_){status.textContent='Clipboard blocked. Select and copy the record below.';}
     },true);
     button(buttons,'Erase this lesson record',()=>{
-      if(!window.confirm('Delete this lesson’s local reflection and plan? Export a copy first if needed.'))return;
-      data={...defaults};try{localStorage.removeItem(key);}catch(_){};window.render();
+      if(!window.confirm('Erase this lesson’s saved record and current knowledge-check answers? Downloads, printed copies and clipboard contents are not affected.'))return;
+      data={...defaults};
+      if(typeof quizAnswers!=='undefined'&&Array.isArray(quizAnswers))quizAnswers.length=0;
+      try{localStorage.removeItem(key);}catch(_){};
+      window.render();
     },true);
     node('p','On shared devices, others using this browser profile might see saved entries. This feature makes no server request or account submission.',end,'teal-record-hint');
   }
