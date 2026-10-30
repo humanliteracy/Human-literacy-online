@@ -25,8 +25,9 @@
     if(cls)n.className=cls;
     parent.append(n);return n;
   }
-  function section(title){
+  function section(title,before){
     const s=node('section',null,app,'teal-record-card');
+    if(before)app.insertBefore(s,before);
     node('h2',title,s,'teal-record-heading');return s;
   }
   function field(s,id,label,hint){
@@ -126,7 +127,8 @@
   }
   window.addEventListener('afterprint',()=>{document.body.classList.remove('teal-print-mode');document.getElementById('teal-print-sheet')?.remove();});
   function remember(){
-    const s=section('Your personal Remember It reflection');
+    const next=[...app.querySelectorAll(':scope > button.action')].find(b=>b.textContent.includes('Continue to Step 5'));
+    const s=section('Your personal Remember It reflection',next);
     node('p','The knowledge check above is unchanged. You can also capture what you understood in your own words.',s);
     field(s,'recall','What did you learn?','A reflection, not a graded answer.');
     field(s,'meaning','Where might you use this?','An example from daily life.');
@@ -136,7 +138,8 @@
     node('p','Private to this browser when storage permits. Export your record before clearing browser data.',s,'teal-record-hint');
   }
   function live(){
-    const s=section('My action plan and learning record');
+    const restart=[...app.querySelectorAll(':scope > button.action')].find(b=>b.textContent.includes('Practice lesson again'));
+    const s=section('My action plan and learning record',restart);
     node('p','Make a realistic plan and consider all three forms of respect. Only report an outcome after something actually happens.',s);
     field(s,'plan','What do you plan to try?','A concrete action, question or sentence.');
     field(s,'self','Respect for Self — what matters for you?','Consider safety, limits, time, energy or needs.');
