@@ -83,3 +83,20 @@ The one-screen Control Panel is the navigation layer, not proof that 72 services
 - COMPLETE: 18-area navigation, 72 draft views, demo calculators, original basic action kits, transparency interface.
 - NOT COMPLETE: three production-grade pilots, market validation, third-party resource verification, accessibility audit, real financial/visitor measurement, customer operations.
 - NEXT ENGINEERING TASK: implement the Money & Bills free pilot on this draft branch, then reuse its audited interaction pattern for caregiving and pricing. Keep existing lessons, Human Literacy artwork, PR #5 and production main unchanged.
+
+## 2026-10-30 — Money & Bills pilot implementation
+
+**Draft implementation added** at `one-place/money-bills.html`. The Money & Bills area and each of its existing four solution views now link to the free first-party planner through a prominent call-to-action on the same draft branch. This is an additional service experience; the existing 18-area navigation, 72 concepts, Human Literacy lessons, original site, draft PR #5, and all financial-transparency prototype fields remain unchanged.
+
+Functional scope:
+- Four compact in-page tabs: Overview, Bills, Income, and My Action Plan.
+- Add, mark paid, and remove unpaid bills and expected-income entries; track due/overdue amounts, 7-day upcoming bills, 7/14/30-day planning windows, and confidence of future deposits.
+- Excludes uncertain income from the planning projection. Keeps fictional data marked fictional until explicitly cleared.
+- Only shows an **illustrative, not verified** remaining amount after explicit user confirmations of current cash and all known commitments; never assumes cash balances or affordability from incomplete inputs.
+- Detects a possible short-term cash deficit when a bill falls due before a later expected deposit; same-day payments are conservatively sequenced before same-day income.
+- Generates a downloadable local text action plan. No server transmission, form submission, bank API, localStorage, accounts, payments, analytics, or visitor financial-data collection.
+- Uses source-reviewed U.S. references from CFPB, 211, and USA.gov, linking to the original providers for their services.
+
+Checks completed in local Chromium on desktop and 390px mobile: list updates, pay-status toggles, positive currency math, expected vs uncertain income, 2-check cash guard, fictional-data guard, XSS-safe displayed labels, downloadable TXT report, and a test where final-window cash looks positive but a prior bill-date deficit is detected. No browser runtime errors in scripted scenarios. Screens are responsive; scrolling is allowed on small screens or at high zoom rather than clipping text.
+
+**Remaining before release:** direct browser acceptance of the GitHub-linked route, keyboard and screen-reader testing, 200% zoom review, 5 independent usability sessions, content/resource-date verification, and appropriate human review for financial safety. Not a financial-advice service, credit counseling, or proof of customer demand. Existing draft PR stays unmerged; no public deployment or fees.
