@@ -1,4 +1,12 @@
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs/promises');
+async function reach(page, selector) {
+  for(let step=0;step<14;step++) {
+    if(await page.locator(selector).count()) return;
+    await page.getByRole('button', { name: 'Forward →' }).click();
+  }
+  await expect(page.locator(selector)).toBeVisible();
+}
 for (let n = 1; n <= 10; n++) {
   const num = String(n).padStart(2, '0');
   test("lesson "+num+": reflection, plan, private export and erasure", async ({ page }) => {
@@ -6,7 +14,7 @@ for (let n = 1; n <= 10; n++) {
     page.on('pageerror', e => errors.push(String(e)));
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/lessons/"+num+"/");
-    for (let step = 0; step < 7; step++) await page.getByRole('button', { name: 'Forward →' }).click();
+    await reach(page, '#teal-recall');
     await expect(page.locator('#teal-recall')).toBeVisible();
     await page.locator('#teal-recall').fill("My reflection on lesson "+num+": protect my limits and consider others.");
     await page.getByRole('button', { name: 'Review my reflection' }).click();
@@ -28,8 +36,11 @@ for (let n = 1; n <= 10; n++) {
       page.getByRole('button', { name: 'Save as text' }).click()
     ]);
     expect(download.suggestedFilename()).toContain("TEAL_Lesson_"+num+"_Record_");
+    const text=await fs.readFile(await download.path(),'utf8');
+    expect(text).toContain("My reflection on lesson "+num);
+    expect(text).toContain("No observed outcome");
     await page.reload();
-    for (let step = 0; step < 8; step++) await page.getByRole('button', { name: 'Forward →' }).click();
+    await reach(page, '#teal-plan');
     await expect(page.locator('#teal-plan')).toHaveValue('Ask a clear question before responding tomorrow.');
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: 'Erase this lesson record' }).click();
@@ -40,9 +51,26 @@ for (let n = 1; n <= 10; n++) {
 }
 test('lesson 05: print action prepares a stand-alone learning record', async ({ page }) => {
   await page.goto('/lessons/05/');
-  for (let step = 0; step < 8; step++) await page.getByRole('button', { name: 'Forward →' }).click();
+  await reach(page, '#teal-plan');
   await page.evaluate(() => { window.__printRequested = false; window.print = () => { window.__printRequested = true; }; });
   await page.getByRole('button', { name: 'Print / Save PDF' }).click();
   expect(await page.evaluate(() => window.__printRequested)).toBe(true);
   await expect(page.locator('#teal-print-sheet')).toContainText('PERSONAL LEARNING RECORD');
+});
+
+test('lesson 05: knowledge-check answers survive reloading this browser', async ({ page }) => {
+  await page.goto('/lessons/05/');
+  for(let i=0;i<14;i++) {
+    if(await page.getByRole('button',{name:'Submit answer'}).count())break;
+    await page.getByRole('button',{name:'Forward →'}).click();
+  }
+  await page.locator('button.option').first().click();
+  await page.getByRole('button',{name:'Submit answer'}).click();
+  await reach(page,'#teal-recall');
+  await page.getByRole('button',{name:'Forward →'}).click();
+  await expect(page.locator('#teal-full-report')).toContainText('Knowledge-check choices');
+  await page.reload();
+  await reach(page,'#teal-plan');
+  await expect(page.locator('#teal-full-report')).toContainText('My answer:');
+  await expect(page.locator('#teal-full-report')).toContainText('Saved knowledge check:');
 });
