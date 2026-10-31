@@ -7,6 +7,58 @@
 @media(max-width:380px){.brand{font-size:14px}.topnav{font-size:10px}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.fieldrow,.two{grid-template-columns:1fr}.tabs button{font-size:12px;padding:7px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 @media print{.top,.bar,.tabs,.toolactions,.bottom,.buttonrow,form,.btn,.ghost{display:none!important}.print-only{display:block}.panel{display:block}.box{margin:7px 0;break-inside:avoid}.main{padding:0}.scroller{max-height:none;overflow:visible}}
+
+/* OP-104: wide, legible desktop workspace; compact, readable mobile reflow. */
+@media screen and (min-width:1000px){
+ .wrap{width:min(1820px,calc(100% - 56px))}
+ .main{padding:10px 0 12px}
+ .intro p,.box>p,.method,.note{font-size:14px}
+ .intro h1{font-size:clamp(30px,2.7vw,43px)}
+ .topnav{font-size:14px}
+ .btn,.ghost{font-size:14px;min-height:42px}
+ .summary{margin:9px 0;gap:11px}
+ .stat{padding:10px 15px}
+ .stat small,.stat span{font-size:12px}
+ .stat strong{font-size:clamp(19px,1.75vw,28px)}
+ .tabs{margin-bottom:8px}
+ .tabs button{font-size:15px;padding:8px 18px;min-height:44px}
+ .panel{grid-template-columns:minmax(0,1.35fr) minmax(335px,.82fr);gap:14px}
+ .box{padding:16px}
+ .field,.check,.mini label,.flowline,.actions,.links a{font-size:14px}
+ .field input,.field select,.field textarea{min-height:42px}
+ .list .label,.list .amt{font-size:14px}
+ .item .meta,.help,.sectionFoot{font-size:12px}
+ .bottom{font-size:12px}
+}
+@media screen and (min-width:1000px) and (max-height:820px){
+ .main{min-height:auto;justify-content:flex-start;padding:7px 0}
+ .intro h1{font-size:30px}
+ .stat{padding:8px 12px}
+ .summary{margin:7px 0}
+ .panel{min-height:0}
+ .box{padding:12px}
+ .tabs{margin-bottom:6px}
+ .bottom{padding:7px 0}
+}
+@media screen and (max-width:999px){
+ .wrap{width:calc(100% - 22px)}
+ .intro p,.box>p,.method,.note{font-size:13px}
+ .tabs button{min-height:44px;font-size:14px}
+ .field,.check,.flowline,.links a{font-size:14px}
+ .field input,.field select,.field textarea{min-height:44px}
+ .stat small{font-size:12px}
+ .stat span{font-size:11px}
+ .btn,.ghost{font-size:14px;min-height:44px}
+ .box{padding:13px}
+ .scroller{max-height:none;overflow:visible}
+}
+@media screen and (max-width:420px){
+ .panel{grid-template-columns:1fr}
+ .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .fieldrow,.two{grid-template-columns:1fr}
+ .topnav{flex-wrap:wrap}
+}
+
 </style></head><body>
 <div class="bar">DRAFT FOUNDER PREVIEW · FREE LOCAL TOOL · NO BANK CONNECTION · NO PAYMENT OR ACCOUNT</div>
 <div class="top"><div class="wrap"><a class="brand" href="index.html"><i>✳</i> ONE PLACE</a><div class="topnav"><a href="index.html">All life areas</a><a href="index.html?impact">Public numbers</a><a href="index.html?team">Our team</a></div></div></div>
