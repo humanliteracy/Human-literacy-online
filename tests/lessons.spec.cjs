@@ -55,3 +55,38 @@ for (const lesson of ['01', '02']) {
     expect(await video.evaluate(v => v.error)).toBe(null);
   });
 }
+
+
+test('HL-119: unanswered Remember It cannot be bypassed with Forward', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/lessons/01/');
+  await page.getByRole('button', { name: 'Continue to Understand It' }).click();
+  await page.getByRole('button', { name: 'Continue to Practice' }).click();
+  for (let scene = 0; scene < 3; scene++) {
+    const options = page.locator('button.option');
+    for (let choice = 0; choice < 3; choice++) await options.nth(choice).click();
+    await page.getByRole('button', { name: scene === 2 ? 'Continue to Remember It' : 'Next situation', exact: true }).click();
+  }
+  const forward = page.getByRole('button', { name: 'Forward →', exact: true });
+  const submit = page.getByRole('button', { name: 'Submit answer', exact: true });
+  await expect(forward).toBeDisabled();
+  await expect(submit).toBeDisabled();
+  await page.locator('button.option').nth(1).click();
+  await expect(forward).toBeDisabled();
+  await submit.click();
+  await expect(forward).toBeDisabled();
+  await page.getByRole('button', { name: '← Back', exact: true }).click();
+  await expect(forward).toBeEnabled();
+  await forward.click();
+  await expect(forward).toBeDisabled();
+  for (const answer of [2, 0]) {
+    await page.locator('button.option').nth(answer).click();
+    await page.getByRole('button', { name: 'Submit answer', exact: true }).click();
+  }
+  await expect(page.locator('.summary')).toContainText('3 of 3 correct');
+  await page.getByRole('button', { name: 'Continue to Live It' }).click();
+  await expect(page.locator('h1')).toContainText('Take the skill into real life');
+  expect(errors).toEqual([]);
+});
