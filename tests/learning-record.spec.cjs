@@ -3,7 +3,16 @@ const fs = require('node:fs/promises');
 async function reach(page, selector) {
   for(let step=0;step<14;step++) {
     if(await page.locator(selector).count()) return;
-    await page.getByRole('button', { name: 'Forward →' }).click();
+    const forward = page.getByRole('button', { name: 'Forward →' });
+    if (await forward.isDisabled()) {
+      // HL-119 keeps unanswered knowledge checks private; answer instead of skipping.
+      const submit = page.getByRole('button', { name: 'Submit answer' });
+      if (!await submit.count()) throw new Error('Unexpected blocked lesson navigation');
+      await page.locator('button.option').first().click();
+      await submit.click();
+    } else {
+      await forward.click();
+    }
   }
   await expect(page.locator(selector)).toBeVisible();
 }
