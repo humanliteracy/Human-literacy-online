@@ -7,6 +7,75 @@
 <title>Human Literacy — Free Interactive Life Skills</title>
 <style>
 :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#193035;background:#edf8f5;font-synthesis:none}*{box-sizing:border-box}body{margin:0}main{width:min(100% - 32px,760px);margin:0 auto;padding:22px 0 50px}.brand{font-size:17px;font-weight:800;letter-spacing:.025em;color:#087f77;margin-bottom:50px}.eyebrow{font-size:15px;font-weight:800;letter-spacing:.035em;color:#087f77}h1{font-size:clamp(36px,8vw,52px);line-height:1.12;letter-spacing:-.035em;margin:20px 0 24px}p{font-size:clamp(18px,4.3vw,23px);line-height:1.65;margin:0 0 22px}.muted{color:#5a7176}.intro{margin-bottom:64px}h2{font-size:clamp(28px,6vw,36px);letter-spacing:-.025em;margin:0 0 22px}.lessons{display:grid;gap:20px}.card{background:white;border:1px solid #cbe3dd;border-radius:25px;padding:27px;box-shadow:0 12px 32px rgba(12,70,62,.05)}.card h3{font-size:clamp(25px,5.8vw,33px);line-height:1.2;letter-spacing:-.025em;margin:20px 0}.card p{font-size:clamp(18px,4.3vw,22px);margin-bottom:28px}.button{display:block;text-align:center;text-decoration:none;color:white;background:#07867d;border-radius:14px;font-weight:800;font-size:19px;padding:18px 16px;min-height:58px}.button:focus-visible{outline:3px solid #172d31;outline-offset:4px}.button:hover{background:#056d66}footer{color:#5a7176;font-size:16px;line-height:1.6;margin:36px 0 0}@media(min-width:700px){main{padding-top:28px}.brand{margin-bottom:65px}.intro{margin-bottom:76px}.card{padding:34px}}
+
+/* OP-104: desktop site hub uses task-sized screens, not a continuous page. */
+[hidden]{display:none!important}
+.screen-switcher{display:flex;flex-wrap:wrap;gap:9px;margin:8px 0 12px}
+.screen-switcher button{font:inherit;font-size:15px;font-weight:800;padding:10px 20px;min-height:44px;border:1px solid #91bdb3;border-radius:12px;color:#14584f;background:#fff;cursor:pointer}
+.screen-switcher button[aria-pressed=true]{background:#087f78;color:#fff;border-color:#087f78}
+.screen-switcher button:focus-visible{outline:3px solid #bd782b;outline-offset:3px}
+.launch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.launch-grid>.card{margin:0!important}
+@media screen and (min-width:1000px){
+ body{font-size:17px}
+ main{width:min(1820px,calc(100% - 56px));padding:12px 0 16px}
+ .brand{margin-bottom:9px;font-size:18px}
+ .intro{margin-bottom:5px}
+ .intro h1{font-size:clamp(35px,3.4vw,56px);margin:4px 0 10px}
+ .intro p{font-size:clamp(16px,1.23vw,20px);line-height:1.4;margin:0 0 7px}
+ h2{font-size:clamp(23px,2vw,32px);margin:3px 0 10px}
+ .launch-grid>.card{padding:clamp(15px,1.3vw,24px)}
+ .launch-grid>.card h2{font-size:clamp(20px,1.8vw,29px);margin:8px 0!important;line-height:1.2}
+ .launch-grid>.card p{font-size:clamp(14px,1vw,17px);line-height:1.4;margin:0 0 13px}
+ .launch-grid .muted{font-size:13px!important}
+ .button{min-height:44px;padding:11px 12px;font-size:15px}
+ .lessons{grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+ .lessons>.card{padding:13px;border-radius:16px;display:flex;flex-direction:column}
+ .lessons>.card .eyebrow{font-size:11px}
+ .lessons>.card h3{font-size:clamp(17px,1.35vw,23px);margin:7px 0}
+ .lessons>.card p{font-size:clamp(13px,.94vw,16px);line-height:1.35;margin:0 0 10px;flex:1}
+ .lessons>.card .button{font-size:13px;padding:9px;min-height:44px}
+ section[aria-labelledby=support-heading]{margin:0!important;padding:22px;max-width:100%}
+ section[aria-labelledby=support-heading] h2{margin:5px 0!important}
+ section[aria-labelledby=support-heading] p{font-size:17px;line-height:1.4;margin:8px 0}
+ footer{font-size:13px;margin:12px 0 0}
+}
+@media screen and (min-width:1000px) and (max-height:820px){
+ main{padding:7px 0}
+ .brand{margin-bottom:5px}
+ .intro h1{font-size:34px;margin:3px 0 5px}
+ .intro p{font-size:15px;margin-bottom:5px}
+ .screen-switcher{margin:5px 0 9px}
+ .launch-grid>.card{padding:15px}
+ .launch-grid>.card h2{font-size:21px}
+ .launch-grid>.card p{font-size:14px}
+ .lessons>.card{padding:10px}
+ .lessons>.card h3{font-size:17px}
+ .lessons>.card p{font-size:13px}
+}
+@media screen and (max-width:999px){
+ main{width:calc(100% - 26px);padding:12px 0}
+ .brand{margin-bottom:12px}
+ .intro{margin-bottom:7px}
+ h1{font-size:clamp(30px,5vw,43px);margin:8px 0}
+ .intro p{font-size:16px;line-height:1.45;margin-bottom:9px}
+ .launch-grid{grid-template-columns:1fr;gap:9px}
+ .launch-grid>.card{padding:16px}
+ .launch-grid>.card h2{font-size:23px;margin:8px 0!important}
+ .launch-grid>.card p{font-size:15px;line-height:1.45;margin-bottom:10px}
+ .button{font-size:15px;min-height:44px;padding:11px}
+ .lessons{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .lessons>.card{padding:12px;border-radius:15px;display:flex;flex-direction:column}
+ .lessons>.card .eyebrow{font-size:11px}
+ .lessons>.card h3{font-size:17px;margin:6px 0}
+ .lessons>.card p{font-size:13px;line-height:1.35;margin:0 0 10px;flex:1}
+ .lessons>.card .button{font-size:13px}
+}
+@media screen and (max-width:360px){
+ .lessons{grid-template-columns:1fr}
+ .screen-switcher button{flex:1;font-size:14px;padding:9px}
+}
+
 </style>
 </head>
 <body><main>
@@ -60,4 +129,26 @@
   </div></section>
 <section class="card" aria-labelledby="support-heading" style="margin-top:32px"><div class="eyebrow">GROWING FOR HUMANITY</div><h2 id="support-heading" style="margin-top:14px">Always free. Built to grow.</h2><p>Our long-term mission is to make practical human knowledge and support accessible to everyone, everywhere.</p><p class="muted" style="font-size:16px">We plan to share a privacy-conscious public visit count once reliable counting is available. No visitor total is displayed until it can be verified.</p><a class="button" href="support/">Support Our Mission</a></section>
 <footer>Human Literacy is an educational project. Lessons offer practice, not psychological diagnosis or individualized professional advice. Your lesson choices aren't sent to a server by these pages.</footer>
-</main></body></html>
+</main><script id="op104-site-screens">
+(()=>{'use strict';
+ const main=document.querySelector('body>main');
+ if(!main)return;
+ const intro=main.querySelector('.intro');
+ const lessons=main.querySelector('section[aria-labelledby="choose"]');
+ const support=main.querySelector('section[aria-labelledby="support-heading"]');
+ if(!intro||!lessons||!support)return;
+ const entries=[...main.children].filter(e=>e.classList.contains('card')&&e!==support);
+ const launch=document.createElement('div');launch.className='launch-grid';launch.id='entry-screen';launch.setAttribute('aria-label','Explore One Place, TEAL, and Life Simulator');
+ for(const e of entries)launch.appendChild(e);
+ main.insertBefore(launch,lessons);
+ const nav=document.createElement('nav');nav.className='screen-switcher';nav.setAttribute('aria-label','Choose a Human Literacy section');
+ nav.innerHTML='<button type="button" data-view="explore" aria-controls="entry-screen" aria-pressed="true">Explore</button><button type="button" data-view="lessons" aria-controls="lessons-screen" aria-pressed="false">All 10 lessons</button><button type="button" data-view="mission" aria-controls="mission-screen" aria-pressed="false">Our mission</button>';
+ lessons.id='lessons-screen';support.id='mission-screen';intro.after(nav);
+ const views={explore:launch,lessons,mission:support};
+ const select=(key)=>{for(const [name,panel] of Object.entries(views))panel.hidden=name!==key;
+  nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===key)));
+ };
+ nav.addEventListener('click',event=>{const b=event.target.closest('button[data-view]');if(b)select(b.dataset.view)});
+ select(location.hash==='#lessons'?'lessons':location.hash==='#mission'?'mission':'explore');
+})();
+</script></body></html>
