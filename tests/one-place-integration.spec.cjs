@@ -43,3 +43,46 @@ test('OP-104 + HL-119: Lesson 01 record and quiz guard coexist',async({page})=>{
   await expect(page.getByRole('button',{name:'Forward →',exact:true})).toBeDisabled();
   expect(errors).toEqual([]);
 });
+
+
+test('OP-104 / TEAL: founding flow reflows and keyboard entry is meaningful', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/teal/');
+    await expect(page).toHaveTitle(/TEAL/);
+    await expect(page.getByText('Trinity Equals Amazing Love', { exact: true })).toBeVisible();
+    await expect(page.locator('a.symbol-entry')).toHaveAttribute('href', '#message-title');
+    await expect(page.locator('a.alternative-entry')).toHaveAttribute('href', '#message-title');
+    await expect.poll(async () => page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth
+    )).toBe(true);
+    const link = page.locator('a.alternative-entry');
+    await link.focus();
+    await expect(link).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#message-title')).toBeFocused();
+    await expect(page.locator('h1#message-title')).toContainText('To humanity');
+  }
+  expect(errors).toEqual([]);
+});
+
+test('OP-104 / TEAL: private review share text excludes unpublished address', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.goto('/teal/');
+  const share = page.locator('#share-invitation');
+  const copy = page.locator('#copy-invitation');
+  await expect(share).toBeVisible();
+  await expect(copy).toBeVisible();
+  const value = await page.locator('#invitation-text').inputValue();
+  expect(value).toContain('TEAL');
+  expect(value).not.toContain('https://humanliteracy.github.io/Human-literacy-online/teal/');
+  await page.locator('a[href="letter.html"]').first().click();
+  await expect(page).toHaveURL(/\/teal\/letter\.html$/);
+  await expect(page.locator('article.founding-letter h1')).toContainText('To humanity');
+  await page.getByRole('link', { name: /Return to the full experience/ }).click();
+  await expect(page).toHaveURL(/\/teal\/index\.html$/);
+  expect(errors).toEqual([]);
+});
