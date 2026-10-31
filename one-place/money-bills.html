@@ -59,6 +59,20 @@
  .topnav{flex-wrap:wrap}
 }
 
+
+/* OP-104 short-desktop acceptance: remove artificial viewport minimum and
+   lay out resource links side by side instead of stacking a long page. */
+@media screen and (min-width:1000px) {
+ .main{min-height:0}
+}
+@media screen and (min-width:1000px) and (max-height:820px) {
+ .box>p{margin:4px 0 7px}
+ .check{margin-top:5px}
+ .callout{margin:7px 0;padding:8px}
+ .links{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .links a{display:flex;align-items:center;min-width:0;padding:7px;font-size:12px;line-height:1.25;overflow-wrap:anywhere}
+ .buttonrow{margin-top:8px}
+}
 </style></head><body>
 <div class="bar">DRAFT FOUNDER PREVIEW · FREE LOCAL TOOL · NO BANK CONNECTION · NO PAYMENT OR ACCOUNT</div>
 <div class="top"><div class="wrap"><a class="brand" href="index.html"><i>✳</i> ONE PLACE</a><div class="topnav"><a href="index.html">All life areas</a><a href="index.html?impact">Public numbers</a><a href="index.html?team">Our team</a></div></div></div>
