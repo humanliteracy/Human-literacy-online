@@ -48,6 +48,26 @@
  .task small{font-size:12px}
 }
 
+
+/* OP-104: compact the initial household form on shorter desktops, while
+   preserving full-height readable inputs and single-column mobile forms. */
+@media screen and (min-width:1000px) and (max-height:820px) {
+ .topline h1{font-size:30px;margin:4px 0 2px}
+ .topline .intro{margin-bottom:4px}
+ .stats{margin:5px 0}
+ .stats div{padding:8px 12px}
+ .stats strong{font-size:20px}
+ .tabs{margin-bottom:5px}
+ .box{padding:9px 12px}
+ #p1 .fieldgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 9px}
+ #p1 .fieldgrid label{min-width:0}
+ #p1 .fieldgrid input,#p1 .fieldgrid select{min-height:40px}
+ #p1 .fieldgrid textarea{min-height:49px}
+ #p1 .note{margin-top:7px;padding:8px}
+ #p1 .box p:has([data-next]){margin:7px 0 0}
+ .foot{margin:5px 0}
+ footer{padding:6px 0}
+}
 </style></head><body><div class="bar">FOUNDER PREVIEW · FREE LOCAL TOOL · NO ACCOUNT, TRACKING, UPLOAD, OR PAYMENT</div><header class="shell"><a class="brand" href="index.html">✳ ONE PLACE</a><nav><a href="index.html?area=Family%20%26%20Caregiving">Family & Caregiving</a> · <a href="index.html?team">Our team</a></nav></header>
 <main class="shell">
 <div class="topline"><div><h1>Share the care. Make the next step clear.</h1><p class="intro">Built by one human founder with ChatGPT and AI tools. Coordinate tasks without exposing medical records.</p></div><div class="actions"><button class="secondary" id="sample" type="button">Fictional example</button><button class="secondary" id="clear" type="button">Clear</button><button class="btn" id="quick" type="button">Download handoff ↓</button></div></div>
