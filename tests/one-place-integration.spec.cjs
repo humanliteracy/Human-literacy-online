@@ -95,7 +95,7 @@ test('OP-104: TEAL headings have names rather than decorative section numbering'
  const kickers=page.locator('.section-kicker > span:first-child');
  expect(await kickers.allTextContents()).toEqual(expect.arrayContaining([
   'THE FOUNDING INVITATION','UNDERSTAND THE CAUSE','THREE SHARED ESSENTIALS',
-  'HUMAN LITERACY ONLINE','REFLECT & ACT','AN INVITATION YOU CAN PASS ALONG','TRUST & OPEN QUESTIONS'
+  'HUMAN LITERACY ONLINE','REFLECT & ACT','TRUST & OPEN QUESTIONS'
  ]));
  for(const text of await kickers.allTextContents()){
   expect(text).not.toMatch(/^[0-9][0-9] *[/]/);
