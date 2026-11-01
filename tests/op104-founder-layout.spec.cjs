@@ -62,3 +62,16 @@ test('TEAL entrance, message and simple reading offer One Place exit',async({pag
   await page.goto('/teal/letter.html');
   await expect(page.locator('.reading-header').getByRole('link',{name:'One Place Home'})).toBeVisible();
 });
+
+test('OP-104 compact desktop grouped learning links retain 44px targets',async({page})=>{
+  await page.setViewportSize({width:1366,height:768});
+  await page.goto('/one-place/');
+  const nav=page.getByRole('navigation',{name:'Learning and practice'});
+  const group=nav.getByRole('group',{name:'Human Literacy: lessons and practice'});
+  await expect(group).toBeVisible();
+  for(const link of await nav.getByRole('link').all()){
+    const box=await link.boundingBox();
+    expect(box, 'Every learning or TEAL link remains visible').not.toBeNull();
+    expect(box.height, 'Readable 44px tap target').toBeGreaterThanOrEqual(44);
+  }
+});
