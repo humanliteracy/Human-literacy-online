@@ -151,15 +151,22 @@ def run(revision, expected_checksum):
                 data = re.sub(r'(<body\b[^>]*>)', lambda m: m[1] + badge,
                               data.decode('utf-8'), count=1, flags=re.I).encode()
             status, extra = 200, {}
-            if path.endswith('.mp4') and self.headers.get('Range'):
-                match = re.fullmatch(r'bytes=(\d+)-(\d*)', self.headers['Range'])
-                size = len(data)
-                start = int(match[1]) if match else size
-                end = min(int(match[2]), size - 1) if match and match[2] else size - 1
-                if start > end:
-                    return self.send(416, extra={'Content-Range': 'bytes */%d' % size})
-                status, extra = 206, {'Content-Range': 'bytes %d-%d/%d' % (start, end, size)}
-                data = data[start:end + 1]
+            if path.endswith('.mp4'):
+                extra['Accept-Ranges'] = 'bytes'
+                if self.headers.get('Range'):
+                    match = re.fullmatch(r'bytes=(\d*)-(\d*)', self.headers['Range'])
+                    size = len(data)
+                    if not match or not any(match.groups()):
+                        return self.send(416, extra={'Content-Range': 'bytes */%d' % size,
+                                                      'Accept-Ranges': 'bytes'})
+                    start = int(match[1]) if match[1] else max(0, size - int(match[2]))
+                    end = min(int(match[2]), size - 1) if match[1] and match[2] else size - 1
+                    if start >= size or start > end:
+                        return self.send(416, extra={'Content-Range': 'bytes */%d' % size,
+                                                      'Accept-Ranges': 'bytes'})
+                    status, extra = 206, {'Accept-Ranges': 'bytes',
+                                          'Content-Range': 'bytes %d-%d/%d' % (start, end, size)}
+                    data = data[start:end + 1]
             return self.send(status, data, mimetypes.guess_type(path)[0] or
                              'application/octet-stream', extra)
 
