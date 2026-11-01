@@ -53,8 +53,8 @@ for (const lesson of ['01', '02']) {
     const controls = page.getByRole('group', { name: 'Video playback and download options' });
     await expect(controls.getByRole('slider', { name: 'Video position' })).toBeEnabled();
     const download = controls.getByRole('link', { name: 'Download video (MP4)' });
-    await expect(download).toHaveAttribute('download', /\\.mp4$/);
-    await expect(download).toHaveAttribute('href', /\\.mp4$/);
+    await expect(download).toHaveAttribute('download', /mp4$/);
+    await expect(download).toHaveAttribute('href', /mp4$/);
     await video.evaluate(v => v.play());
     await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(0.2);
     await video.evaluate(v => v.pause());
