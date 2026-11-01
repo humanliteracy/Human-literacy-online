@@ -146,6 +146,19 @@
   #panel-plan #exportStatus{grid-area:planstatus}
 }
 
+
+/* OP-104 visual retest 2026-10-31: at a ~928px-tall desktop the entire
+   action plan is readable but the footer requires a small vertical scroll.
+   Recover space in framing only, retaining content and all text sizes.
+   Do not affect 200% zoom/mobile reflow or the existing <=820px controls. */
+@media screen and (min-width:1200px) and (min-height:821px) and (max-height:980px){
+  .top .wrap{min-height:49px}
+  .main{padding:5px 0 6px}
+  .summary{margin:5px 0}
+  .tabs{margin-bottom:5px}
+  .bottom{padding:6px 0}
+}
+
 </style></head><body>
 <div class="bar">DRAFT FOUNDER PREVIEW · FREE LOCAL TOOL · NO BANK CONNECTION · NO PAYMENT OR ACCOUNT</div>
 <div class="top"><div class="wrap"><a class="brand" href="index.html"><i>✳</i> ONE PLACE</a><div class="topnav"><a href="index.html">All life areas</a><a href="index.html?impact">Public numbers</a><a href="index.html?team">Our team</a></div></div></div>
