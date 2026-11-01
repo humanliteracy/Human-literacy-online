@@ -100,6 +100,8 @@ test('OP-104: TEAL headings have names rather than decorative section numbering'
  for(const text of await kickers.allTextContents()){
   expect(text).not.toMatch(/^[0-9][0-9] *[/]/);
  }
+ await expect(page.locator('.share-section .eyebrow')).toContainText('AN INVITATION YOU CAN PASS ALONG');
+ await expect(page.locator('.share-section .eyebrow')).not.toContainText('06 /');
  await expect(page.locator('.goals-section .number')).toHaveCount(0);
  await expect(page.locator('.principles-grid .number')).toHaveCount(0);
  await expect(page.locator('.site-nav')).toHaveCSS('background-color','rgb(4, 21, 31)');
