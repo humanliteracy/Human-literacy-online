@@ -28,6 +28,8 @@ class IntegratedPreview(unittest.TestCase):
             '/teal/assets/test.webp': b'synthetic image',
             '/shared/lesson-record.js': b'/* record */',
             '/shared/lesson-record.css': b'/* style */',
+            '/shared/lesson-video-controls.js': b'/* seek controls */',
+            '/media/example.mp4': bytes(range(256)) * 4,
             '/simulator/01/index.html': b'<body>Coach</body>',
         })
         archive = io.BytesIO()
@@ -89,6 +91,28 @@ class IntegratedPreview(unittest.TestCase):
                     self.assertIn(original.replace(b'<body>', b''), body)
                 else:
                     self.assertEqual(body, original)
+
+    def test_media_seek_and_direct_download_headers(self):
+        path = '/media/example.mp4'
+        full = self.payloads[path]
+        status, headers, data = self.request(path, authenticated=True)
+        self.assertEqual(status, 200)
+        self.assertEqual(headers['Accept-Ranges'], 'bytes')
+        self.assertEqual(data, full)
+        status, headers, data = self.request(path, authenticated=True,
+                                            extra={'Range': 'bytes=10-29'})
+        self.assertEqual(status, 206)
+        self.assertEqual(headers['Content-Range'], 'bytes 10-29/1024')
+        self.assertEqual(data, full[10:30])
+        status, headers, data = self.request(path, authenticated=True,
+                                            extra={'Range': 'bytes=-20'})
+        self.assertEqual(status, 206)
+        self.assertEqual(data, full[-20:])
+        status, headers, _ = self.request(path, authenticated=True,
+                                          extra={'Range': 'bytes=9999-'})
+        self.assertEqual(status, 416)
+        self.assertEqual(headers['Content-Range'], 'bytes */1024')
+        self.assertEqual(self.request(path)[0], 401)
 
     def test_directory_and_query_routes(self):
         for route in ['/one-place/', '/teal/', '/lessons/01/',
