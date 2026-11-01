@@ -62,7 +62,10 @@ for (const lesson of ['01', '02']) {
     await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(8);
     await controls.getByRole('button', { name: '← Back 10 seconds' }).click();
     await expect.poll(() => video.evaluate(v => v.currentTime)).toBeLessThan(5);
-    await controls.getByRole('slider', { name: 'Video position' }).fill('30');
+    await controls.getByRole('slider', { name: 'Video position' }).evaluate(el => {
+      el.value = '30';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
     await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(25);
     const response = await page.request.get(await download.getAttribute('href'));
     expect(response.ok()).toBe(true);
