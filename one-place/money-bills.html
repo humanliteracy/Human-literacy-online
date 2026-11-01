@@ -111,6 +111,41 @@
  .links a{display:flex;align-items:center;min-width:0;padding:7px;font-size:12px;line-height:1.25;overflow-wrap:anywhere}
  .buttonrow{margin-top:8px}
 }
+
+/* OP-104: desktop-only action-plan density. Keep every warning, source and
+   checklist item visible; let small screens or unusually long plans scroll. */
+@media screen and (min-width:1200px){
+  #panel-plan>.panel{
+    grid-template-columns:minmax(0,1.75fr) minmax(325px,.75fr);
+    gap:13px;
+  }
+  #panel-plan>.panel>.box:first-child{
+    display:grid;
+    grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+    grid-template-areas:
+      "planheading actionheading"
+      "planperiod actionitems"
+      "planfigures actionitems"
+      "plannotice actionitems"
+      "planbuttons planbuttons"
+      "planstatus planstatus";
+    column-gap:16px;
+    row-gap:4px;
+    align-items:start;
+    align-content:start;
+  }
+  #panel-plan>.panel>.box:first-child>h2{grid-area:planheading}
+  #panel-plan #planPeriod{grid-area:planperiod;margin:2px 0 6px}
+  #panel-plan #planLines{grid-area:planfigures}
+  #panel-plan #planWarning{grid-area:plannotice;margin-top:5px}
+  #panel-plan>.panel>.box:first-child>h3{grid-area:actionheading;margin-top:0!important}
+  #panel-plan #nextActions{grid-area:actionitems;margin:4px 0 0;padding-left:21px}
+  #panel-plan #nextActions li{margin-bottom:7px}
+  #panel-plan #planLines .flowline{padding:5px 0;line-height:1.35}
+  #panel-plan>.panel>.box:first-child>.buttonrow{grid-area:planbuttons;margin-top:4px}
+  #panel-plan #exportStatus{grid-area:planstatus}
+}
+
 </style></head><body>
 <div class="bar">DRAFT FOUNDER PREVIEW · FREE LOCAL TOOL · NO BANK CONNECTION · NO PAYMENT OR ACCOUNT</div>
 <div class="top"><div class="wrap"><a class="brand" href="index.html"><i>✳</i> ONE PLACE</a><div class="topnav"><a href="index.html">All life areas</a><a href="index.html?impact">Public numbers</a><a href="index.html?team">Our team</a></div></div></div>
