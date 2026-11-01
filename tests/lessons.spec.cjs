@@ -50,8 +50,24 @@ for (const lesson of ['01', '02']) {
     const video = page.locator('video');
     await expect.poll(() => video.evaluate(v => v.readyState)).toBeGreaterThanOrEqual(1);
     expect(await video.evaluate(v => v.duration)).toBeGreaterThan(100);
+    const controls = page.getByRole('group', { name: 'Video playback and download options' });
+    await expect(controls.getByRole('slider', { name: 'Video position' })).toBeEnabled();
+    const download = controls.getByRole('link', { name: 'Download video (MP4)' });
+    await expect(download).toHaveAttribute('download', /\\.mp4$/);
+    await expect(download).toHaveAttribute('href', /\\.mp4$/);
     await video.evaluate(v => v.play());
     await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(0.2);
+    await video.evaluate(v => v.pause());
+    await controls.getByRole('button', { name: 'Forward 10 seconds →' }).click();
+    await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(8);
+    await controls.getByRole('button', { name: '← Back 10 seconds' }).click();
+    await expect.poll(() => video.evaluate(v => v.currentTime)).toBeLessThan(5);
+    await controls.getByRole('slider', { name: 'Video position' }).fill('30');
+    await expect.poll(() => video.evaluate(v => v.currentTime)).toBeGreaterThan(25);
+    const response = await page.request.get(await download.getAttribute('href'));
+    expect(response.ok()).toBe(true);
+    expect((response.headers()['content-type'] || '')).toContain('video/mp4');
+    expect(await response.body()).not.toHaveLength(0);
     expect(await video.evaluate(v => v.error)).toBe(null);
   });
 }
