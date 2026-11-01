@@ -88,3 +88,19 @@ test('OP-104 / TEAL: private review share text excludes unpublished address', as
   await expect(page).toHaveURL(/\/teal\/index\.html$/);
   expect(errors).toEqual([]);
 });
+
+
+test('OP-104: TEAL headings have names rather than decorative section numbering',async({page})=>{
+ await page.goto('/teal/');
+ const kickers=page.locator('.section-kicker > span:first-child');
+ expect(await kickers.allTextContents()).toEqual(expect.arrayContaining([
+  'THE FOUNDING INVITATION','UNDERSTAND THE CAUSE','THREE SHARED ESSENTIALS',
+  'HUMAN LITERACY ONLINE','REFLECT & ACT','AN INVITATION YOU CAN PASS ALONG','TRUST & OPEN QUESTIONS'
+ ]));
+ for(const text of await kickers.allTextContents()){
+  expect(text).not.toMatch(/^\\d{2}\\s*\\//);
+ }
+ await expect(page.locator('.goals-section .number')).toHaveCount(0);
+ await expect(page.locator('.principles-grid .number')).toHaveCount(0);
+ await expect(page.locator('.site-nav')).toHaveCSS('background-color','rgb(4, 21, 31)');
+});
