@@ -23,7 +23,18 @@ test('HL-119: Lesson 01 remains readable at narrow width and enlarged text', asy
   await expect(page.locator('h1')).toContainText('See It');
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   const reflow = async () => {
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const geometry = await page.evaluate(() => ({
+      viewport: window.innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      overflowers: [...document.querySelectorAll('body *')]
+        .filter(el => el.getBoundingClientRect().right > window.innerWidth + 1)
+        .slice(0, 12)
+        .map(el => ({ tag: el.tagName.toLowerCase(), className: String(el.className),
+          text: (el.textContent || '').trim().slice(0, 60),
+          right: Math.round(el.getBoundingClientRect().right),
+          width: Math.round(el.getBoundingClientRect().width) }))
+    }));
+    expect(geometry.scrollWidth, JSON.stringify(geometry)).toBeLessThanOrEqual(geometry.viewport);
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'One Place and lessons' })).toBeVisible();
   };
