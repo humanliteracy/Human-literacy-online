@@ -51,7 +51,7 @@ for (let lesson = 1; lesson <= 10; lesson++) {
     }
 
     await reflow('Results');
-    await page.getByRole('button', { name: 'Continue to Live It' }).click();
+    await page.getByRole('button', { name: lesson <= 2 ? 'Continue to Live It' : 'Continue to Step 5 · Live it', exact: true }).click();
     await reflow('Live It');
     expect(errors).toEqual([]);
   });
