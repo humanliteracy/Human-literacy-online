@@ -16,10 +16,15 @@ for (let lesson = 1; lesson <= 10; lesson++) {
       await expect(page.locator('#app h1')).toBeVisible();
     };
 
-    await reflow('See It');
-    await page.locator('#app > button.action').first().click();
-    await reflow('Understand It');
-    await page.locator('#app > button.action').first().click();
+    await reflow('entry');
+    // Lessons 03-10 move directly from See It to Practice; 01-02 include Understand It.
+    for (let step = 0; step < 3 && (await page.locator('button.option').count()) === 0; step++) {
+      const advance = page.locator('#app > button.action').first();
+      await expect(advance).toBeEnabled();
+      await advance.click();
+      await reflow('before Practice It, step ' + (step + 1));
+    }
+    await expect(page.locator('button.option')).toHaveCount(3);
 
     for (let scene = 0; scene < 3; scene++) {
       await reflow('Practice It scenario ' + (scene + 1));
