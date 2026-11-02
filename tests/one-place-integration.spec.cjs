@@ -106,3 +106,39 @@ test('OP-104: TEAL headings have names rather than decorative section numbering'
  await expect(page.locator('.principles-grid .number')).toHaveCount(0);
  await expect(page.locator('.site-nav')).toHaveCSS('background-color','rgb(4, 21, 31)');
 });
+
+
+test('OP-104-MOBILE-320: all four planner tabs fit and switch at 320px', async ({page}) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.setViewportSize({width:320,height:633});
+  await page.goto('/one-place/money-bills.html');
+  const tabs = page.getByRole('tablist', {name:'Money and bills steps'});
+  await expect(tabs).toBeVisible();
+  const geometry = await tabs.evaluate(el => ({
+    overflows: el.scrollWidth > el.clientWidth + 1,
+    buttons: [...el.querySelectorAll('[role="tab"]')].map(button => {
+      const rect = button.getBoundingClientRect();
+      return {left:rect.left, right:rect.right,
+        textOverflows:button.scrollWidth > button.clientWidth + 1};
+    })
+  }));
+  expect(geometry.overflows).toBe(false);
+  expect(geometry.buttons).toHaveLength(4);
+  for (const b of geometry.buttons) {
+    expect(b.left).toBeGreaterThanOrEqual(0);
+    expect(b.right).toBeLessThanOrEqual(320);
+    expect(b.textOverflows).toBe(false);
+  }
+  for (const [name, panel] of [
+    ['1. Overview', '#panel-overview'], ['2. Bills', '#panel-bills'],
+    ['3. Income', '#panel-income'], ['4. My action plan', '#panel-plan']
+  ]) {
+    const tab = tabs.getByRole('tab', {name,exact:true});
+    await tab.click();
+    await expect(tab).toHaveAttribute('aria-selected','true');
+    await expect(page.locator(panel)).toBeVisible();
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  expect(errors).toEqual([]);
+});

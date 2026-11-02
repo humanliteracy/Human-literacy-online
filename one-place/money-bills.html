@@ -91,6 +91,9 @@
  .scroller{max-height:none;overflow:visible}
 }
 @media screen and (max-width:420px){
+ /* At narrow widths, show all four steps in two rows instead of clipping step 4. */
+ .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;overflow:visible}
+ .tabs button{min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:1.25;text-align:center}
  .panel{grid-template-columns:1fr}
  .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
  .fieldrow,.two{grid-template-columns:1fr}
