@@ -117,3 +117,14 @@ Functions: household role labels, primary and backup helpers, dates and review s
 **Open:** independent caregiver usability tests, consent/privacy review, screen reader and 200% zoom acceptance, content review, international emergency guidance and localization. Do not publish, merge, deploy, collect payments/analytics, or spend funds without founder authorization.
 
 **After this pilot:** complete a production-grade Job Pricing Calculator and usability validation of the free Money & Bills and Family & Caregiving journeys. Preserve the Human Literacy lessons, TEAL draft PR #5, and published main unchanged.
+
+
+## 2026-11-07 — Founder-approved project identity (documentation only)
+
+**Decision:** **ONE PLACE** is the official primary name and umbrella identity for the integrated project. **Human Literacy** is retained as its learning and life-skills program, rather than being deleted or replaced as educational content.
+
+**Proposed visitor hierarchy:** ONE PLACE (main home) → Human Literacy (Learn), Life Simulator (Practice), TEAL (philosophy and values), Life Areas (find help and resources), and first-party Interactive Tools (take action). This is a naming and information-architecture decision, not authorization to merge, publish, spend money, or launch services.
+
+**Technical sequencing before any production rename:** prepare and review visitor-facing One Place branding and navigation in the draft; preserve working lesson/simulator paths; check internal and external links, canonical URLs and accessibility; validate both desktop and 320-pixel mobile navigation; then consider coordinated changes to the GitHub repository name, Pages URL and public entry point only after explicit founder release approval. Renaming the project repository may change the project Pages path and break existing direct links, so do not rename the repository or change Pages settings as part of this documentation step.
+
+**Status:** naming APPROVED; engineering migration PENDING; GitHub Pages production remains on `main` at the original Human Literacy path; this OP-104 PR remains a draft. Existing project priorities and other open draft PRs remain unchanged.
