@@ -46,7 +46,7 @@ test('retrying and sending a new reply clears the previous navigation status',as
 
 for(const width of [320,390,1120])test(`return to all lessons reaches the lesson list and resumes keyboard navigation at ${width}px`,async({page},testInfo)=>{
  await page.setViewportSize({width,height:844});
- await page.goto('/');
+ await page.goto('/human-literacy/');
  const card=page.locator('section[aria-labelledby="simulator-heading"]');
  await expect(card).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -56,7 +56,7 @@ for(const width of [320,390,1120])test(`return to all lessons reaches the lesson
  await expect(page.locator('#completionTitle')).toBeFocused();
  const back=page.getByRole('link',{name:'Back to all lessons',exact:true});
  await back.focus();await page.keyboard.press('Enter');
- await expect(page).toHaveURL(/\/#choose$/);
+ await expect(page).toHaveURL(/\/human-literacy\/index\.html#choose$/);
  const heading=page.getByRole('heading',{name:'Choose a lesson',exact:true});
  await expect(heading).toBeFocused();
  expect(await heading.evaluate(n=>{const r=n.getBoundingClientRect();return r.top>=-1&&r.bottom<=innerHeight;})).toBe(true);

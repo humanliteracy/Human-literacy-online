@@ -40,7 +40,8 @@ def run(revision, expected_checksum):
                 continue
             path = name[len(prefix):]
             if path in ('index.html', 'LICENSE', 'CONTENT-LICENSE.md', 'review/evidence.zip') or path.startswith(
-                    ('lessons/', 'simulator/', 'support/', 'media/', 'docs/screenshots/')):
+                    ('lessons/', 'simulator/', 'support/', 'media/', 'docs/screenshots/',
+                     'one-place/', 'teal/', 'shared/', 'human-literacy/')):
                 files['/' + path] = source.read(name)
     assert all('/lessons/%02d/index.html' % n in files for n in range(1, 11))
     # Serve the synthetic review packet through this same authenticated loopback
@@ -70,20 +71,22 @@ def run(revision, expected_checksum):
     cookie_name = 'local_review_' + secrets.token_hex(8)
     badge = ('<aside role="note" id="__review_identity" data-source-sha="' + SHA + '" '
              'style="padding:12px;background:#122c35;color:white;font:14px/1.5 system-ui;'
-             'overflow-wrap:anywhere"><strong>UNRELEASED · LOCAL REVIEW</strong><br>Life Simulator · '
+             'overflow-wrap:anywhere"><strong>UNRELEASED · LOCAL REVIEW</strong><br>One Place integrated review · '
              + SHA + '<br><a style="color:white" href="/__review/">Review instructions</a></aside>')
     landing = ('<!doctype html><html lang="en"><meta charset="utf-8">'
                '<meta name="viewport" content="width=device-width,initial-scale=1">'
-               '<title>Unreleased Life Simulator review</title><body style="font:18px/1.5 system-ui;'
+               '<title>Unreleased One Place review</title><body style="font:18px/1.5 system-ui;'
                'max-width:700px;padding:20px;margin:auto;overflow-wrap:anywhere">' + badge +
-               '<h1>Unreleased Life Simulator</h1><p><a href="/simulator/01/">Open the simulator</a>'
-               ' · <a href="/">All ten lessons</a></p>'
-               '<p>Use the same Chromebook and Chrome session. This is local only; no website has been published.</p>'
-               '<ol><li>Complete one main conversation: choose or type wording, then choose Say this for each reply. Use Back/Forward to review saved progress, then read the takeaway.</li>'
-               '<li>Retry with one unexpected or hostile response. Check that Jordan asks for clarification or responds appropriately without a fake grade.</li>'
-               '<li>Try one optional feature: Help me draft, or local recording and playback. Typing is always available.</li></ol>'
+               '<h1>Unreleased One Place</h1><p><a href="/">Open One Place</a>'
+               ' · <a href="/human-literacy/">Human Literacy home</a>'
+               ' · <a href="/simulator/01/">Life Simulator</a>'
+               ' · <a href="/teal/">TEAL foundation (draft)</a></p>'
+               '<p>Start with One Place, then return here as needed. Use the same Chromebook and Chrome session. This is local only; no website has been published.</p>'
+               '<ol><li>Open One Place. Follow the learning links to Lesson 01, Life Simulator and TEAL; confirm return navigation.</li>'
+               '<li>Try Money &amp; Bills and Family &amp; Caregiving with fictional data. Check editing, reset and local export.</li>'
+               '<li>In the scripted Coach, try Help me draft, a boundary or final decision, then Finish here. Keep optional voice off.</li></ol>'
                '<p>Use synthetic examples. Browser dictation has separate external-service consent and may be unreliable; leave it off for private words. This is a scripted prototype, not AI.</p>'
-               '<p><a href="/__evidence/">View the review packet</a> · '
+               '<p>Historical Coach evidence (not acceptance of this integrated revision): <a href="/__evidence/">View the Coach review packet</a> · '
                '<a href="/review/evidence.zip" download="human-literacy-review.zip">Download a ZIP copy</a> '
                '(test report, screenshots, silent synthetic walkthrough, limitations and acceptance checklist).</p>'
                '<p>Automated results do not replace your acceptance of this exact version. No screen-reader software, physical microphone or live speech provider is claimed as tested.</p>'
@@ -148,15 +151,22 @@ def run(revision, expected_checksum):
                 data = re.sub(r'(<body\b[^>]*>)', lambda m: m[1] + badge,
                               data.decode('utf-8'), count=1, flags=re.I).encode()
             status, extra = 200, {}
-            if path.endswith('.mp4') and self.headers.get('Range'):
-                match = re.fullmatch(r'bytes=(\d+)-(\d*)', self.headers['Range'])
-                size = len(data)
-                start = int(match[1]) if match else size
-                end = min(int(match[2]), size - 1) if match and match[2] else size - 1
-                if start > end:
-                    return self.send(416, extra={'Content-Range': 'bytes */%d' % size})
-                status, extra = 206, {'Content-Range': 'bytes %d-%d/%d' % (start, end, size)}
-                data = data[start:end + 1]
+            if path.endswith('.mp4'):
+                extra['Accept-Ranges'] = 'bytes'
+                if self.headers.get('Range'):
+                    match = re.fullmatch(r'bytes=(\d*)-(\d*)', self.headers['Range'])
+                    size = len(data)
+                    if not match or not any(match.groups()):
+                        return self.send(416, extra={'Content-Range': 'bytes */%d' % size,
+                                                      'Accept-Ranges': 'bytes'})
+                    start = int(match[1]) if match[1] else max(0, size - int(match[2]))
+                    end = min(int(match[2]), size - 1) if match[1] and match[2] else size - 1
+                    if start >= size or start > end:
+                        return self.send(416, extra={'Content-Range': 'bytes */%d' % size,
+                                                      'Accept-Ranges': 'bytes'})
+                    status, extra = 206, {'Accept-Ranges': 'bytes',
+                                          'Content-Range': 'bytes %d-%d/%d' % (start, end, size)}
+                    data = data[start:end + 1]
             return self.send(status, data, mimetypes.guess_type(path)[0] or
                              'application/octet-stream', extra)
 
