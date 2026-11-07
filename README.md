@@ -1,6 +1,6 @@
-# ONE PLACE — integrated founder-review draft
+# ONE PLACE — practical life help, learning and practice
 
-ONE PLACE is the primary home for practical life resources, free tools, Human Literacy learning, Life Simulator practice and TEAL. This integrated version remains in draft PR #9; the deployed site is unchanged. No visitor account or payment is required.
+ONE PLACE is the primary home for practical life resources, free tools, Human Literacy learning, Life Simulator practice and TEAL. The public website uses the approved One Place identity, with unfinished products and services clearly marked as previews. No visitor account or payment is required.
 
 ## Where the site lives
 
@@ -17,9 +17,9 @@ See [the rebranding and repository transition assessment](docs/one-place-transit
 
 ## Publication control
 
-GitHub Pages serves [Human Literacy Online](https://humanliteracy.github.io/Human-literacy-online/) from the repository root on **`main`**. Merging or pushing to `main` starts public deployment automatically; there is no separate manual publish step. Browser-test CI is a separate workflow and does not itself hold back Pages.
+GitHub Pages serves [ONE PLACE](https://humanliteracy.github.io/Human-literacy-online/) from the repository root on **`main`**. Merging or pushing to `main` starts public deployment automatically; there is no separate manual publish step. Browser-test CI is a separate workflow and does not itself hold back Pages.
 
-Use the [release and rollback checklist](docs/release-checklist.md) before changing `main`. Founder acceptance of PR #2 has been granted; the current release-preparation assignment does **not** authorize merging or publication. Do not change Pages settings, upload replacement videos or activate services to release this static prototype.
+Use the [release and rollback checklist](docs/release-checklist.md) before changing `main`. The founder authorized publication of the integrated One Place homepage at the existing GitHub Pages address on November 7, 2026. This authorization does not include renaming the GitHub repository, changing the Pages address, activating purchases, payments, analytics, or paid services. Review and approve future release changes separately.
 
 ## Authentication: visitors versus maintainers
 
