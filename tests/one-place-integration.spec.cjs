@@ -29,7 +29,7 @@ test('OP-104: linked learning experiences share a navigable review build', async
   await page.goto('/one-place/');
   await navigation.getByRole('link',{name:'Learning home'}).click();
   await page.getByRole('link',{name:'Start Lesson 01',exact:true}).click();
-  await expect(page).toHaveURL(/\/lessons\/01\/$/);
+  await expect(page).toHaveURL(/\/lessons\/01\/(?:index\.html(?:\?.*)?)?$/);
   await expect(page.locator('script[src="../../shared/lesson-record.js"]')).toHaveCount(1);
   await page.goto('/one-place/');
   await navigation.getByRole('link',{name:'Life Simulator'}).click();

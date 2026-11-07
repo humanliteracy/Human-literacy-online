@@ -106,6 +106,7 @@ test('ONE PLACE: fictional tool edits stay local and root adds no tracking or ac
   await page.getByRole('link', { name: 'One Place Home', exact: true }).click();
   await page.getByRole('navigation', { name: 'One Place navigation' }).getByRole('link', { name: 'Family & Caregiving', exact: true }).click();
   await page.locator('#sample').click();
+  await page.getByRole('tab', { name: '1. Household', exact: true }).click();
   await page.locator('#person').fill('Fictional person');
   expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
   expect(outbound).toEqual([]);
