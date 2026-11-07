@@ -66,7 +66,7 @@ test('TEAL entrance, message and simple reading offer One Place exit',async({pag
 test('OP-104 compact desktop grouped learning links retain 44px targets',async({page})=>{
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/one-place/');
-  const nav=page.getByRole('navigation',{name:'Learning and practice'});
+  const nav=page.getByRole('navigation',{name:'One Place navigation'});
   const group=nav.getByRole('group',{name:'Human Literacy: lessons and practice'});
   await expect(group).toBeVisible();
   for(const link of await nav.getByRole('link').all()){
