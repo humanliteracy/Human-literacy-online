@@ -128,3 +128,14 @@ Functions: household role labels, primary and backup helpers, dates and review s
 **Technical sequencing before any production rename:** prepare and review visitor-facing One Place branding and navigation in the draft; preserve working lesson/simulator paths; check internal and external links, canonical URLs and accessibility; validate both desktop and 320-pixel mobile navigation; then consider coordinated changes to the GitHub repository name, Pages URL and public entry point only after explicit founder release approval. Renaming the project repository may change the project Pages path and break existing direct links, so do not rename the repository or change Pages settings as part of this documentation step.
 
 **Status:** naming APPROVED; engineering migration PENDING; GitHub Pages production remains on `main` at the original Human Literacy path; this OP-104 PR remains a draft. Existing project priorities and other open draft PRs remain unchanged.
+
+
+## 2026-11-07 — One Place navigation draft for founder acceptance
+
+The approved ONE PLACE umbrella identity is reflected in the existing OP-104 draft homepage navigation. The brand/logo opens the One Place home; the primary navigation explicitly links to **Explore life areas**, the **Human Literacy** learning cluster (**All lessons**, **Start learning**, **Life Simulator**), and the separate **TEAL foundation (draft)**. The 18 life areas, 72 preview entry points, tools, disclaimers, privacy notes, and founding disclosure remain intact. The Human Literacy learning homepage remains available at the existing repository root and is now titled **Human Literacy at ONE PLACE — Free Interactive Life Skills** in the *draft branch only*.
+
+**Founder acceptance:** in a local integrated review of branch `review/op-104-integrated-founder-v1`, confirm that (1) the One Place logo and Explore life areas return to the 18-area home from an inner view, (2) All lessons opens the Human Literacy lesson list, (3) Start learning opens Lesson 01, (4) Life Simulator opens its current route, (5) TEAL opens its draft, and (6) the paths remain usable at 320px and desktop width, including keyboard focus and readable tap targets. No published preview URL is implied by this record.
+
+**Automation:** existing integration and layout tests were updated for the five-link navigation and One Place accessibility name; action-run results must be checked before calling this acceptance PASS. These are *unverified founder-facing draft changes* until browser review completes.
+
+**Release controls:** PR #9 remains a draft. Do **not** merge or publish, rename the repository, alter GitHub Pages settings, enable payments, activate tracking, or incur expenses. No priority changes. Production main and the current hosted Human Literacy URL are unchanged.
