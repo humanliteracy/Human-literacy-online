@@ -16,6 +16,14 @@ test('OP-104: linked learning experiences share a navigable review build', async
   await expect(navigation.getByRole('link',{name:'Explore life areas'})).toHaveAttribute('href','index.html');
   await expect(navigation.getByRole('link',{name:'All lessons'})).toHaveAttribute('href','../index.html#choose');
   await expect(navigation.getByRole('group',{name:'Human Literacy: lessons and practice'})).toBeVisible();
+  await page.goto('/one-place/index.html?area=Money%20%26%20Bills');
+  await navigation.getByRole('link',{name:'Explore life areas'}).click();
+  await expect(page).toHaveURL(/\/one-place\/index\.html$/);
+  await expect(page.getByRole('heading',{name:'Explore every part of life'})).toBeVisible();
+  await navigation.getByRole('link',{name:'All lessons'}).click();
+  await expect(page).toHaveURL(/\/index\.html#choose$/);
+  await expect(page.getByRole('heading',{name:'Choose a lesson'})).toBeVisible();
+  await page.goto('/one-place/');
   await navigation.getByRole('link',{name:'TEAL foundation (draft)'}).click();
   await expect(page).toHaveURL(/\/teal\/$/);
   await page.goto('/one-place/');
