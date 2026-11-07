@@ -23,7 +23,7 @@ module.exports = defineConfig({
     },
   },
   webServer: {
-    command: 'python3 -m http.server 8765 --bind 127.0.0.1',
+    command: 'python3 review/static_range_server.py 8765',
     url: 'http://127.0.0.1:8765',
     reuseExistingServer: false,
     timeout: 10000,
