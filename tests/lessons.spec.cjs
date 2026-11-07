@@ -5,7 +5,7 @@ for (let lesson = 1; lesson <= 10; lesson++) {
   test(`lesson ${number}: library navigation, feedback, quiz, completion, restart and home`, async ({ page }) => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('/');
+    await page.goto('/human-literacy/');
     await page.getByRole('link', { name: `Start Lesson ${number}`, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/lessons/${number}/`));
     await expect(page.locator('h1')).toBeVisible();
@@ -39,6 +39,8 @@ for (let lesson = 1; lesson <= 10; lesson++) {
     await page.getByRole('button', { name: 'Practice lesson again', exact: true }).click();
     await expect(page.getByRole('button', { name: '← Back', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: '⌂ Home', exact: true }).click();
+    await expect(page).toHaveTitle(/ONE PLACE/);
+    await page.getByRole('link', { name: 'All lessons', exact: true }).click();
     await expect(page.getByRole('link', { name: 'Start Lesson 10', exact: true })).toBeVisible();
     expect(errors).toEqual([]);
   });

@@ -1,13 +1,19 @@
-# Human Literacy Online
+# ONE PLACE — integrated founder-review draft
 
-Free, interactive life-skills lessons designed to be accessible without creating an account. Learners can practice everyday skills at their own pace.
+ONE PLACE is the primary home for practical life resources, free tools, Human Literacy learning, Life Simulator practice and TEAL. This integrated version remains in draft PR #9; the deployed site is unchanged. No visitor account or payment is required.
 
 ## Where the site lives
 
-- `index.html` — public lesson library and homepage.
+- `index.html` — ONE PLACE homepage, search and the 18-area / 72-offering catalog.
+- `human-literacy/index.html` — Human Literacy learning home and all ten lessons.
+- `one-place/index.html` — compatible redirect for older catalog query links.
+- `one-place/money-bills.html`, `one-place/family-handoff.html` — existing local practical tools.
+- `teal/` — TEAL invitation, resources and simple reading view.
 - `lessons/01/index.html` through `lessons/10/index.html` — ten interactive lessons.
 - `simulator/01/index.html` — optional workplace roleplay and private expression/rehearsal.
 - The lesson pages contain their own HTML, styling and JavaScript. The simulator also loads `coach.js`, `dialogue.js` and `speech.js` from its own directory. There is no application backend, visitor authentication service or database in this static site.
+
+See [the rebranding and repository transition assessment](docs/one-place-transition.md) for the component inventory, compatibility routes, deferred materials, future rename and rollback requirements.
 
 ## Publication control
 
@@ -31,7 +37,7 @@ Do **not** put passwords, personal access tokens, OAuth client secrets, or priva
 4. JavaScript displays feedback, advances the lesson, and calculates a score locally.
 5. Results are displayed in the browser without being attached to an account.
 
-The 13 site HTML pages include the homepage, ten lessons, the simulator and support. The site does not submit lesson answers to an application API or retain learner progress in cookies, `localStorage` or `sessionStorage`; refreshing a lesson resets its in-memory progress. The simulator clears its conversation and private writing when leaving or refreshing. The separate local-review launcher uses an HttpOnly session cookie to control access to its loopback preview, not to save learner answers.
+The integrated pages include ONE PLACE, Human Literacy, ten lessons, tools, TEAL and support. The site does not submit lesson answers to an application API. Original lesson navigation uses page memory; the existing optional reflection/learning-record feature saves entered work automatically in browser `localStorage`, with shared-device warnings, deletion and local export. Preserve that behavior and use fictional data in testing. The simulator clears its conversation and private writing when leaving or refreshing. The separate local-review launcher uses an HttpOnly session cookie to control access to its loopback preview, not to save learner answers.
 
 **Privacy boundary:** This describes the application source, not all behavior of the hosting platform, browser, network, or optional future integrations. Hosting providers may process access logs such as IP addresses. Do not promise that every website visit is completely untracked.
 
@@ -52,7 +58,7 @@ The simulator is an **always-unscored scripted prototype**, not live AI or a mea
 
 One editable suggestion is shown first; **More responses (2)** reveals the alternatives. **Change goal** reopens the goal controls, with interpretation detail under **Why this suggestion?**. Confirmed resignation conditions remain in the editable wording; preserving text does not imply the script understood every condition. No response is universally correct. Unfamiliar wording receives a transparent limitation rather than a fabricated grade.
 
-**Use this wording** and rehearsal's **Move draft** only transfer text to the simulator. They never send it. Moving a draft after completion starts a new conversation; **Restore prior draft**, when offered, recovers displaced writing. The simulation has up to two submitted replies. Stop and pause requests can end it after one; **Finish here** ends an optional follow-up without sending unfinished writing. **Back/Forward** review saved progress without sending; explicitly choosing **Say this** on an earlier reply replaces dependent later progress. **Try again** starts a fresh conversation. **Back to all lessons** goes directly to the homepage's lesson list.
+**Use this wording** and rehearsal's **Move draft** only transfer text to the simulator. They never send it. Moving a draft after completion starts a new conversation; **Restore prior draft**, when offered, recovers displaced writing. The simulation has up to two submitted replies. Stop and pause requests can end it after one; **Finish here** ends an optional follow-up without sending unfinished writing. **Back/Forward** review saved progress without sending; explicitly choosing **Say this** on an earlier reply replaces dependent later progress. **Try again** starts a fresh conversation. **Back to all lessons** goes directly to Human Literacy's lesson list.
 
 Completion shows one takeaway and one optional practical action. **Why this happened and what to try** opens meaningful feedback and unresolved questions; technical matching detail stays under **Wording and practice detail**. Jordan responds to submitted words, not a private goal. Resignation, refusal and a temporary break are distinct; no extra work, willingness to negotiate or employment/legal outcome is assumed. Scripted coverage remains limited.
 

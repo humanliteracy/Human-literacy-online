@@ -41,7 +41,7 @@ def run(revision, expected_checksum):
             path = name[len(prefix):]
             if path in ('index.html', 'LICENSE', 'CONTENT-LICENSE.md', 'review/evidence.zip') or path.startswith(
                     ('lessons/', 'simulator/', 'support/', 'media/', 'docs/screenshots/',
-                     'one-place/', 'teal/', 'shared/')):
+                     'one-place/', 'teal/', 'shared/', 'human-literacy/')):
                 files['/' + path] = source.read(name)
     assert all('/lessons/%02d/index.html' % n in files for n in range(1, 11))
     # Serve the synthetic review packet through this same authenticated loopback
@@ -77,8 +77,8 @@ def run(revision, expected_checksum):
                '<meta name="viewport" content="width=device-width,initial-scale=1">'
                '<title>Unreleased One Place review</title><body style="font:18px/1.5 system-ui;'
                'max-width:700px;padding:20px;margin:auto;overflow-wrap:anywhere">' + badge +
-               '<h1>Unreleased One Place</h1><p><a href="/one-place/">Open One Place</a>'
-               ' · <a href="/">Human Literacy home</a>'
+               '<h1>Unreleased One Place</h1><p><a href="/">Open One Place</a>'
+               ' · <a href="/human-literacy/">Human Literacy home</a>'
                ' · <a href="/simulator/01/">Life Simulator</a>'
                ' · <a href="/teal/">TEAL foundation (draft)</a></p>'
                '<p>Start with One Place, then return here as needed. Use the same Chromebook and Chrome session. This is local only; no website has been published.</p>'

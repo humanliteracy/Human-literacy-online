@@ -20,6 +20,7 @@ class IntegratedPreview(unittest.TestCase):
                         for n in range(1, 11)}
         cls.payloads.update({
             '/index.html': b'<body>Home</body>',
+            '/human-literacy/index.html': b'<body>Human Literacy</body>',
             '/one-place/index.html': b'<body>One Place</body>',
             '/one-place/money-bills.html': b'<body>Money</body>',
             '/one-place/family-handoff.html': b'<body>Handoff</body>',
@@ -123,7 +124,8 @@ class IntegratedPreview(unittest.TestCase):
     def test_landing_starts_with_one_place(self):
         status, _, body = self.request('/__review/', authenticated=True)
         self.assertEqual(status, 200)
-        self.assertIn(b'href="/one-place/"', body)
+        self.assertIn(b'href="/">Open One Place', body)
+        self.assertIn(b'href="/human-literacy/"', body)
         self.assertIn(b'Historical Coach evidence', body)
 
     def test_anonymous_requests_and_wrong_tokens_fail(self):

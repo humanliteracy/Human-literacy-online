@@ -9,8 +9,8 @@ const desktopRoutes=[
   ['Family & Caregiving area','/one-place/index.html?area=Family%20%26%20Caregiving'],
   ['Money & Bills tool overview','/one-place/money-bills.html'],
   ['Family Handoff tool first view','/one-place/family-handoff.html'],
-  ['Human Literacy Explore','/'],
-  ['Human Literacy Lessons','/#lessons'],
+  ['Human Literacy Explore','/human-literacy/'],
+  ['Human Literacy Lessons','/human-literacy/#lessons'],
 ];
 
 for(const size of [{width:1920,height:1080},{width:1366,height:768}]){
@@ -50,8 +50,8 @@ test('all ten lessons expose distinct global destinations',async({page})=>{
     const nav=page.getByRole('navigation',{name:'One Place and lessons'});
     await expect(nav.getByRole('link',{name:'One Place Home'})).toBeVisible();
     await expect(nav.getByRole('link',{name:'All Lessons'})).toBeVisible();
-    await expect(nav.getByRole('link',{name:'One Place Home'})).toHaveAttribute('href','../../one-place/index.html');
-    await expect(nav.getByRole('link',{name:'All Lessons'})).toHaveAttribute('href','../../index.html#lessons');
+    await expect(nav.getByRole('link',{name:'One Place Home'})).toHaveAttribute('href','../../index.html');
+    await expect(nav.getByRole('link',{name:'All Lessons'})).toHaveAttribute('href','../../human-literacy/index.html#lessons');
   }
 });
 test('TEAL entrance, message and simple reading offer One Place exit',async({page})=>{
@@ -67,7 +67,7 @@ test('OP-104 compact desktop grouped learning links retain 44px targets',async({
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/one-place/');
   const nav=page.getByRole('navigation',{name:'One Place navigation'});
-  const group=nav.getByRole('group',{name:'Human Literacy: lessons and practice'});
+  const group=nav.getByRole('group',{name:'Human Literacy: learning'});
   await expect(group).toBeVisible();
   for(const link of await nav.getByRole('link').all()){
     const box=await link.boundingBox();
