@@ -10,9 +10,11 @@ test('OP-104: linked learning experiences share a navigable review build', async
   await expect(page.getByRole('link',{name:'Open founder prototype'})).toHaveCount(0);
   await page.getByRole('link',{name:'← One Place Home'}).click();
   await expect(page).toHaveURL(/\/one-place\/index\.html$/);
-  const navigation = page.getByRole('navigation',{name:'Learning and practice'});
+  const navigation = page.getByRole('navigation',{name:'One Place navigation'});
   await expect(navigation).toBeVisible();
-  await expect(navigation.getByRole('link')).toHaveCount(4);
+  await expect(navigation.getByRole('link')).toHaveCount(5);
+  await expect(navigation.getByRole('link',{name:'Explore life areas'})).toHaveAttribute('href','index.html');
+  await expect(navigation.getByRole('link',{name:'All lessons'})).toHaveAttribute('href','../index.html#choose');
   await expect(navigation.getByRole('group',{name:'Human Literacy: lessons and practice'})).toBeVisible();
   await navigation.getByRole('link',{name:'TEAL foundation (draft)'}).click();
   await expect(page).toHaveURL(/\/teal\/$/);
